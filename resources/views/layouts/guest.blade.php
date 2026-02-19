@@ -34,7 +34,22 @@
             <a href="{{ route('tentang.index') }}" class="px-5 py-2 text-[13px] font-medium {{ Request::routeIs('tentang.*') ? 'text-teal-600 bg-white shadow-sm' : 'text-slate-600 hover:text-teal-600' }} rounded-full transition-all">Tentang Kami</a>
         </div>
 
-        <div class="flex-1 flex items-center justify-end space-x-4">
+        <div class="flex-1 flex items-center justify-end space-x-2 md:space-x-4">
+            <!-- Shopping Cart Icon -->
+            <a href="{{ route('cart.index') }}" id="cart-icon" class="relative p-2 text-slate-400 hover:text-teal-600 transition-all duration-300 group">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                @auth
+                    @php
+                        $cartCount = \App\Models\CartItem::where('user_id', Auth::id())->sum('quantity');
+                    @endphp
+                    @if($cartCount > 0)
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black leading-none text-white bg-teal-500 rounded-full transform translate-x-1/2 -translate-y-1/2 shadow-sm group-hover:scale-110 transition-transform">{{ $cartCount }}</span>
+                    @endif
+                @endauth
+            </a>
+
             <div class="hidden md:flex items-center space-x-4">
                 @auth
                     <a href="{{ url('/dashboard') }}" class="inline-flex items-center justify-center px-6 py-2.5 text-[14px] font-bold text-white bg-teal-600 rounded-full hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 active:scale-95">
@@ -63,6 +78,9 @@
         <a href="{{ route('blog.index') }}" class="block text-base font-medium {{ Request::routeIs('blog.*') ? 'text-teal-600' : 'text-slate-600' }}">Blog</a>
         <a href="{{ route('kontak.index') }}" class="block text-base font-medium {{ Request::routeIs('kontak.*') ? 'text-teal-600' : 'text-slate-600' }}">Kontak</a>
         <a href="{{ route('tentang.index') }}" class="block text-base font-medium {{ Request::routeIs('tentang.*') ? 'text-teal-600' : 'text-slate-600' }}">Tentang Kami</a>
+        @auth
+            <a href="{{ route('cart.index') }}" class="block text-base font-medium {{ Request::routeIs('cart.*') ? 'text-teal-600' : 'text-slate-600' }}">Keranjang Belanja</a>
+        @endauth
         <hr>
         <div class="flex flex-col space-y-3">
             @auth
@@ -175,6 +193,18 @@
             menu.classList.toggle('hidden');
         });
     }
+
+    // Animation for adding to cart
+    @if(session('success') && (strpos(session('success'), 'berhasil ditambahkan') !== false))
+        const cartIcon = document.getElementById('cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate__animated', 'animate__bounce');
+            cartIcon.style.color = '#0d9488'; // teal-600
+            setTimeout(() => {
+                cartIcon.classList.remove('animate__animated', 'animate__bounce');
+            }, 1000);
+        }
+    @endif
 </script>
 
 </body>

@@ -4,6 +4,15 @@
 
 @section('content')
 <main class="max-w-7xl mx-auto px-6 py-12">
+    @if(session('success'))
+        <div class="mb-8 p-5 bg-teal-50 border border-teal-100 text-teal-700 rounded-[2rem] flex items-center shadow-sm animate__animated animate__backInDown">
+            <div class="bg-teal-500 p-1.5 rounded-full mr-4 text-white flex-shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="font-bold text-sm">{{ session('success') }}</span>
+        </div>
+    @endif
+
     <div class="mb-12">
         <h1 class="text-4xl font-black text-slate-900 tracking-tight">Katalog <span class="text-teal-600">Produk</span></h1>
         <p class="mt-4 text-slate-500 max-w-xl">Temukan beragam pilihan kain premium untuk memenuhi segala kebutuhan fashion Anda.</p>
@@ -39,9 +48,20 @@
                             <span class="text-xs font-bold px-3 py-1 bg-green-50 text-green-600 rounded-full">
                                 {{ $product->stock > 0 ? 'Tersedia' : 'Habis' }}
                             </span>
-                            <a href="{{ route('produk.show', $product->slug) }}" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-teal-600 transition-colors shadow-lg active:scale-90">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            </a>
+                            <div class="flex items-center space-x-2">
+                                @auth
+                                    <form action="{{ route('cart.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <button type="submit" class="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center hover:bg-teal-700 transition-colors shadow-lg shadow-teal-100 active:scale-90">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        </button>
+                                    </form>
+                                @endauth
+                                <a href="{{ route('produk.show', $product->slug) }}" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-teal-600 transition-colors shadow-lg active:scale-90">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
