@@ -9,7 +9,11 @@ use App\Http\Controllers\TeamMemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('index');
+    $setting = \App\Models\LandingSetting::first();
+    $testimonials = \App\Models\Testimonial::all();
+    $partners = \App\Models\Partner::where('is_active', true)->orderBy('order')->get();
+    $featuredProducts = \App\Models\Product::where('is_active', true)->latest()->take(4)->get();
+    return view('index', compact('setting', 'testimonials', 'partners', 'featuredProducts'));
 });
 
 Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
@@ -26,9 +30,38 @@ Route::post('/kontak', [ContactController::class, 'store'])->name('kontak.store'
 
 Route::get('/tentang-kami', [TeamMemberController::class, 'index'])->name('tentang.index');
 
+Route::get('/faq', function() {
+    $faqs = \App\Models\Faq::where('is_active', true)->orderBy('order')->get();
+    return view('landing_page.faqs.index', compact('faqs'));
+})->name('faqs.index');
+
+Route::get('/p/{slug}', function($slug) {
+    $page = \App\Models\Page::where('slug', $slug)->firstOrFail();
+    return view('landing_page.show', compact('page'));
+})->name('pages.show');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('produk', \App\Http\Controllers\Admin\ProductController::class);
+    Route::resource('portofolio', \App\Http\Controllers\Admin\PortfolioController::class);
+    Route::resource('blog', \App\Http\Controllers\Admin\PostController::class);
+    Route::resource('kontak', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('tentang-kami', \App\Http\Controllers\Admin\TeamMemberController::class);
+    Route::patch('kontak/{kontak}/toggle-read', [\App\Http\Controllers\Admin\ContactController::class, 'toggleRead'])->name('kontak.toggle-read');
+
+    // Landing Page Management
+    Route::prefix('landing')->name('landing.')->group(function () {
+        Route::get('/hero', [\App\Http\Controllers\Admin\LandingSettingController::class, 'index'])->name('hero');
+        Route::patch('/hero', [\App\Http\Controllers\Admin\LandingSettingController::class, 'update'])->name('hero.update');
+        Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
+        Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
+        Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->only(['index', 'edit', 'update']);
+        Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
+    });
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

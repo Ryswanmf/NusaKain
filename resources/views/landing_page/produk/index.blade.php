@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('title', 'Katalog Produk Nusakain - Kualitas Kain Terbaik')
 

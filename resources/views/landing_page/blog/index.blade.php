@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('title', 'Blog Nusakain - Inspirasi & Tips Fashion')
 

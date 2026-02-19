@@ -14,17 +14,17 @@
         <!-- Logo -->
         <div class="text-center mb-10">
             <a href="/" class="inline-flex items-center space-x-3 group">
-                <div class="w-12 h-12 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform duration-300">
+                <div class="w-12 h-12 bg-gradient-to-tr from-teal-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-200 group-hover:scale-105 transition-transform duration-300">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                 </div>
-                <span class="text-2xl font-extrabold text-slate-900 tracking-tight">Nusakain<span class="text-blue-600">.</span></span>
+                <span class="text-2xl font-extrabold text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
             </a>
         </div>
 
         <div class="bg-white rounded-[3rem] p-10 md:p-12 border border-gray-100 shadow-sm">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Selamat <span class="text-blue-600">Datang!</span></h1>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Selamat <span class="text-teal-600">Datang!</span></h1>
             <p class="mt-4 text-slate-500 font-medium">Silakan masuk ke akun Anda untuk melanjutkan.</p>
 
             <!-- Session Status -->
@@ -37,7 +37,7 @@
                 <div class="space-y-2">
                     <label for="email" class="text-sm font-bold text-slate-700 ml-1">Email</label>
                     <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all">
+                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all">
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
@@ -46,24 +46,24 @@
                     <div class="flex justify-between items-center">
                         <label for="password" class="text-sm font-bold text-slate-700 ml-1">Password</label>
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-xs font-bold text-blue-600 hover:text-blue-700">Lupa Password?</a>
+                            <a href="{{ route('password.request') }}" class="text-xs font-bold text-teal-600 hover:text-teal-700">Lupa Password?</a>
                         @endif
                     </div>
                     <input type="password" name="password" id="password" required autocomplete="current-password"
-                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all">
+                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all">
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
                 <!-- Remember Me -->
                 <div class="flex items-center ml-1">
                     <label for="remember_me" class="inline-flex items-center">
-                        <input id="remember_me" type="checkbox" class="rounded-lg border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
+                        <input id="remember_me" type="checkbox" class="rounded-lg border-gray-300 text-teal-600 shadow-sm focus:ring-teal-500" name="remember">
                         <span class="ms-2 text-sm text-slate-500 font-medium italic">Ingat Saya</span>
                     </label>
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 active:scale-[0.98]">
+                    <button type="submit" class="w-full py-5 bg-teal-600 text-white rounded-2xl font-black hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-[0.98]">
                         Masuk Sekarang
                     </button>
                 </div>
@@ -72,7 +72,7 @@
             @if (Route::has('register'))
                 <p class="mt-10 text-center text-sm text-slate-500 font-medium">
                     Belum punya akun? 
-                    <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:underline underline-offset-4 decoration-2">Daftar Gratis</a>
+                    <a href="{{ route('register') }}" class="text-teal-600 font-bold hover:underline underline-offset-4 decoration-2">Daftar Gratis</a>
                 </p>
             @endif
         </div>
