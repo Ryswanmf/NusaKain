@@ -27,15 +27,25 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category' => 'nullable|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'is_active' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                $galleryPaths[] = $file->store('products/gallery', 'public');
+            }
+            $validated['gallery'] = $galleryPaths;
         }
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . time();
@@ -57,19 +67,34 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category' => 'nullable|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'is_active' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image
             if ($produk->image) {
                 Storage::disk('public')->delete($produk->image);
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        if ($request->hasFile('gallery')) {
+            // Delete old gallery images if replacing (simple strategy)
+            if ($produk->gallery) {
+                foreach ($produk->gallery as $oldImg) {
+                    Storage::disk('public')->delete($oldImg);
+                }
+            }
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                $galleryPaths[] = $file->store('products/gallery', 'public');
+            }
+            $validated['gallery'] = $galleryPaths;
         }
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . $produk->id;
@@ -84,6 +109,11 @@ class ProductController extends Controller
     {
         if ($produk->image) {
             Storage::disk('public')->delete($produk->image);
+        }
+        if ($produk->gallery) {
+            foreach ($produk->gallery as $img) {
+                Storage::disk('public')->delete($img);
+            }
         }
         $produk->delete();
 

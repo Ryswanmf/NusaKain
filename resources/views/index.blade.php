@@ -95,7 +95,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         @forelse($featuredProducts as $product)
             <div class="group relative bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                <div class="aspect-square rounded-[2rem] overflow-hidden bg-gray-100 mb-6">
+                <div class="aspect-square rounded-[2rem] overflow-hidden bg-gray-100 mb-6 relative">
                     @if($product->image)
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     @else
@@ -103,13 +103,39 @@
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
                     @endif
+
+                    <!-- Dynamic Badges -->
+                    <div class="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                        @if($product->created_at->diffInDays(now()) <= 7)
+                            <span class="px-3 py-1 bg-teal-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">New</span>
+                        @endif
+                        @if($product->original_price && $product->original_price > $product->price)
+                            @php
+                                $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
+                            @endphp
+                            <span class="px-3 py-1 bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">Sale {{ $discount }}%</span>
+                        @endif
+                    </div>
                 </div>
                 <div class="px-4 pb-4">
-                    <span class="text-[10px] font-black text-teal-600 uppercase tracking-widest">{{ $product->category ?? 'Kain' }}</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-black text-teal-600 uppercase tracking-widest">{{ $product->category ?? 'Kain' }}</span>
+                        @if($product->original_price && $product->original_price > $product->price)
+                            @php
+                                $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
+                            @endphp
+                            <span class="text-[9px] font-black px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase tracking-widest animate-pulse">Save {{ $discount }}%</span>
+                        @endif
+                    </div>
                     <h3 class="text-lg font-black text-slate-900 mt-1 line-clamp-1">{{ $product->name }}</h3>
                     <p class="text-sm text-slate-500 mt-2 italic leading-relaxed line-clamp-2">{{ Str::limit($product->description, 60) }}</p>
                     <div class="mt-6 flex items-center justify-between">
-                        <span class="text-sm font-black text-slate-900">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                        <div class="flex flex-col">
+                            @if($product->original_price && $product->original_price > $product->price)
+                                <span class="text-[10px] font-bold text-slate-400 line-through">Rp{{ number_format($product->original_price, 0, ',', '.') }}</span>
+                            @endif
+                            <span class="text-sm font-black text-slate-900">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                        </div>
                         <div class="flex items-center space-x-2">
                             @auth
                                 <form action="{{ route('cart.store') }}" method="POST">

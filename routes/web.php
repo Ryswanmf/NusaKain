@@ -81,6 +81,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/{wishlist}', [\App\Http\Controllers\WishlistController::class, 'destroy'])->name('wishlist.destroy');
+
+    // Customer Order Routes
+    Route::get('/my-orders', [\App\Http\Controllers\CartController::class, 'orders'])->name('customer.orders');
+    Route::get('/my-orders/{order_number}', [\App\Http\Controllers\CartController::class, 'showOrder'])->name('customer.orders.show');
 });
 
 require __DIR__.'/auth.php';

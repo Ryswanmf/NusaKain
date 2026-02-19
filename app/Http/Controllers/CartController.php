@@ -120,4 +120,20 @@ class CartController extends Controller
             return redirect()->away($waUrl);
         });
     }
+
+    public function orders()
+    {
+        $orders = \App\Models\Order::where('user_id', Auth::id())->latest()->paginate(10);
+        return view('landing_page.orders.index', compact('orders'));
+    }
+
+    public function showOrder($order_number)
+    {
+        $order = \App\Models\Order::where('user_id', Auth::id())
+            ->where('order_number', $order_number)
+            ->with('items.product')
+            ->firstOrFail();
+            
+        return view('landing_page.orders.show', compact('order'));
+    }
 }

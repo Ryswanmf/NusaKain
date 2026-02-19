@@ -46,17 +46,38 @@
         <!-- Image Section -->
         <div class="relative group">
             <div class="absolute -inset-4 bg-teal-50 rounded-[3rem] blur-2xl opacity-50 group-hover:bg-teal-100 transition-all duration-500"></div>
-            <div class="relative aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm">
+            <div class="relative aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm mb-6">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
-                         loading="lazy"
-                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <a href="{{ asset('storage/' . $product->image) }}" class="glightbox" data-gallery="product-gallery">
+                        <img id="main-image" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
+                             loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute bottom-6 right-6 w-12 h-12 bg-white/90 backdrop-blur rounded-2xl flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+                        </div>
+                    </a>
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">
                         <svg class="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
                 @endif
             </div>
+
+            <!-- Gallery Thumbnails -->
+            @if($product->gallery && count($product->gallery) > 0)
+                <div class="grid grid-cols-4 gap-4 px-2">
+                    <div onclick="changeImage('{{ asset('storage/' . $product->image) }}')" class="aspect-square rounded-2xl overflow-hidden border-2 border-teal-500 cursor-pointer transition-all hover:opacity-80">
+                        <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
+                    </div>
+                    @foreach($product->gallery as $galleryImg)
+                        <div onclick="changeImage('{{ asset('storage/' . $galleryImg) }}')" class="aspect-square rounded-2xl overflow-hidden border-2 border-transparent hover:border-teal-500 cursor-pointer transition-all hover:opacity-80">
+                            <img src="{{ asset('storage/' . $galleryImg) }}" class="w-full h-full object-cover">
+                            <!-- Hidden Link for Lightbox Gallery -->
+                            <a href="{{ asset('storage/' . $galleryImg) }}" class="glightbox hidden" data-gallery="product-gallery"></a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <!-- Info Section -->
@@ -77,15 +98,27 @@
                 {{ $product->name }}
             </h1>
 
-            <div class="flex items-center space-x-4 mb-8">
-                <p class="text-3xl font-black text-teal-600 italic">
-                    Rp{{ number_format($product->price, 0, ',', '.') }}
-                    <span class="text-sm font-bold text-slate-400 not-italic uppercase tracking-tighter">/ Meter</span>
-                </p>
-                <div class="h-6 w-[1px] bg-slate-200"></div>
-                <span class="text-sm font-bold {{ $product->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
-                    {{ $product->stock > 0 ? 'Stok: ' . $product->stock . ' Meter' : 'Stok Habis' }}
-                </span>
+            <div class="flex flex-col mb-8">
+                <div class="flex items-end gap-4">
+                    <p class="text-4xl font-black text-teal-600 italic">
+                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                    </p>
+                    @if($product->original_price && $product->original_price > $product->price)
+                        @php
+                            $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
+                        @endphp
+                        <div class="flex flex-col mb-1">
+                            <span class="text-sm font-bold text-slate-400 line-through">Rp{{ number_format($product->original_price, 0, ',', '.') }}</span>
+                            <span class="text-[10px] font-black px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase tracking-widest mt-1 text-center w-fit animate-bounce">Hemat {{ $discount }}%</span>
+                        </div>
+                    @endif
+                    <span class="text-sm font-bold text-slate-400 mb-1 uppercase tracking-tighter">/ Meter</span>
+                </div>
+                <div class="flex items-center gap-3 mt-4">
+                    <span class="text-sm font-bold {{ $product->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
+                        {{ $product->stock > 0 ? 'Stok: ' . $product->stock . ' Meter' : 'Stok Habis' }}
+                    </span>
+                </div>
             </div>
 
             <div class="prose prose-slate prose-lg mb-10">
@@ -232,6 +265,20 @@
         document.body.style.overflow = 'auto';
     }
 
+    function changeImage(src) {
+        const mainImg = document.getElementById('main-image');
+        mainImg.src = src;
+        mainImg.parentElement.href = src;
+        
+        // Update thumbnail borders
+        event.currentTarget.parentElement.querySelectorAll('div').forEach(el => {
+            el.classList.remove('border-teal-500');
+            el.classList.add('border-transparent');
+        });
+        event.currentTarget.classList.add('border-teal-500');
+        event.currentTarget.classList.remove('border-transparent');
+    }
+
     function setSize(multiplier) {
         currentMultiplier = multiplier;
         // Reset all buttons
@@ -252,6 +299,14 @@
         const result = (base * currentMultiplier).toFixed(2);
         document.getElementById('resultLength').innerText = result;
     }
+
+    // Initialize GLightbox
+    const lightbox = GLightbox({
+        selector: '.glightbox',
+        touchNavigation: true,
+        loop: true,
+        zoomable: true
+    });
 </script>
 @endpush
 @endsection

@@ -76,6 +76,19 @@
                         </div>
                     @endif
 
+                    <!-- Badges -->
+                    <div class="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                        @if($product->created_at->diffInDays(now()) <= 7)
+                            <span class="px-3 py-1 bg-teal-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">New</span>
+                        @endif
+                        @if($product->original_price && $product->original_price > $product->price)
+                            @php
+                                $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
+                            @endphp
+                            <span class="px-3 py-1 bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">Sale {{ $discount }}%</span>
+                        @endif
+                    </div>
+
                     <!-- Wishlist Button Overlay -->
                     @auth
                         @php
@@ -96,11 +109,24 @@
                             </div>
                         </div>
                         <h3 class="text-xl font-bold text-slate-900 leading-tight line-clamp-1">{{ $product->name }}</h3>
-                        <p class="text-2xl font-black text-slate-900 mt-4">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+                        <div class="mt-4 flex items-end gap-2">
+                            <p class="text-2xl font-black text-slate-900">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+                            @if($product->original_price && $product->original_price > $product->price)
+                                <p class="text-sm font-bold text-slate-400 line-through mb-1">Rp{{ number_format($product->original_price, 0, ',', '.') }}</p>
+                            @endif
+                        </div>
                         <div class="mt-6 flex items-center justify-between">
-                            <span class="text-xs font-bold px-3 py-1 bg-green-50 text-green-600 rounded-full">
-                                {{ $product->stock > 0 ? 'Tersedia' : 'Habis' }}
-                            </span>
+                            <div>
+                                @if($product->original_price && $product->original_price > $product->price)
+                                    @php
+                                        $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
+                                    @endphp
+                                    <span class="text-[10px] font-black px-2 py-1 bg-rose-500 text-white rounded-lg uppercase tracking-widest mr-2 animate-pulse">Save {{ $discount }}%</span>
+                                @endif
+                                <span class="text-xs font-bold px-3 py-1 bg-green-50 text-green-600 rounded-full">
+                                    {{ $product->stock > 0 ? 'Tersedia' : 'Habis' }}
+                                </span>
+                            </div>
                             <div class="flex items-center space-x-2">
                                 @auth
                                     <form action="{{ route('cart.store') }}" method="POST">

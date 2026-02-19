@@ -23,6 +23,8 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -84,9 +86,22 @@
 
             <div class="hidden md:flex items-center space-x-4">
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="inline-flex items-center justify-center px-6 py-2.5 text-[14px] font-bold text-white bg-teal-600 rounded-full hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 active:scale-95">
-                       Dashboard
-                    </a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 px-4 py-2 bg-slate-50 text-slate-900 rounded-full font-bold text-sm hover:bg-slate-100 transition-all border border-slate-100">
+                            <div class="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center text-[10px] uppercase">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                            <span>Profil</span>
+                            <svg class="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[60]">
+                            <a href="{{ url('/dashboard') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Dashboard</a>
+                            <a href="{{ route('customer.orders') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Pesanan Saya</a>
+                            <hr class="my-2 border-slate-50">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-5 py-2.5 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors">Keluar</button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="text-[14px] font-bold text-slate-700 hover:text-teal-600 transition-colors">Log in</a>
                     @if (Route::has('register'))
@@ -111,6 +126,8 @@
         <a href="{{ route('kontak.index') }}" class="block text-base font-medium {{ Request::routeIs('kontak.*') ? 'text-teal-600' : 'text-slate-600' }}">Kontak</a>
         <a href="{{ route('tentang.index') }}" class="block text-base font-medium {{ Request::routeIs('tentang.*') ? 'text-teal-600' : 'text-slate-600' }}">Tentang Kami</a>
         @auth
+            <a href="{{ route('wishlist.index') }}" class="block text-base font-medium {{ Request::routeIs('wishlist.*') ? 'text-teal-600' : 'text-slate-600' }}">Koleksi Tersimpan</a>
+            <a href="{{ route('customer.orders') }}" class="block text-base font-medium {{ Request::routeIs('customer.orders.*') ? 'text-teal-600' : 'text-slate-600' }}">Pesanan Saya</a>
             <a href="{{ route('cart.index') }}" class="block text-base font-medium {{ Request::routeIs('cart.*') ? 'text-teal-600' : 'text-slate-600' }}">Keranjang Belanja</a>
         @endauth
         <hr>

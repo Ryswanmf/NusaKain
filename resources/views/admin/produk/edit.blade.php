@@ -40,20 +40,29 @@
                         <h3 class="text-base md:text-lg font-black text-slate-900 tracking-tight mb-6 md:mb-8">Informasi Komersial</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             <div class="space-y-2 md:space-y-3">
-                                <label for="price" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Harga (Rp)</label>
+                                <label for="price" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Harga Diskon (Rp)</label>
                                 <div class="relative">
-                                    <span class="absolute left-5 md:left-8 top-1/2 -translate-y-1/2 text-slate-400 font-bold italic text-sm md:text-base">Rp</span>
+                                    <span class="absolute left-5 md:left-8 top-1/2 -translate-y-1/2 text-teal-600 font-bold italic text-sm md:text-base">Rp</span>
                                     <input type="number" name="price" id="price" value="{{ old('price', $produk->price) }}" required min="0"
                                         class="w-full pl-12 md:pl-16 pr-5 md:pr-8 py-4 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="0">
                                 </div>
                                 @error('price') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
                             </div>
                             <div class="space-y-2 md:space-y-3">
-                                <label for="stock" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Stok (Meter)</label>
-                                <input type="number" name="stock" id="stock" value="{{ old('stock', $produk->stock) }}" required min="0"
-                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="0">
-                                @error('stock') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
+                                <label for="original_price" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Harga Coret (Rp)</label>
+                                <div class="relative">
+                                    <span class="absolute left-5 md:left-8 top-1/2 -translate-y-1/2 text-slate-400 font-bold italic text-sm md:text-base">Rp</span>
+                                    <input type="number" name="original_price" id="original_price" value="{{ old('original_price', $produk->original_price) }}" min="0"
+                                        class="w-full pl-12 md:pl-16 pr-5 md:pr-8 py-4 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-400 line-through text-sm md:text-base" placeholder="0">
+                                </div>
+                                @error('original_price') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
                             </div>
+                        </div>
+                        <div class="space-y-2 md:space-y-3 mt-6">
+                            <label for="stock" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Stok (Meter)</label>
+                            <input type="number" name="stock" id="stock" value="{{ old('stock', $produk->stock) }}" required min="0"
+                                class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="0">
+                            @error('stock') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -102,6 +111,29 @@
                         </div>
                         <p class="text-[10px] text-slate-400 text-center font-bold italic tracking-tighter uppercase">WebP format recommended for better performance</p>
                         @error('image') <p class="text-red-500 text-[10px] md:text-xs mt-2 text-center font-bold">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm space-y-4 md:space-y-6">
+                        <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1 block text-center">Gallery Produk (Multi-upload)</label>
+                        
+                        @if($produk->gallery)
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                @foreach($produk->gallery as $img)
+                                    <div class="aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm relative group">
+                                        <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <span class="text-[8px] font-black text-white uppercase tracking-widest">Aktif</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border-2 border-dashed border-slate-200">
+                            <input type="file" name="gallery[]" multiple class="w-full text-xs font-bold text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 transition-all cursor-pointer">
+                            <p class="mt-3 text-[10px] text-slate-400 text-center font-medium italic">Mengunggah foto baru akan mengganti galeri lama.</p>
+                        </div>
+                        @error('gallery') <p class="text-red-500 text-[10px] md:text-xs mt-2 text-center font-bold">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="space-y-3 md:space-y-4 pt-2">
