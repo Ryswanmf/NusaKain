@@ -50,6 +50,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('blog', \App\Http\Controllers\Admin\PostController::class);
     Route::resource('kontak', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('tentang-kami', \App\Http\Controllers\Admin\TeamMemberController::class);
+    Route::resource('pesanan', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'destroy']);
+    Route::patch('pesanan/{pesanan}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('pesanan.update-status');
     Route::patch('kontak/{kontak}/toggle-read', [\App\Http\Controllers\Admin\ContactController::class, 'toggleRead'])->name('kontak.toggle-read');
 
     // Landing Page Management
@@ -73,6 +75,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
     Route::patch('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
+
+    // Wishlist Routes
+    Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::delete('/wishlist/{wishlist}', [\App\Http\Controllers\WishlistController::class, 'destroy'])->name('wishlist.destroy');
 });
 
 require __DIR__.'/auth.php';

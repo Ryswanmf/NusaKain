@@ -2,6 +2,10 @@
 
 @section('title', $product->name . ' - Nusakain Premium')
 
+@section('meta_description', Str::limit(strip_tags($product->description), 160))
+@section('meta_keywords', $product->name . ', ' . $product->category . ', kain premium, tekstil nusakain')
+@section('meta_image', $product->image ? asset('storage/' . $product->image) : asset('images/hero-landingpage.png'))
+
 @section('content')
 <main class="max-w-7xl mx-auto px-6 py-12">
     @if(session('success'))
@@ -45,6 +49,7 @@
             <div class="relative aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm">
                 @if($product->image)
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
+                         loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">
@@ -56,10 +61,16 @@
 
         <!-- Info Section -->
         <div class="flex flex-col justify-center">
-            <div class="mb-6">
+            <div class="mb-6 flex items-center justify-between lg:justify-start lg:space-x-6">
                 <span class="px-4 py-1.5 bg-teal-50 text-teal-600 text-xs font-black uppercase tracking-widest rounded-full">
                     {{ $product->category ?? 'Koleksi Premium' }}
                 </span>
+                <div class="flex items-center text-amber-400">
+                    @for($i=0; $i<5; $i++)
+                        <svg class="w-4 h-4 {{ $i < floor($product->rating) ? 'fill-current' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    @endfor
+                    <span class="text-sm font-black ml-2 text-slate-400">{{ number_format($product->rating, 1) }}</span>
+                </div>
             </div>
             
             <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
@@ -83,6 +94,12 @@
                     {!! nl2br(e($product->description)) !!}
                 </p>
             </div>
+
+            <!-- Calculator Trigger Button -->
+            <button onclick="openCalculator()" class="mb-10 flex items-center space-x-3 px-6 py-4 bg-teal-50 text-teal-600 rounded-2xl font-bold hover:bg-teal-100 transition-all group">
+                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <span>Kalkulator Kebutuhan Kain</span>
+            </button>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <form action="{{ route('cart.store') }}" method="POST" class="w-full">
@@ -127,5 +144,114 @@
             </div>
         </div>
     </div>
+
+    <!-- Related Products Section -->
+    @if($relatedProducts->count() > 0)
+        <section class="mt-32">
+            <div class="flex items-center justify-between mb-12">
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight">Produk <span class="text-teal-600">Serupa</span></h2>
+                <a href="{{ route('produk.index') }}?category={{ $product->category }}" class="text-sm font-bold text-teal-600 hover:underline underline-offset-4">Lihat Lainnya</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($relatedProducts as $related)
+                    <div class="group relative bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-square rounded-[2rem] overflow-hidden bg-gray-100 mb-6">
+                            @if($related->image)
+                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            @endif
+                        </div>
+                        <div class="px-2 pb-2">
+                            <h3 class="text-lg font-black text-slate-900 line-clamp-1">{{ $related->name }}</h3>
+                            <p class="text-sm font-black text-teal-600 mt-1">Rp{{ number_format($related->price, 0, ',', '.') }}</p>
+                            <a href="{{ route('produk.show', $related->slug) }}" class="absolute inset-0 z-10"></a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    @endif
 </main>
+
+<!-- Calculator Modal -->
+<div id="calcModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeCalculator()"></div>
+    <div class="relative bg-white w-full max-w-lg rounded-[3rem] shadow-2xl overflow-hidden animate__animated animate__zoomIn animate__faster">
+        <div class="p-8 md:p-12 text-center">
+            <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-2">Estimasi Kebutuhan Kain</h3>
+            <p class="text-slate-500 text-sm font-medium mb-10">Pilih jenis pakaian untuk mendapatkan saran panjang kain.</p>
+
+            <div class="space-y-6 text-left">
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Jenis Pakaian</label>
+                    <select id="garmentType" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900">
+                        <option value="1.5">Kemeja Lengan Pendek</option>
+                        <option value="2.0">Kemeja Lengan Panjang</option>
+                        <option value="2.5">Gamis / Dress Simple</option>
+                        <option value="3.5">Gamis Lebar / Syar'i</option>
+                        <option value="1.5">Celana Panjang</option>
+                        <option value="1.0">Rok Pendek</option>
+                        <option value="2.0">Rok Panjang / A-Line</option>
+                    </select>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Ukuran Tubuh</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setSize(1)" id="size-S" class="size-btn py-3 rounded-xl bg-slate-50 font-bold text-slate-600 hover:bg-teal-50 hover:text-teal-600 transition-all">S / M</button>
+                        <button onclick="setSize(1.2)" id="size-L" class="size-btn py-3 rounded-xl bg-teal-600 font-bold text-white shadow-lg">L / XL</button>
+                        <button onclick="setSize(1.5)" id="size-XXL" class="size-btn py-3 rounded-xl bg-slate-50 font-bold text-slate-600 hover:bg-teal-50 hover:text-teal-600 transition-all">XXL+</button>
+                    </div>
+                </div>
+
+                <div class="mt-10 p-6 bg-teal-50 rounded-[2rem] text-center border border-teal-100/50">
+                    <p class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">Hasil Estimasi</p>
+                    <p class="text-4xl font-black text-teal-700 italic"><span id="resultLength">2.4</span> <span class="text-lg not-italic">Meter</span></p>
+                </div>
+            </div>
+
+            <button onclick="closeCalculator()" class="mt-8 text-sm font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Tutup</button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    let currentMultiplier = 1.2;
+
+    function openCalculator() {
+        document.getElementById('calcModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        calculate();
+    }
+
+    function closeCalculator() {
+        document.getElementById('calcModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function setSize(multiplier) {
+        currentMultiplier = multiplier;
+        // Reset all buttons
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.remove('bg-teal-600', 'text-white', 'shadow-lg');
+            btn.classList.add('bg-slate-50', 'text-slate-600');
+        });
+        // Style selected
+        event.target.classList.add('bg-teal-600', 'text-white', 'shadow-lg');
+        event.target.classList.remove('bg-slate-50', 'text-slate-600');
+        calculate();
+    }
+
+    document.getElementById('garmentType').addEventListener('change', calculate);
+
+    function calculate() {
+        const base = parseFloat(document.getElementById('garmentType').value);
+        const result = (base * currentMultiplier).toFixed(2);
+        document.getElementById('resultLength').innerText = result;
+    }
+</script>
+@endpush
 @endsection

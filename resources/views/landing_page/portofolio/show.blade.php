@@ -2,6 +2,10 @@
 
 @section('title', $portfolio->title . ' - Portofolio Nusakain')
 
+@section('meta_description', Str::limit(strip_tags($portfolio->description), 160))
+@section('meta_keywords', $portfolio->title . ', ' . $portfolio->client_name . ', portofolio tekstil, kolaborasi brand')
+@section('meta_image', $portfolio->image ? asset('storage/' . $portfolio->image) : asset('images/hero-landingpage.png'))
+
 @section('content')
 <main class="max-w-7xl mx-auto px-6 py-12">
     <!-- Breadcrumb -->
@@ -36,6 +40,7 @@
             <div class="relative aspect-video rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm">
                 @if($portfolio->image)
                     <img src="{{ asset('storage/' . $portfolio->image) }}" alt="{{ $portfolio->title }}" 
+                         loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">

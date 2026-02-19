@@ -2,6 +2,9 @@
 
 @section('title', 'Nusakain - Kualitas Kain Terbaik Untuk Bisnis Anda')
 
+@section('meta_description', $setting->hero_description ?? 'Nusakain membantu pengusaha fashion mendapatkan material premium dengan harga kompetitif langsung dari produsen.')
+@section('meta_keywords', 'supplier kain, kain premium, bisnis fashion, tekstil berkualitas, nusakain, grosir kain')
+
 @section('content')
 <style>
     @keyframes float {
@@ -44,16 +47,17 @@
                 <div class="absolute -inset-4 bg-teal-100/50 rounded-[2.5rem] blur-2xl group-hover:bg-teal-200/50 transition-colors"></div>
                 
                 <div class="animate-float">
-                    @if($setting && $setting->hero_image)
-                        <img src="{{ asset('storage/' . $setting->hero_image) }}" 
-                             alt="Koleksi Kain Nusakain" 
-                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
-                    @else
-                        <img src="{{ asset('images/hero-landingpage.png') }}" 
-                             alt="Koleksi Kain Nusakain" 
-                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
-                    @endif
-                </div>
+                                    @if($setting && $setting->hero_image)
+                                        <img src="{{ asset('storage/' . $setting->hero_image) }}" 
+                                             alt="Koleksi Kain Nusakain" 
+                                             loading="lazy"
+                                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
+                                    @else
+                                        <img src="{{ asset('images/hero-landingpage.png') }}" 
+                                             alt="Koleksi Kain Nusakain" 
+                                             loading="lazy"
+                                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
+                                    @endif                </div>
                 
                 <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 bg-white/90 backdrop-blur px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl shadow-xl border border-white/20 animate__animated animate__bounceIn animate__delay-2s">
                     <p class="text-xs md:text-sm font-bold text-slate-900">100+ Jenis Kain</p>
@@ -93,7 +97,7 @@
             <div class="group relative bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
                 <div class="aspect-square rounded-[2rem] overflow-hidden bg-gray-100 mb-6">
                     @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-slate-300 bg-slate-50">
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>

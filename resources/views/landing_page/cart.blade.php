@@ -85,11 +85,12 @@
                         <span class="text-sm font-black uppercase tracking-widest text-teal-400">Total</span>
                         <span class="text-3xl font-black italic">Rp{{ number_format($cartItems->sum(fn($i) => $i->product->price * $i->quantity), 0, ',', '.') }}</span>
                     </div>
-                    <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya ingin checkout pesanan berikut:%0A@foreach($cartItems as $item)- {{ $item->product->name }} ({{ $item->quantity }}m)%0A@endforeach%0ATotal: Rp{{ number_format($cartItems->sum(fn($i) => $i->product->price * $i->quantity), 0, ',', '.') }}" 
-                       target="_blank"
-                       class="w-full flex items-center justify-center py-5 bg-teal-500 text-slate-900 rounded-[2rem] font-black text-lg hover:bg-teal-400 transition-all shadow-xl shadow-teal-900/20 active:scale-95">
-                        Checkout Sekarang
-                    </a>
+                    <form action="{{ route('cart.checkout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center py-5 bg-teal-500 text-slate-900 rounded-[2rem] font-black text-lg hover:bg-teal-400 transition-all shadow-xl shadow-teal-900/20 active:scale-95">
+                            Checkout Sekarang
+                        </button>
+                    </form>
                 </div>
             </div>
         @endif

@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Nusakain - Premium Textiles')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia. Kami menyediakan berbagai pilihan kain berkualitas tinggi.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'kain premium, tekstil indonesia, supplier kain, batik, linen, denim, katun')">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'Nusakain - Premium Textiles')">
+    <meta property="og:description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia.')">
+    <meta property="og:image" content="@yield('meta_image', asset('images/hero-landingpage.png'))">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'Nusakain - Premium Textiles')">
+    <meta property="twitter:description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia.')">
+    <meta property="twitter:image" content="@yield('meta_image', asset('images/hero-landingpage.png'))">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -35,6 +52,21 @@
         </div>
 
         <div class="flex-1 flex items-center justify-end space-x-2 md:space-x-4">
+            @auth
+                <!-- Wishlist Icon -->
+                <a href="{{ route('wishlist.index') }}" class="relative p-2 text-slate-400 hover:text-rose-500 transition-colors group">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    @php
+                        $wishlistCount = \App\Models\Wishlist::where('user_id', Auth::id())->count();
+                    @endphp
+                    @if($wishlistCount > 0)
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black leading-none text-white bg-rose-500 rounded-full transform translate-x-1/2 -translate-y-1/2 shadow-sm">{{ $wishlistCount }}</span>
+                    @endif
+                </a>
+            @endauth
+
             <!-- Shopping Cart Icon -->
             <a href="{{ route('cart.index') }}" id="cart-icon" class="relative p-2 text-slate-400 hover:text-teal-600 transition-all duration-300 group">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,5 +239,6 @@
     @endif
 </script>
 
+    @stack('scripts')
 </body>
 </html>

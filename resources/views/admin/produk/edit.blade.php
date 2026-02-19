@@ -68,6 +68,13 @@
                             @error('category') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
                         </div>
 
+                        <div class="pt-2 md:pt-4 space-y-3">
+                            <label for="rating" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Rating Produk (0 - 5)</label>
+                            <input type="number" name="rating" id="rating" value="{{ old('rating', $produk->rating) }}" step="0.1" min="0" max="5"
+                                class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
+                            @error('rating') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
+                        </div>
+
                         <div class="pt-2 md:pt-4 flex items-center justify-between px-2">
                             <span class="text-xs md:text-[13px] font-black text-slate-900 uppercase tracking-widest">Status Aktif</span>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -93,6 +100,7 @@
                                 <p class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest">Ubah Gambar</p>
                             </div>
                         </div>
+                        <p class="text-[10px] text-slate-400 text-center font-bold italic tracking-tighter uppercase">WebP format recommended for better performance</p>
                         @error('image') <p class="text-red-500 text-[10px] md:text-xs mt-2 text-center font-bold">{{ $message }}</p> @enderror
                     </div>
 

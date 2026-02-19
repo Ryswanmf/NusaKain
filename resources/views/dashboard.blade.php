@@ -76,8 +76,26 @@
 
         <!-- Recent Activity Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-            <!-- Left: Table -->
-            <div class="lg:col-span-2 bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+            <!-- Charts Section -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-10">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-900 tracking-tight">Analitik Penjualan</h3>
+                            <p class="text-sm text-slate-400 font-medium">Tren pesanan dalam 7 hari terakhir.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-teal-500 rounded-full"></span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pesanan Baru</span>
+                        </div>
+                    </div>
+                    <div class="h-[300px] w-full">
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Left: Table -->
+                <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
                 <div class="p-6 md:p-10 border-b border-slate-50 flex items-center justify-between">
                     <div class="min-w-0">
                         <h3 class="text-lg md:text-xl font-black text-slate-900 tracking-tight">Pesanan Terbaru</h3>
@@ -131,6 +149,14 @@
                     </a>
                 </div>
 
+                <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm">
+                    <h4 class="text-slate-900 font-black text-sm uppercase tracking-widest mb-8">Distribusi Kategori</h4>
+                    <div class="h-[250px] w-full mb-6">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-medium text-center italic">Proporsi produk berdasarkan kategori terpopuler.</p>
+                </div>
+
                 <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm">
                     <h4 class="text-slate-900 font-black text-xs md:text-sm uppercase tracking-widest mb-6">Informasi Sistem</h4>
                     <div class="space-y-5 md:space-y-6">
@@ -150,4 +176,61 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Orders Chart (Line)
+            const ctxOrders = document.getElementById('ordersChart').getContext('2d');
+            new Chart(ctxOrders, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Pesanan',
+                        data: [12, 19, 15, 25, 22, 30, 28],
+                        borderColor: '#0d9488', // teal-600
+                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false }, border: { display: false } },
+                        x: { grid: { display: false }, border: { display: false } }
+                    }
+                }
+            });
+
+            // Category Chart (Doughnut)
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Katun', 'Linen', 'Denim', 'Rayon'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: ['#0d9488', '#0ea5e9', '#6366f1', '#f59e0b'],
+                        borderWidth: 0,
+                        cutout: '80%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { weight: 'bold', size: 10 } } }
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>
