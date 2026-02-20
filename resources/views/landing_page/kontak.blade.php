@@ -72,8 +72,8 @@
                     <div>
                         <h3 class="text-lg font-black text-slate-900">Hubungi Langsung</h3>
                         <p class="mt-2 text-slate-500 leading-relaxed">
-                            Email: hello@nusakain.com <br>
-                            WhatsApp: +62 812 3456 7890
+                            Email: halo@nusakain.com <br>
+                            WhatsApp: +{{ $setting->whatsapp ?? '628123456789' }}
                         </p>
                     </div>
                 </div>

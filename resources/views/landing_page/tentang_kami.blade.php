@@ -37,7 +37,7 @@
     <!-- Team Section -->
     <div class="mb-24">
         <div class="text-center mb-16">
-            <h2 class="text-3xl font-black text-slate-900">Tim di Balik <span class="text-blue-600">Nusakain</span></h2>
+            <h2 class="text-3xl font-black text-slate-900">Tim di Balik <span class="text-teal-600">Nusakain</span></h2>
             <p class="mt-4 text-slate-500">Kombinasi antara keahlian tradisional dan semangat inovasi muda.</p>
         </div>
 
@@ -59,7 +59,7 @@
                             @endif
                         </div>
                         <h3 class="text-xl font-black text-slate-900">{{ $member->name }}</h3>
-                        <p class="text-sm font-bold text-blue-600 uppercase tracking-widest mt-1">{{ $member->position }}</p>
+                        <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mt-1">{{ $member->position }}</p>
                         @if($member->bio)
                             <p class="mt-4 text-slate-500 text-sm leading-relaxed px-4">{{ $member->bio }}</p>
                         @endif
@@ -73,15 +73,15 @@
     <div class="bg-slate-900 rounded-[4rem] p-12 md:p-20 text-center text-white">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-                <p class="text-5xl font-black text-blue-400">10+</p>
+                <p class="text-5xl font-black text-teal-400">10+</p>
                 <p class="mt-3 text-slate-400 font-bold uppercase tracking-widest text-sm">Tahun Pengalaman</p>
             </div>
             <div>
-                <p class="text-5xl font-black text-blue-400">500+</p>
+                <p class="text-5xl font-black text-teal-400">500+</p>
                 <p class="mt-3 text-slate-400 font-bold uppercase tracking-widest text-sm">UMKM Terbantu</p>
             </div>
             <div>
-                <p class="text-5xl font-black text-blue-400">100k+</p>
+                <p class="text-5xl font-black text-teal-400">100k+</p>
                 <p class="mt-3 text-slate-400 font-bold uppercase tracking-widest text-sm">Meter Kain Terjual</p>
             </div>
         </div>

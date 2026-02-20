@@ -33,10 +33,10 @@
             </p>
             
             <div class="mt-8 md:mt-10 flex flex-col sm:flex-row justify-center md:justify-start gap-4 animate__animated animate__fadeInUp animate__delay-1s">
-                <a href="{{ $setting->hero_button_primary_url ?? '#' }}" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-teal-600 transition-all shadow-lg shadow-slate-200">
+                <a href="{{ !empty($setting->hero_button_primary_url) && $setting->hero_button_primary_url !== '#' ? $setting->hero_button_primary_url : route('produk.index') }}" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-teal-600 transition-all shadow-lg shadow-slate-200">
                     {{ $setting->hero_button_primary_text ?? 'Mulai Belanja' }}
                 </a>
-                <a href="{{ $setting->hero_button_secondary_url ?? '#' }}" class="px-8 py-4 bg-white text-slate-700 border border-gray-200 rounded-2xl font-bold hover:bg-gray-50 transition-all">
+                <a href="{{ !empty($setting->hero_button_secondary_url) && $setting->hero_button_secondary_url !== '#' ? $setting->hero_button_secondary_url : route('produk.index') }}" class="px-8 py-4 bg-white text-slate-700 border border-gray-200 rounded-2xl font-bold hover:bg-gray-50 transition-all">
                     {{ $setting->hero_button_secondary_text ?? 'Lihat Katalog' }}
                 </a>
             </div>

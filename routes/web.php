@@ -44,10 +44,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('produk', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('portofolio', \App\Http\Controllers\Admin\PortfolioController::class);
     Route::resource('blog', \App\Http\Controllers\Admin\PostController::class);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::resource('kontak', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('tentang-kami', \App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('pesanan', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'destroy']);

@@ -56,6 +56,9 @@ class LandingSettingController extends Controller
             'contact_address' => 'nullable|string',
             'contact_instagram' => 'nullable|string|max:255',
             'contact_facebook' => 'nullable|string|max:255',
+            'whatsapp' => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'facebook' => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('hero_image')) {

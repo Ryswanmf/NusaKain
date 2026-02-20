@@ -30,6 +30,9 @@ class RiswanPanelProvider extends PanelProvider
             ->id('riswan')
             ->path('riswan')
             ->login()
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
+            ->brandLogoHeight('2rem')
             ->colors([
                 'primary' => Color::Teal,
             ])

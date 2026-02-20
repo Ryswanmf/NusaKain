@@ -20,5 +20,8 @@ class LandingSetting extends Model
         'cta_description',
         'cta_button_text',
         'cta_button_url',
+        'whatsapp',
+        'instagram',
+        'facebook',
     ];
 }

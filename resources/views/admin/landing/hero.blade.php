@@ -68,7 +68,7 @@
                             <span class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                             </span>
-                            Kontak & Alamat
+                            Kontak & Media Sosial
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -78,9 +78,19 @@
                                     class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
                             </div>
                             <div class="space-y-2 md:space-y-3">
-                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">WhatsApp</label>
-                                <input type="text" name="contact_phone" value="{{ old('contact_phone', $setting->contact_phone) }}"
-                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">WhatsApp (628...)</label>
+                                <input type="text" name="whatsapp" value="{{ old('whatsapp', $setting->whatsapp) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base" placeholder="628123456789">
+                            </div>
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Instagram URL</label>
+                                <input type="text" name="instagram" value="{{ old('instagram', $setting->instagram) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base" placeholder="https://instagram.com/username">
+                            </div>
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Facebook URL</label>
+                                <input type="text" name="facebook" value="{{ old('facebook', $setting->facebook) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base" placeholder="https://facebook.com/username">
                             </div>
                         </div>
 
