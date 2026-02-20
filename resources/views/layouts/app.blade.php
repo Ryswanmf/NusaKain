@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', $title ?? 'Nusakain - Admin Dashboard')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -19,10 +20,8 @@
                 <!-- Brand -->
                 <div class="p-8 flex items-center justify-between">
                     <a href="/" class="flex items-center space-x-3 group">
-                        <div class="w-10 h-10 bg-gradient-to-tr from-teal-400 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg shadow-teal-900/20 group-hover:scale-105 transition-transform duration-300">
-                            <svg class="w-5 h-5 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                            <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                         </div>
                         <span class="text-xl font-black tracking-tight">Nusakain<span class="text-teal-400">.</span></span>
                     </a>
@@ -166,8 +165,58 @@
                 </div>
 
                 <div class="flex items-center space-x-2 md:space-x-4 ml-4 flex-shrink-0">
-                    <button class="hidden sm:flex p-2 rounded-xl text-slate-400 hover:bg-gray-50 hover:text-teal-600 transition-all">
-                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></button>
+                    <!-- Notifications -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex p-2 rounded-xl text-slate-400 hover:bg-gray-50 hover:text-teal-600 transition-all relative">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            @if($totalNotif > 0)
+                                <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 border-2 border-white rounded-full animate-pulse"></span>
+                            @endif
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" @click.away="open = false" x-transition 
+                             class="absolute right-0 mt-3 w-80 bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden z-50">
+                            <div class="p-6 border-b border-slate-50 bg-slate-50/50">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest">Notifikasi Baru</h4>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto">
+                                @if($totalNotif == 0)
+                                    <div class="p-10 text-center">
+                                        <p class="text-xs font-bold text-slate-400 italic">Semua tugas beres! Tidak ada notifikasi baru.</p>
+                                    </div>
+                                @endif
+
+                                @foreach($newOrders as $order)
+                                    <a href="{{ route('admin.pesanan.show', $order) }}" class="flex items-center p-5 hover:bg-slate-50 transition-all border-b border-slate-50 group">
+                                        <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-xs font-black text-slate-900">Pesanan #{{ $order->order_number }}</span>
+                                            <span class="text-[10px] text-slate-500 font-medium">Baru saja masuk dari {{ $order->user->name }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+
+                                @foreach($unreadContacts as $contact)
+                                    <a href="{{ route('admin.kontak.show', $contact) }}" class="flex items-center p-5 hover:bg-slate-50 transition-all border-b border-slate-50 group">
+                                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-xs font-black text-slate-900">Pesan: {{ $contact->subject }}</span>
+                                            <span class="text-[10px] text-slate-500 font-medium">Dari {{ $contact->name }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                            <div class="p-4 bg-slate-50/50 text-center">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Klik untuk lihat detail</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="hidden xs:block h-6 md:h-8 w-[1px] bg-gray-100 mx-1"></div>
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-slate-400 text-xs md:text-sm uppercase">
                         {{ substr(Auth::user()->name, 0, 1) }}

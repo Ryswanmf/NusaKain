@@ -19,6 +19,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        view()->share('setting', \App\Models\LandingSetting::first());
+        $setting = \App\Models\LandingSetting::first();
+        view()->share('setting', $setting);
+
+        // Data Notifikasi untuk Admin
+        view()->composer('layouts.app', function ($view) {
+            $unreadContacts = \App\Models\Contact::where('is_read', false)->latest()->take(5)->get();
+            $newOrders = \App\Models\Order::where('status', 'pending')->latest()->take(5)->get();
+            $totalNotif = $unreadContacts->count() + $newOrders->count();
+            
+            $view->with([
+                'unreadContacts' => $unreadContacts,
+                'newOrders' => $newOrders,
+                'totalNotif' => $totalNotif
+            ]);
+        });
     }
 }

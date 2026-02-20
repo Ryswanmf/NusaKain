@@ -18,6 +18,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', 'Nusakain - Premium Textiles')">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <meta property="twitter:description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia.')">
     <meta property="twitter:image" content="@yield('meta_image', asset('images/hero-landingpage.png'))">
 
@@ -35,10 +36,8 @@
 
         <div class="flex-1 flex items-center">
             <a href="/" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 bg-gradient-to-tr from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-md shadow-teal-200 group-hover:scale-105 transition-transform duration-300">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                    <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                 </div>
                 <span class="text-xl font-extrabold text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
             </a>
@@ -152,24 +151,14 @@
             <!-- Brand Column -->
             <div class="space-y-6">
                 <a href="/" class="flex items-center space-x-3 group">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-md shadow-teal-200 group-hover:scale-105 transition-transform duration-300">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
+                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                        <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                     </div>
                     <span class="text-2xl font-black text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
                 </a>
                 <p class="text-slate-500 text-sm leading-relaxed font-medium">
                     Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia. Kami menghubungkan tradisi dengan teknologi modern.
                 </p>
-                <div class="flex items-center space-x-4">
-                    <a href="#" class="w-10 h-10 bg-slate-50 text-slate-400 hover:bg-teal-50 hover:text-teal-600 rounded-xl flex items-center justify-center transition-all">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.015 3.253.008 4.741 1.488 4.749 4.742.003 1.266.015 1.646.015 4.85s-.012 3.584-.015 4.85c-.008 3.253-1.488 4.741-4.742 4.749-1.266.003-1.646.015-4.85.015s-3.584-.012-4.85-.015c-3.253-.008-4.741-1.488-4.749-4.742-.003-1.266-.015-1.646-.015-4.85s.012-3.584.015-4.85c.008-3.253 1.488-4.741 4.742-4.749 1.266-.003 1.646-.015 4.85-.015zm0-2.163c-3.259 0-3.66.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.66.072 4.947.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.66-.014 4.947-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.66-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-slate-50 text-slate-400 hover:bg-teal-50 hover:text-teal-600 rounded-xl flex items-center justify-center transition-all">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                    </a>
-                </div>
             </div>
 
             <!-- Quick Links -->

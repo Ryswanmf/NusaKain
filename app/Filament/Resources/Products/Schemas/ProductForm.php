@@ -6,6 +6,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Schemas\Schema;
 
 class ProductForm
@@ -14,25 +16,91 @@ class ProductForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('slug')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
-                TextInput::make('stock')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                FileUpload::make('image')
-                    ->image(),
-                TextInput::make('category'),
-                Toggle::make('is_active')
-                    ->required(),
+                Section::make('Informasi Produk')
+                    ->columns(2)
+                    ->components([
+                        TextInput::make('name')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                        TextInput::make('slug')
+                            ->required()
+                            ->unique(ignoreRecord: true),
+                        TextInput::make('category')
+                            ->required(),
+                        Toggle::make('is_active')
+                            ->required()
+                            ->default(true),
+                        Textarea::make('description')
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Harga & Stok Dasar')
+                    ->description('Harga ini akan digunakan jika variasi tidak memiliki harga khusus.')
+                    ->columns(3)
+                    ->components([
+                        TextInput::make('price')
+                            ->label('Harga Jual')
+                            ->required()
+                            ->numeric()
+                            ->prefix('Rp'),
+                        TextInput::make('original_price')
+                            ->label('Harga Coret')
+                            ->numeric()
+                            ->prefix('Rp'),
+                        TextInput::make('stock')
+                            ->label('Total Stok Dasar')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                    ]),
+
+                Section::make('Gambar Produk')
+                    ->components([
+                        FileUpload::make('image')
+                            ->label('Gambar Utama')
+                            ->image()
+                            ->directory('products'),
+                        FileUpload::make('gallery')
+                            ->label('Galeri Foto')
+                            ->image()
+                            ->multiple()
+                            ->directory('products/gallery'),
+                    ]),
+
+                Section::make('Variasi Produk')
+                    ->description('Tambahkan pilihan warna, ukuran, atau jenis grade kain.')
+                    ->components([
+                        Repeater::make('variants')
+                            ->relationship('variants')
+                            ->columns(4)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nama Variasi')
+                                    ->placeholder('Misal: Merah, XL, atau Grade A')
+                                    ->required(),
+                                TextInput::make('sku')
+                                    ->label('SKU Khusus')
+                                    ->placeholder('NK-VAR-001'),
+                                TextInput::make('price')
+                                    ->label('Harga Khusus')
+                                    ->numeric()
+                                    ->prefix('Rp'),
+                                TextInput::make('stock')
+                                    ->label('Stok Variasi')
+                                    ->required()
+                                    ->numeric()
+                                    ->default(0),
+                                FileUpload::make('image')
+                                    ->label('Foto Khusus')
+                                    ->image()
+                                    ->directory('products/variants')
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                            ->collapsible()
+                            ->collapsed(),
+                    ]),
             ]);
     }
 }

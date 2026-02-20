@@ -16,6 +16,11 @@ class Order extends Model
         'notes',
     ];
 
+    public function getFormattedTotalAmountAttribute(): string
+    {
+        return 'Rp ' . number_format($this->total_amount, 0, ',', '.');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

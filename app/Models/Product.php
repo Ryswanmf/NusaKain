@@ -42,4 +42,19 @@ class Product extends Model
         'rating' => 'float',
         'gallery' => 'array',
     ];
+
+    public function getFormattedPriceAttribute(): string
+    {
+        return 'Rp ' . number_format($this->price, 0, ',', '.');
+    }
+
+    public function getFormattedOriginalPriceAttribute(): string
+    {
+        return 'Rp ' . number_format($this->original_price, 0, ',', '.');
+    }
+
+    public function variants(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }
