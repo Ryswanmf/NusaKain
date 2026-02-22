@@ -53,7 +53,12 @@
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-[13px] md:text-[15px] font-black text-slate-900 leading-tight truncate">{{ $product->name }}</div>
-                                            <div class="text-[9px] md:text-[11px] text-slate-400 font-bold mt-0.5 md:mt-1 truncate">#NK-{{ str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</div>
+                                            <div class="flex items-center gap-2 mt-0.5 md:mt-1">
+                                                <span class="text-[9px] md:text-[11px] text-slate-400 font-bold truncate">#NK-{{ str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</span>
+                                                @if($product->variants->count() > 0)
+                                                    <span class="px-1.5 py-0.5 bg-teal-50 text-teal-600 text-[8px] font-black uppercase rounded-md border border-teal-100">{{ $product->variants->count() }} Varian</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </td>

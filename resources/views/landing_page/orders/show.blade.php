@@ -16,6 +16,34 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div class="lg:col-span-2 space-y-8">
+            <!-- Payment Status Alert -->
+            @if($order->payment_status === 'unpaid')
+                <div class="p-8 bg-amber-50 rounded-[2.5rem] border border-amber-100 flex flex-col md:flex-row items-center justify-between gap-6 animate__animated animate__pulse animate__infinite">
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="font-black text-slate-900 uppercase tracking-tight">Menunggu Pembayaran</p>
+                            <p class="text-xs font-medium text-amber-700">Silakan selesaikan pembayaran Anda agar pesanan segera diproses.</p>
+                        </div>
+                    </div>
+                    <button id="pay-button" class="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-sm hover:bg-teal-600 transition-all shadow-xl active:scale-95 whitespace-nowrap">
+                        Bayar Sekarang
+                    </button>
+                </div>
+            @elseif($order->payment_status === 'paid')
+                <div class="p-8 bg-teal-50 rounded-[2.5rem] border border-teal-100 flex items-center gap-5">
+                    <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-black text-slate-900 uppercase tracking-tight">Pembayaran Berhasil</p>
+                        <p class="text-xs font-medium text-teal-700">Terima kasih! Pesanan Anda sedang kami siapkan.</p>
+                    </div>
+                </div>
+            @endif
+
             <div class="bg-white p-8 md:p-12 rounded-[3rem] border border-slate-100 shadow-sm">
                 <div class="flex items-center justify-between mb-10 pb-6 border-b border-slate-50">
                     <div>
@@ -47,7 +75,13 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h4 class="text-lg font-black text-slate-900 truncate">{{ $item->product->name }}</h4>
-                                <p class="text-xs font-bold text-slate-400 mt-1 uppercase">{{ $item->product->category }}</p>
+                                <div class="flex items-center gap-3 mt-1">
+                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ $item->product->category }}</span>
+                                    @if($item->variant)
+                                        <div class="w-1 h-1 bg-slate-200 rounded-full"></div>
+                                        <span class="text-[10px] font-black text-teal-600 uppercase tracking-widest">{{ $item->variant->name }}</span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="text-right">
                                 <p class="text-sm font-black text-slate-900">{{ $item->quantity }}m x Rp{{ number_format($item->unit_price, 0, ',', '.') }}</p>
@@ -57,35 +91,94 @@
                     @endforeach
                 </div>
 
-                <div class="mt-12 pt-10 border-t border-slate-100 flex justify-between items-end">
-                    <span class="text-sm font-black text-slate-400 uppercase tracking-widest">Total Pembayaran</span>
-                    <span class="text-4xl font-black text-slate-900 italic">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                <div class="mt-12 pt-10 border-t border-slate-100 space-y-4">
+                    <div class="flex justify-between text-sm font-bold text-slate-400">
+                        <span>Biaya Pengiriman</span>
+                        <span class="text-slate-900">Rp{{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <span class="text-sm font-black text-slate-400 uppercase tracking-widest">Total Pembayaran</span>
+                        <span class="text-4xl font-black text-slate-900 italic">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="space-y-8">
-            <div class="bg-teal-600 p-10 rounded-[3rem] text-white shadow-2xl shadow-teal-100 relative overflow-hidden group">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all"></div>
-                <h3 class="text-xl font-black tracking-tight mb-4 relative z-10">Konfirmasi WA?</h3>
-                <p class="text-teal-100 text-sm font-medium mb-10 relative z-10 leading-relaxed">Hubungi admin kembali jika Anda ingin menanyakan detail pengiriman.</p>
-                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya ingin menanyakan status pesanan #{{ $order->order_number }}." 
-                   target="_blank"
-                   class="w-full inline-flex items-center justify-center py-4 bg-white text-teal-600 rounded-2xl font-black text-sm hover:bg-teal-50 transition-all relative z-10 shadow-lg active:scale-95">
-                    Chat Admin
-                </a>
+            <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+                <div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Alamat Pengiriman</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Penerima</span>
+                                <span class="text-sm font-bold text-slate-900 truncate">{{ $order->receiver_name }}</span>
+                                <span class="text-xs font-medium text-slate-500">{{ $order->receiver_phone }}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Alamat Lengkap</span>
+                                <span class="text-sm font-medium text-slate-600 leading-relaxed">{{ $order->address_detail }}</span>
+                                <span class="text-xs font-bold text-slate-900 mt-1">{{ $order->postal_code }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-slate-50">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Metode Pembayaran</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                        </div>
+                        <p class="text-sm font-black text-slate-900 uppercase tracking-tight">Midtrans <span class="text-[10px] text-teal-600">(Snap)</span></p>
+                    </div>
+                </div>
             </div>
 
-            <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Metode Pembayaran</h3>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
-                        <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    </div>
-                    <p class="text-sm font-bold text-slate-700">Bank Transfer / Manual (WA)</p>
-                </div>
+            <div class="bg-slate-900 p-10 rounded-[3rem] text-white shadow-2xl shadow-slate-200 relative overflow-hidden group">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all"></div>
+                <h3 class="text-xl font-black tracking-tight mb-4 relative z-10">Ada Kendala?</h3>
+                <p class="text-slate-400 text-sm font-medium mb-10 relative z-10 leading-relaxed">Hubungi admin jika Anda ingin mengubah detail pengiriman atau bertanya soal stok.</p>
+                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya {{ Auth::user()->name }} ingin bertanya status pesanan #{{ $order->order_number }}." 
+                   target="_blank"
+                   class="w-full inline-flex items-center justify-center py-4 bg-white text-slate-900 rounded-2xl font-black text-sm hover:bg-teal-500 hover:text-white transition-all relative z-10 shadow-lg active:scale-95">
+                    Hubungi via WhatsApp
+                </a>
             </div>
         </div>
     </div>
+</main>
+
+@if($order->payment_status === 'unpaid' && $order->snap_token)
+    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    <script type="text/javascript">
+        const payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function () {
+            window.snap.pay('{{ $order->snap_token }}', {
+                onSuccess: function (result) {
+                    window.location.reload();
+                },
+                onPending: function (result) {
+                    window.location.reload();
+                },
+                onError: function (result) {
+                    alert("Pembayaran gagal!");
+                },
+                onClose: function () {
+                    alert('Anda menutup popup tanpa menyelesaikan pembayaran');
+                }
+            });
+        });
+    </script>
+@endif
+@endsection
 </main>
 @endsection

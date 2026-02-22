@@ -85,12 +85,9 @@
                         <span class="text-sm font-black uppercase tracking-widest text-teal-400">Total</span>
                         <span class="text-3xl font-black italic">Rp{{ number_format($cartItems->sum(fn($i) => $i->product->price * $i->quantity), 0, ',', '.') }}</span>
                     </div>
-                    <form action="{{ route('cart.checkout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center justify-center py-5 bg-teal-500 text-slate-900 rounded-[2rem] font-black text-lg hover:bg-teal-400 transition-all shadow-xl shadow-teal-900/20 active:scale-95">
-                            Checkout Sekarang
-                        </button>
-                    </form>
+                    <a href="{{ route('cart.checkout') }}" class="w-full flex items-center justify-center py-5 bg-teal-500 text-slate-900 rounded-[2rem] font-black text-lg hover:bg-teal-400 transition-all shadow-xl shadow-teal-900/20 active:scale-95">
+                        Checkout Sekarang
+                    </a>
                 </div>
             </div>
         @endif

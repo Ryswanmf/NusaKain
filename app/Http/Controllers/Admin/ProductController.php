@@ -29,6 +29,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'weight' => 'required|integer|min:1',
             'category' => 'nullable|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -51,7 +52,15 @@ class ProductController extends Controller
         $validated['slug'] = Str::slug($validated['name']) . '-' . time();
         $validated['is_active'] = $request->has('is_active');
 
-        Product::create($validated);
+        $product = Product::create($validated);
+
+        if ($request->has('variants')) {
+            foreach ($request->variants as $variantData) {
+                if (!empty($variantData['name'])) {
+                    $product->variants()->create($variantData);
+                }
+            }
+        }
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
@@ -69,6 +78,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'weight' => 'required|integer|min:1',
             'category' => 'nullable|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -101,6 +111,25 @@ class ProductController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         $produk->update($validated);
+
+        if ($request->has('variants')) {
+            $variantIds = [];
+            foreach ($request->variants as $variantData) {
+                if (!empty($variantData['name'])) {
+                    $variant = $produk->variants()->updateOrCreate(
+                        ['id' => $variantData['id'] ?? null],
+                        $variantData
+                    );
+                    $variantIds[] = $variant->id;
+                }
+            }
+            // Delete variants that were removed from the form
+            $produk->variants()->whereNotIn('id', $variantIds)->delete();
+        } else {
+            // If no variants in request, but they existed before, delete them? 
+            // Or keep them. Usually, if the section is there but empty, it means delete.
+            $produk->variants()->delete();
+        }
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui.');
     }

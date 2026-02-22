@@ -35,6 +35,51 @@
                         </div>
                     </div>
 
+                    <!-- Product Variations -->
+                    <div class="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm space-y-6 md:space-y-8">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base md:text-lg font-black text-slate-900 tracking-tight">Variasi Produk</h3>
+                            <button type="button" onclick="addVariant()" class="px-4 py-2 bg-teal-50 text-teal-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition-all">
+                                + Tambah Variasi
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium -mt-4">Tambahkan pilihan seperti Warna, Ukuran, atau Grade kain.</p>
+                        
+                        <div id="variants-container" class="space-y-4">
+                            <!-- Variants will be injected here -->
+                        </div>
+
+                        <template id="variant-template">
+                            <div class="variant-item p-6 bg-slate-50 rounded-[1.5rem] border border-slate-100 relative group animate__animated animate__fadeIn">
+                                <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Varian</label>
+                                        <input type="text" name="variants[INDEX][name]" required placeholder="Misal: Merah" class="w-full px-4 py-3 bg-white border-none rounded-xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 text-sm">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">SKU</label>
+                                        <input type="text" name="variants[INDEX][sku]" placeholder="NK-VAR-001" class="w-full px-4 py-3 bg-white border-none rounded-xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 text-sm">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Harga (Opsional)</label>
+                                        <input type="number" name="variants[INDEX][price]" placeholder="Kosongkan jika sama" class="w-full px-4 py-3 bg-white border-none rounded-xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 text-sm">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Stok</label>
+                                        <input type="number" name="variants[INDEX][stock]" value="0" required class="w-full px-4 py-3 bg-white border-none rounded-xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 text-sm">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Berat (gr)</label>
+                                        <input type="number" name="variants[INDEX][weight]" placeholder="Sama" class="w-full px-4 py-3 bg-white border-none rounded-xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 text-sm">
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
                     <div class="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm">
                         <h3 class="text-base md:text-lg font-black text-slate-900 tracking-tight mb-6 md:mb-8">Informasi Komersial</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -57,11 +102,22 @@
                                 @error('original_price') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
                             </div>
                         </div>
-                        <div class="space-y-2 md:space-y-3 mt-6">
-                            <label for="stock" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Stok (Meter)</label>
-                            <input type="number" name="stock" id="stock" value="{{ old('stock', 0) }}" required min="0"
-                                class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="0">
-                            @error('stock') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6">
+                            <div class="space-y-2 md:space-y-3">
+                                <label for="stock" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Stok (Meter)</label>
+                                <input type="number" name="stock" id="stock" value="{{ old('stock', 0) }}" required min="0"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="0">
+                                @error('stock') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="space-y-2 md:space-y-3">
+                                <label for="weight" class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Berat (Gram)</label>
+                                <div class="relative">
+                                    <input type="number" name="weight" id="weight" value="{{ old('weight', 100) }}" required min="1"
+                                        class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-black text-slate-900 text-sm md:text-base" placeholder="100">
+                                    <span class="absolute right-5 md:right-8 top-1/2 -translate-y-1/2 text-slate-400 font-bold italic text-xs md:text-sm pointer-events-none">gr</span>
+                                </div>
+                                @error('weight') <p class="text-red-500 text-[10px] md:text-xs mt-2 ml-2 font-bold">{{ $message }}</p> @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -131,6 +187,15 @@
     </div>
 
     <script>
+        let variantIndex = 0;
+        function addVariant() {
+            const container = document.getElementById('variants-container');
+            const template = document.getElementById('variant-template').innerHTML;
+            const html = template.replace(/INDEX/g, variantIndex);
+            container.insertAdjacentHTML('beforeend', html);
+            variantIndex++;
+        }
+
         function previewImage(input) {
             const preview = document.getElementById('preview');
             const placeholder = document.getElementById('upload-placeholder');

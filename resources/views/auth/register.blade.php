@@ -8,26 +8,38 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-50/50 min-h-screen flex items-center justify-center p-6">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    <!-- Animated Background Blobs -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] -left-[10%] w-[40%] h-[40%] bg-teal-200/30 rounded-full blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] -right-[10%] w-[40%] h-[40%] bg-cyan-200/30 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
+        <div class="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-100/30 rounded-full blur-[100px] animate-blob animation-delay-4000"></div>
+    </div>
 
-    <div class="max-w-md w-full">
-        <!-- Logo -->
-        <div class="text-center mb-8 md:mb-10">
-            <a href="/" class="inline-flex items-center space-x-3 group">
-                <div class="w-12 h-12 bg-gradient-to-tr from-teal-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-200 group-hover:scale-105 transition-transform duration-300">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                </div>
-                <span class="text-2xl font-extrabold text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
-            </a>
-        </div>
+    <style>
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
 
-        <div class="bg-white rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 border border-gray-100 shadow-sm">
-            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Buat <span class="text-teal-600">Akun Baru.</span></h1>
-            <p class="mt-3 text-slate-500 font-medium">Gabung sekarang untuk akses katalog lengkap.</p>
+    <div class="max-w-md w-full relative z-10">
+        <div class="bg-white rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 border border-gray-100 shadow-sm text-center">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight text-left">Buat <span class="text-teal-600">Akun Baru.</span></h1>
+            <p class="mt-3 text-slate-500 font-medium text-left">Gabung sekarang untuk akses katalog lengkap.</p>
 
-            <form method="POST" action="{{ route('register') }}" class="mt-8 md:mt-10 space-y-5 md:space-y-6">
+            <form method="POST" action="{{ route('register') }}" class="mt-8 md:mt-10 space-y-5 md:space-y-6 text-left">
                 @csrf
 
                 <!-- Name -->
@@ -73,6 +85,13 @@
                 Sudah punya akun? 
                 <a href="{{ route('login') }}" class="text-teal-600 font-bold hover:underline underline-offset-4 decoration-2">Masuk Sekarang</a>
             </p>
+
+            <div class="mt-8 pt-8 border-t border-slate-50">
+                <a href="/" class="inline-flex items-center text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors group">
+                    <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Kembali ke Beranda
+                </a>
+            </div>
         </div>
 
         <p class="mt-8 md:mt-10 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">

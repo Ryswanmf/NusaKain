@@ -12,6 +12,7 @@ class ProductVariant extends Model
         'sku',
         'price',
         'stock',
+        'weight',
         'image',
     ];
 

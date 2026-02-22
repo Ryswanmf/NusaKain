@@ -100,26 +100,38 @@
 
             <div class="flex flex-col mb-8">
                 <div class="flex items-end gap-4">
-                    <p class="text-4xl font-black text-teal-600 italic">
-                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                    <p id="display-price" class="text-4xl font-black text-teal-600 italic">
+                        {{ $product->formatted_price }}
                     </p>
                     @if($product->original_price && $product->original_price > $product->price)
-                        @php
-                            $discount = round((($product->original_price - $product->price) / $product->original_price) * 100);
-                        @endphp
-                        <div class="flex flex-col mb-1">
-                            <span class="text-sm font-bold text-slate-400 line-through">Rp{{ number_format($product->original_price, 0, ',', '.') }}</span>
-                            <span class="text-[10px] font-black px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase tracking-widest mt-1 text-center w-fit animate-bounce">Hemat {{ $discount }}%</span>
+                        <div id="display-discount-wrapper" class="flex flex-col mb-1">
+                            <span class="text-sm font-bold text-slate-400 line-through">{{ $product->formatted_original_price }}</span>
+                            <span class="text-[10px] font-black px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase tracking-widest mt-1 text-center w-fit animate-bounce">Hemat <span id="display-discount">{{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}</span>%</span>
                         </div>
                     @endif
                     <span class="text-sm font-bold text-slate-400 mb-1 uppercase tracking-tighter">/ Meter</span>
                 </div>
                 <div class="flex items-center gap-3 mt-4">
-                    <span class="text-sm font-bold {{ $product->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
+                    <span id="display-stock" class="text-sm font-bold {{ $product->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
                         {{ $product->stock > 0 ? 'Stok: ' . $product->stock . ' Meter' : 'Stok Habis' }}
                     </span>
                 </div>
             </div>
+
+            @if($product->variants->count() > 0)
+                <div class="mb-10">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Pilih Variasi</h3>
+                    <div class="flex flex-wrap gap-3">
+                        @foreach($product->variants as $variant)
+                            <div onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->formatted_price }}', {{ $variant->stock }}, '{{ $variant->image ? asset('storage/' . $variant->image) : '' }}')" 
+                                 class="variant-option px-6 py-3 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-teal-500 hover:bg-teal-50 transition-all {{ $loop->first ? 'border-teal-500 bg-teal-50' : '' }}"
+                                 data-id="{{ $variant->id }}">
+                                <span class="font-bold text-slate-700">{{ $variant->name }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <div class="prose prose-slate prose-lg mb-10">
                 <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Deskripsi Produk</h3>
@@ -138,6 +150,7 @@
                 <form action="{{ route('cart.store') }}" method="POST" class="w-full">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
                     <input type="hidden" name="quantity" value="1">
                     @auth
                         <button type="submit" class="w-full flex items-center justify-center px-8 py-5 bg-teal-600 text-white rounded-[2rem] font-black text-lg hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-95">
@@ -307,6 +320,37 @@
         loop: true,
         zoomable: true
     });
+
+    function selectVariant(element, id, price, stock, image) {
+        // Update visual selection
+        document.querySelectorAll('.variant-option').forEach(el => {
+            el.classList.remove('border-teal-500', 'bg-teal-50');
+            el.classList.add('border-slate-100');
+        });
+        element.classList.remove('border-slate-100');
+        element.classList.add('border-teal-500', 'bg-teal-50');
+
+        // Update hidden input
+        document.getElementById('product_variant_id').value = id;
+
+        // Update price
+        document.getElementById('display-price').innerText = price;
+
+        // Update stock display
+        const stockEl = document.getElementById('display-stock');
+        if (stock > 0) {
+            stockEl.innerText = 'Stok: ' + stock + ' Meter';
+            stockEl.className = 'text-sm font-bold text-green-600';
+        } else {
+            stockEl.innerText = 'Stok Habis';
+            stockEl.className = 'text-sm font-bold text-red-500';
+        }
+
+        // Update image if variant has one
+        if (image) {
+            changeImage(image);
+        }
+    }
 </script>
 @endpush
 @endsection

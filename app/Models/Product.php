@@ -17,6 +17,7 @@ class Product extends Model
         'price',
         'original_price',
         'stock',
+        'weight',
         'image',
         'gallery',
         'category',

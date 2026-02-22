@@ -40,6 +40,8 @@ Route::get('/p/{slug}', function($slug) {
     return view('landing_page.show', compact('page'));
 })->name('pages.show');
 
+Route::post('/midtrans/callback', [\App\Http\Controllers\CartController::class, 'callback'])->name('midtrans.callback');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -76,7 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
     Route::patch('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
-    Route::post('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout', [\App\Http\Controllers\CartController::class, 'processCheckout'])->name('cart.processCheckout');
 
     // Wishlist Routes
     Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
