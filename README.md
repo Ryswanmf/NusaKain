@@ -2,19 +2,14 @@
 
 Nusakain adalah platform digital berbasis web untuk bisnis tekstil/kain yang modern dan profesional. Dibangun dengan **Laravel 12** dan **Filament 3**, aplikasi ini dirancang untuk memudahkan pengelolaan produk, portofolio, blog, serta interaksi dengan pelanggan melalui admin panel yang intuitif.
 
----
-
-## 🚀 Tech Stack
-
+## Tech Stack
 - **Framework:** [Laravel 12.x](https://laravel.com)
 - **Admin Panel:** [Filament v3.x](https://filamentphp.com) (Custom path: `/riswan`)
 - **Frontend Styling:** [Tailwind CSS](https://tailwindcss.com) (Modern "Toska" Theme)
 - **Database:** SQLite (Default) / MySQL / PostgreSQL
 - **Auth:** Laravel Breeze (Customized UI)
 
----
-
-## ✨ Fitur Utama
+## Fitur Utama
 
 ### 1. Katalog Produk
 - Manajemen kain premium dengan kategori (Katun, Linen, Denim, dll).
