@@ -113,6 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-orders', [\App\Http\Controllers\CartController::class, 'orders'])->name('customer.orders');
     Route::get('/my-orders/{order_number}', [\App\Http\Controllers\CartController::class, 'showOrder'])->name('customer.orders.show');
     Route::get('/my-orders/{order_number}/invoice', [\App\Http\Controllers\CartController::class, 'downloadInvoice'])->name('customer.orders.invoice');
+    Route::post('/reviews', [\App\Http\Controllers\ProductReviewController::class, 'store'])->name('reviews.store');
 });
 
 require __DIR__.'/auth.php';

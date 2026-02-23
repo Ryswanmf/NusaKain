@@ -140,6 +140,48 @@
                 </p>
             </div>
 
+            <!-- Customer Reviews Section -->
+            <div class="mt-16 border-t border-slate-100 pt-16">
+                <div class="flex items-center justify-between mb-10">
+                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Review Pembeli <span class="text-teal-600">({{ $product->reviews->count() }})</span></h3>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <span class="text-xl font-black text-slate-900">{{ number_format($product->rating, 1) }}</span>
+                    </div>
+                </div>
+
+                @forelse($product->reviews as $review)
+                    <div class="mb-10 pb-10 border-b border-slate-50 last:border-0">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 uppercase text-xs">
+                                {{ substr($review->user->name, 0, 1) }}
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-black text-slate-900">{{ $review->user->name }}</h4>
+                                <div class="flex items-center gap-1 mt-0.5">
+                                    @for($i=1; $i<=5; $i++)
+                                        <svg class="w-3 h-3 {{ $i <= $review->rating ? 'text-amber-400' : 'text-slate-200' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    @endfor
+                                    <span class="text-[10px] text-slate-400 font-bold ml-2 uppercase">{{ $review->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-sm font-medium">
+                            {{ $review->comment }}
+                        </p>
+                        @if($review->image)
+                            <div class="mt-4 w-32 h-32 rounded-2xl overflow-hidden border border-slate-100">
+                                <img src="{{ asset('storage/' . $review->image) }}" class="w-full h-full object-cover">
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <div class="py-12 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
+                        <p class="text-slate-400 font-bold italic">Belum ada review untuk produk ini. Jadi yang pertama mengulas!</p>
+                    </div>
+                @endforelse
+            </div>
+
             <!-- Calculator Trigger Button -->
             <button onclick="openCalculator()" class="mb-10 flex items-center space-x-3 px-6 py-4 bg-teal-50 text-teal-600 rounded-2xl font-bold hover:bg-teal-100 transition-all group">
                 <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>

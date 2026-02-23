@@ -46,12 +46,22 @@
                         </div>
                         <div>
                             <p class="font-black text-slate-900 uppercase tracking-tight">Pembayaran Berhasil</p>
-                            <p class="text-xs font-medium text-teal-700">Terima kasih! Pesanan Anda sedang kami siapkan.</p>
+                            @if($order->status === 'completed')
+                                <p class="text-xs font-medium text-teal-700">Pesanan telah selesai. Terima kasih telah berbelanja!</p>
+                            @else
+                                <p class="text-xs font-medium text-teal-700">Terima kasih! Pesanan Anda sedang kami siapkan.</p>
+                            @endif
                         </div>
                     </div>
-                    <button disabled class="px-10 py-4 bg-teal-600 text-white rounded-2xl font-black text-sm cursor-default whitespace-nowrap shadow-lg">
-                        Telah Dibayar
-                    </button>
+                    @if($order->status === 'completed')
+                        <button onclick="openReviewModal()" class="px-10 py-4 bg-teal-600 text-white rounded-2xl font-black text-sm hover:bg-teal-700 transition-all shadow-xl active:scale-95 whitespace-nowrap">
+                            Beri Review Produk
+                        </button>
+                    @else
+                        <button disabled class="px-10 py-4 bg-teal-600 text-white rounded-2xl font-black text-sm cursor-default whitespace-nowrap shadow-lg">
+                            Telah Dibayar
+                        </button>
+                    @endif
                 </div>
             @endif
 
@@ -193,6 +203,94 @@
                 }
             });
         });
+    </script>
+@endif
+@if($order->status === 'completed')
+    <!-- Review Modal -->
+    <div id="reviewModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeReviewModal()"></div>
+        <div class="relative bg-white w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden animate__animated animate__zoomIn animate__faster">
+            <form action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="order_id" value="{{ $order->id }}">
+                <div class="p-8 md:p-12 text-center">
+                    <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-2">Bagaimana Kualitas Kain Kami?</h3>
+                    <p class="text-slate-500 text-sm font-medium mb-10">Review Anda sangat membantu pembeli lain dalam memilih material.</p>
+
+                    <div class="space-y-8 text-left">
+                        <!-- Product Selection if multiple -->
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Pilih Produk</label>
+                            <select name="product_id" required class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 mt-2">
+                                @foreach($order->items as $item)
+                                    <option value="{{ $item->product_id }}">{{ $item->product->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Star Rating -->
+                        <div class="text-center">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Rating Produk</label>
+                            <div class="flex justify-center gap-2">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <button type="button" onclick="setRating({{ $i }})" class="star-btn p-1 text-slate-200 hover:scale-110 transition-all duration-200" data-value="{{ $i }}">
+                                        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </button>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="rating" id="rating_input" value="5" required>
+                        </div>
+
+                        <!-- Comment -->
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Komentar & Pengalaman</label>
+                            <textarea name="comment" rows="4" placeholder="Ceritakan kualitas kain, warna, atau pelayanan kami..."
+                                class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 mt-2"></textarea>
+                        </div>
+
+                        <!-- Photo Upload -->
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Foto Produk (Opsional)</label>
+                            <input type="file" name="image" accept="image/*" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 font-bold text-slate-900 mt-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="mt-10 flex flex-col gap-4">
+                        <button type="submit" class="w-full py-5 bg-teal-600 text-white rounded-2xl font-black text-lg hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-95">
+                            Kirim Review
+                        </button>
+                        <button type="button" onclick="closeReviewModal()" class="text-sm font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Batal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openReviewModal() {
+            document.getElementById('reviewModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setRating(5); // Default
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function setRating(val) {
+            document.getElementById('rating_input').value = val;
+            const stars = document.querySelectorAll('.star-btn');
+            stars.forEach((star, index) => {
+                if (index < val) {
+                    star.classList.remove('text-slate-200');
+                    star.classList.add('text-amber-400');
+                } else {
+                    star.classList.add('text-slate-200');
+                    star.classList.remove('text-amber-400');
+                }
+            });
+        }
     </script>
 @endif
 @endsection
