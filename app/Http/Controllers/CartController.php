@@ -7,9 +7,22 @@ use App\Models\Product;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CartController extends Controller
 {
+    public function downloadInvoice($order_number)
+    {
+        $order = \App\Models\Order::where('user_id', Auth::id())
+            ->where('order_number', $order_number)
+            ->with(['items.product', 'items.variant'])
+            ->firstOrFail();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('landing_page.orders.invoice', compact('order'));
+        
+        return $pdf->download('Invoice-' . $order->order_number . '.pdf');
+    }
+
     public function index()
     {
         $cartItems = CartItem::with(['product', 'variant'])
@@ -121,7 +134,7 @@ class CartController extends Controller
             $shippingCost = 0; 
             $totalAmount = $productTotal + $shippingCost;
             
-            $orderNumber = 'NK-' . strtoupper(\Illuminate\Support\Str::random(8));
+            $orderNumber = 'NK-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
 
             // Create Order
             $order = \App\Models\Order::create([
@@ -171,11 +184,28 @@ class CartController extends Controller
         if ($hashed == $request->signature_key) {
             $order = \App\Models\Order::where('order_number', $request->order_id)->first();
             if ($order) {
-                if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
+                $transaction = $request->transaction_status;
+                $type = $request->payment_type;
+                $order_id = $request->order_id;
+                $fraud = $request->fraud_status;
+
+                if ($transaction == 'capture') {
+                    if ($type == 'credit_card') {
+                        if ($fraud == 'challenge') {
+                            $order->update(['payment_status' => 'pending']);
+                        } else {
+                            $order->update(['payment_status' => 'paid', 'status' => 'processing']);
+                        }
+                    }
+                } elseif ($transaction == 'settlement') {
                     $order->update(['payment_status' => 'paid', 'status' => 'processing']);
-                } elseif ($request->transaction_status == 'pending') {
+                } elseif ($transaction == 'pending') {
                     $order->update(['payment_status' => 'pending']);
-                } elseif ($request->transaction_status == 'deny' || $request->transaction_status == 'expire' || $request->transaction_status == 'cancel') {
+                } elseif ($transaction == 'deny') {
+                    $order->update(['payment_status' => 'failed']);
+                } elseif ($transaction == 'expire') {
+                    $order->update(['payment_status' => 'failed']);
+                } elseif ($transaction == 'cancel') {
                     $order->update(['payment_status' => 'failed']);
                 }
             }
@@ -196,6 +226,18 @@ class CartController extends Controller
             ->where('order_number', $order_number)
             ->with('items.product')
             ->firstOrFail();
+
+        // Regenerate snap token if missing and unpaid
+        if ($order->payment_status === 'unpaid' && !$order->snap_token) {
+            try {
+                $midtrans = new MidtransService();
+                $snapToken = $midtrans->getSnapToken($order);
+                $order->update(['snap_token' => $snapToken]);
+            } catch (\Exception $e) {
+                // Log error or handle gracefully
+                logger()->error('Midtrans Snap Token Error: ' . $e->getMessage());
+            }
+        }
             
         return view('landing_page.orders.show', compact('order'));
     }

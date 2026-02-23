@@ -37,7 +37,7 @@ class ProductForm
 
                 Section::make('Harga & Stok Dasar')
                     ->description('Harga ini akan digunakan jika variasi tidak memiliki harga khusus.')
-                    ->columns(3)
+                    ->columns(4)
                     ->components([
                         TextInput::make('price')
                             ->label('Harga Jual')
@@ -49,10 +49,15 @@ class ProductForm
                             ->numeric()
                             ->prefix('Rp'),
                         TextInput::make('stock')
-                            ->label('Total Stok Dasar')
+                            ->label('Total Stok')
                             ->required()
                             ->numeric()
                             ->default(0),
+                        TextInput::make('weight')
+                            ->label('Berat (gram)')
+                            ->numeric()
+                            ->default(0)
+                            ->suffix('gr'),
                     ]),
 
                 Section::make('Gambar Produk')
@@ -60,12 +65,14 @@ class ProductForm
                         FileUpload::make('image')
                             ->label('Gambar Utama')
                             ->image()
-                            ->directory('products'),
+                            ->directory('products')
+                            ->imageEditor(),
                         FileUpload::make('gallery')
                             ->label('Galeri Foto')
                             ->image()
                             ->multiple()
-                            ->directory('products/gallery'),
+                            ->directory('products/gallery')
+                            ->imageEditor(),
                     ]),
 
                 Section::make('Variasi Produk')
@@ -73,28 +80,33 @@ class ProductForm
                     ->components([
                         Repeater::make('variants')
                             ->relationship('variants')
-                            ->columns(4)
+                            ->columns(3)
                             ->schema([
                                 TextInput::make('name')
                                     ->label('Nama Variasi')
                                     ->placeholder('Misal: Merah, XL, atau Grade A')
                                     ->required(),
                                 TextInput::make('sku')
-                                    ->label('SKU Khusus')
+                                    ->label('SKU')
                                     ->placeholder('NK-VAR-001'),
                                 TextInput::make('price')
                                     ->label('Harga Khusus')
                                     ->numeric()
                                     ->prefix('Rp'),
                                 TextInput::make('stock')
-                                    ->label('Stok Variasi')
+                                    ->label('Stok')
                                     ->required()
                                     ->numeric()
                                     ->default(0),
+                                TextInput::make('weight')
+                                    ->label('Berat (gram)')
+                                    ->numeric()
+                                    ->suffix('gr'),
                                 FileUpload::make('image')
                                     ->label('Foto Khusus')
                                     ->image()
                                     ->directory('products/variants')
+                                    ->imageEditor()
                                     ->columnSpanFull(),
                             ])
                             ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)

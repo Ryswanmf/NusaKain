@@ -12,12 +12,18 @@
             <h1 class="text-3xl font-black text-slate-900 tracking-tight">Detail Pesanan <span class="text-teal-600">#{{ $order->order_number }}</span></h1>
             <p class="mt-1 text-slate-500 font-medium">Informasi lengkap transaksi Anda.</p>
         </div>
+        <div class="ml-auto">
+            <a href="{{ route('customer.orders.invoice', $order->order_number) }}" class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Download Invoice
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div class="lg:col-span-2 space-y-8">
             <!-- Payment Status Alert -->
-            @if($order->payment_status === 'unpaid')
+            @if(in_array($order->payment_status, ['unpaid', 'pending']))
                 <div class="p-8 bg-amber-50 rounded-[2.5rem] border border-amber-100 flex flex-col md:flex-row items-center justify-between gap-6 animate__animated animate__pulse animate__infinite">
                     <div class="flex items-center gap-5">
                         <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-200">
@@ -33,14 +39,19 @@
                     </button>
                 </div>
             @elseif($order->payment_status === 'paid')
-                <div class="p-8 bg-teal-50 rounded-[2.5rem] border border-teal-100 flex items-center gap-5">
-                    <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                <div class="p-8 bg-teal-50 rounded-[2.5rem] border border-teal-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <div>
+                            <p class="font-black text-slate-900 uppercase tracking-tight">Pembayaran Berhasil</p>
+                            <p class="text-xs font-medium text-teal-700">Terima kasih! Pesanan Anda sedang kami siapkan.</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="font-black text-slate-900 uppercase tracking-tight">Pembayaran Berhasil</p>
-                        <p class="text-xs font-medium text-teal-700">Terima kasih! Pesanan Anda sedang kami siapkan.</p>
-                    </div>
+                    <button disabled class="px-10 py-4 bg-teal-600 text-white rounded-2xl font-black text-sm cursor-default whitespace-nowrap shadow-lg">
+                        Telah Dibayar
+                    </button>
                 </div>
             @endif
 
@@ -157,8 +168,13 @@
     </div>
 </main>
 
-@if($order->payment_status === 'unpaid' && $order->snap_token)
-    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+@if(in_array($order->payment_status, ['unpaid', 'pending']) && $order->snap_token)
+    @php
+        $snapUrl = config('services.midtrans.is_production') 
+            ? 'https://app.midtrans.com/snap/snap.js' 
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
+    @endphp
+    <script src="{{ $snapUrl }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
     <script type="text/javascript">
         const payButton = document.getElementById('pay-button');
         payButton.addEventListener('click', function () {
@@ -179,6 +195,4 @@
         });
     </script>
 @endif
-@endsection
-</main>
 @endsection

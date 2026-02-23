@@ -92,7 +92,9 @@
                             <svg class="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[60]">
-                            <a href="{{ url('/dashboard') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Dashboard</a>
+                            @if(Auth::user()->isAdmin())
+                                <a href="{{ url('/riswan') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Admin Panel</a>
+                            @endif
                             <a href="{{ route('customer.orders') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Pesanan Saya</a>
                             <hr class="my-2 border-slate-50">
                             <form method="POST" action="{{ route('logout') }}">
@@ -132,7 +134,9 @@
         <hr>
         <div class="flex flex-col space-y-3">
             @auth
-                <a href="{{ url('/dashboard') }}" class="text-center py-3 bg-teal-600 text-white rounded-xl font-bold">Dashboard</a>
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ url('/riswan') }}" class="text-center py-3 bg-teal-600 text-white rounded-xl font-bold">Admin Panel</a>
+                @endif
             @else
                 <a href="{{ route('login') }}" class="text-center font-bold text-slate-700">Log in</a>
                 @if (Route::has('register'))

@@ -27,7 +27,19 @@ class OrderTable
                     ->label('Total')
                     ->money('IDR')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->label('Pembayaran')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'unpaid' => 'gray',
+                        'pending' => 'warning',
+                        'paid' => 'success',
+                        'failed' => 'danger',
+                        'expired' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('status')
+                    ->label('Pengiriman')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
@@ -37,13 +49,26 @@ class OrderTable
                         'cancelled' => 'danger',
                         default => 'gray',
                     }),
+                Tables\Columns\TextColumn::make('receiver_name')
+                    ->label('Penerima')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal')
                     ->dateTime()
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->label('Status Bayar')
+                    ->options([
+                        'unpaid' => 'Belum Bayar',
+                        'pending' => 'Menunggu Pembayaran',
+                        'paid' => 'Sudah Bayar',
+                        'failed' => 'Gagal',
+                    ]),
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Status Kirim')
                     ->options([
                         'pending' => 'Pending',
                         'processing' => 'Processing',

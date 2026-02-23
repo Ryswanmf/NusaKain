@@ -44,7 +44,7 @@ Route::post('/midtrans/callback', [\App\Http\Controllers\CartController::class, 
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'admin'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('produk', \App\Http\Controllers\Admin\ProductController::class);
@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
     // Customer Order Routes
     Route::get('/my-orders', [\App\Http\Controllers\CartController::class, 'orders'])->name('customer.orders');
     Route::get('/my-orders/{order_number}', [\App\Http\Controllers\CartController::class, 'showOrder'])->name('customer.orders.show');
+    Route::get('/my-orders/{order_number}/invoice', [\App\Http\Controllers\CartController::class, 'downloadInvoice'])->name('customer.orders.invoice');
 });
 
 require __DIR__.'/auth.php';
