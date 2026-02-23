@@ -75,10 +75,10 @@
                 </svg>
                 @auth
                     @php
-                        $cartCount = \App\Models\CartItem::where('user_id', Auth::id())->sum('quantity');
+                        $cartCount = \App\Models\CartItem::where('user_id', Auth::id())->count();
                     @endphp
                     @if($cartCount > 0)
-                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black leading-none text-white bg-teal-500 rounded-full transform translate-x-1/2 -translate-y-1/2 shadow-sm group-hover:scale-110 transition-transform">{{ $cartCount }}</span>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-[10px] font-black leading-none text-white bg-teal-500 rounded-full transform translate-x-1/2 -translate-y-1/2 shadow-sm group-hover:scale-110 transition-transform">{{ $cartCount }}</span>
                     @endif
                 @endauth
             </a>
@@ -129,7 +129,12 @@
         @auth
             <a href="{{ route('wishlist.index') }}" class="block text-base font-medium {{ Request::routeIs('wishlist.*') ? 'text-teal-600' : 'text-slate-600' }}">Koleksi Tersimpan</a>
             <a href="{{ route('customer.orders') }}" class="block text-base font-medium {{ Request::routeIs('customer.orders.*') ? 'text-teal-600' : 'text-slate-600' }}">Pesanan Saya</a>
-            <a href="{{ route('cart.index') }}" class="block text-base font-medium {{ Request::routeIs('cart.*') ? 'text-teal-600' : 'text-slate-600' }}">Keranjang Belanja</a>
+            <a href="{{ route('cart.index') }}" class="flex items-center justify-between text-base font-medium {{ Request::routeIs('cart.*') ? 'text-teal-600' : 'text-slate-600' }}">
+                <span>Keranjang Belanja</span>
+                @if($cartCount > 0)
+                    <span class="px-2 py-0.5 bg-teal-500 text-white text-[10px] font-black rounded-full shadow-sm">{{ $cartCount }}</span>
+                @endif
+            </a>
         @endauth
         <hr>
         <div class="flex flex-col space-y-3">

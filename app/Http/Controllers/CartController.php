@@ -102,7 +102,20 @@ class CartController extends Controller
             return $price * $item->quantity;
         });
 
-        return view('landing_page.checkout', compact('cartItems', 'totalWeight', 'totalAmount'));
+        $discount = 0;
+        $appliedVoucher = null;
+        
+        if (session()->has('applied_voucher')) {
+            $voucher = \App\Models\Voucher::where('code', session('applied_voucher'))->first();
+            if ($voucher && $voucher->isValid($totalAmount)) {
+                $discount = $voucher->calculateDiscount($totalAmount);
+                $appliedVoucher = $voucher;
+            } else {
+                session()->forget('applied_voucher');
+            }
+        }
+
+        return view('landing_page.checkout', compact('cartItems', 'totalWeight', 'totalAmount', 'discount', 'appliedVoucher'));
     }
 
     public function processCheckout(Request $request)
@@ -135,7 +148,20 @@ class CartController extends Controller
             });
 
             $shippingCost = 20000; 
-            $totalAmount = $productTotal + $shippingCost;
+            
+            // Apply Voucher Discount
+            $discount = 0;
+            $voucherCode = null;
+            if (session()->has('applied_voucher')) {
+                $voucher = \App\Models\Voucher::where('code', session('applied_voucher'))->first();
+                if ($voucher && $voucher->isValid($productTotal)) {
+                    $discount = $voucher->calculateDiscount($productTotal);
+                    $voucherCode = $voucher->code;
+                    $voucher->increment('used_count');
+                }
+            }
+
+            $totalAmount = ($productTotal - $discount) + $shippingCost;
             
             $orderNumber = 'NK-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
 
@@ -146,6 +172,8 @@ class CartController extends Controller
                 'total_amount' => $totalAmount,
                 'shipping_cost' => $shippingCost,
                 'total_weight' => $totalWeight,
+                'voucher_code' => $voucherCode,
+                'discount_amount' => $discount,
                 'city_id' => $request->city, // Store city name
                 'courier' => strtoupper($request->courier),
                 'shipping_service' => $request->shipping_service,
@@ -175,8 +203,9 @@ class CartController extends Controller
             
             $order->update(['snap_token' => $snapToken]);
 
-            // Clear Cart
+            // Clear Cart and Voucher Session
             CartItem::where('user_id', Auth::id())->delete();
+            session()->forget('applied_voucher');
 
             return redirect()->route('customer.orders.show', $order->order_number);
         });

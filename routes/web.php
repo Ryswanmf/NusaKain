@@ -72,6 +72,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::resource('portofolio', \App\Http\Controllers\Admin\PortfolioController::class);
     Route::resource('blog', \App\Http\Controllers\Admin\PostController::class);
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('vouchers', \App\Http\Controllers\Admin\VoucherController::class);
     Route::resource('kontak', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('tentang-kami', \App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('pesanan', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'destroy']);
@@ -108,6 +109,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/{wishlist}', [\App\Http\Controllers\WishlistController::class, 'destroy'])->name('wishlist.destroy');
+
+    // Voucher AJAX Route
+    Route::post('/vouchers/validate', [\App\Http\Controllers\Admin\VoucherController::class, 'validateVoucher'])->name('vouchers.validate');
 
     // Customer Order Routes
     Route::get('/my-orders', [\App\Http\Controllers\CartController::class, 'orders'])->name('customer.orders');

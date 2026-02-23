@@ -60,6 +60,11 @@
                         <span>Blog</span>
                     </a>
 
+                    <a href="{{ route('admin.vouchers.index') }}" class="flex items-center space-x-3 px-4 py-3.5 rounded-2xl {{ Request::routeIs('admin.vouchers.*') ? 'bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }} transition-all font-bold text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                        <span>Voucher</span>
+                    </a>
+
                     <a href="{{ route('admin.kontak.index') }}" class="flex items-center space-x-3 px-4 py-3.5 rounded-2xl {{ Request::routeIs('admin.kontak.*') ? 'bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }} transition-all font-bold text-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         <span>Pesan Masuk</span>

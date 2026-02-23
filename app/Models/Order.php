@@ -22,6 +22,8 @@ class Order extends Model
         'shipping_cost',
         'courier',
         'shipping_service',
+        'voucher_code',
+        'discount_amount',
         'status',
         'payment_status',
         'payment_type',

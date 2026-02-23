@@ -97,6 +97,12 @@
                             <span>Subtotal Produk</span>
                             <span class="text-white">Rp{{ number_format($totalAmount, 0, ',', '.') }}</span>
                         </div>
+                        @if($discount > 0)
+                            <div class="flex justify-between text-xs font-bold text-rose-400">
+                                <span>Voucher ({{ $appliedVoucher->code }})</span>
+                                <span>-Rp{{ number_format($discount, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
                         <div class="flex justify-between text-xs font-bold text-slate-400">
                             <span>Estimasi Berat</span>
                             <span class="text-white">{{ $totalWeight / 1000 }} kg</span>
@@ -108,7 +114,7 @@
                         
                         <div class="pt-4 flex justify-between items-end">
                             <span class="text-sm font-bold uppercase tracking-widest">Total Bayar</span>
-                            <span id="total_amount_display" class="text-3xl font-black text-teal-400 italic">Rp{{ number_format($totalAmount + 20000, 0, ',', '.') }}</span>
+                            <span id="total_amount_display" class="text-3xl font-black text-teal-400 italic">Rp{{ number_format(($totalAmount - $discount) + 20000, 0, ',', '.') }}</span>
                         </div>
                     </div>
 
