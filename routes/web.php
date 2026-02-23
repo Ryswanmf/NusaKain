@@ -113,9 +113,11 @@ Route::middleware('auth')->group(function () {
     // Voucher AJAX Route
     Route::post('/vouchers/validate', [\App\Http\Controllers\Admin\VoucherController::class, 'validateVoucher'])->name('vouchers.validate');
 
-    // Customer Order Routes
+    // Customer Dashboard Routes
+    Route::get('/my-account', [\App\Http\Controllers\Customer\DashboardController::class, 'index'])->name('customer.dashboard');
     Route::get('/my-orders', [\App\Http\Controllers\CartController::class, 'orders'])->name('customer.orders');
     Route::get('/my-orders/{order_number}', [\App\Http\Controllers\CartController::class, 'showOrder'])->name('customer.orders.show');
+    Route::patch('/my-orders/{order}/confirm', [\App\Http\Controllers\CartController::class, 'confirmReceipt'])->name('customer.orders.confirm');
     Route::get('/my-orders/{order_number}/invoice', [\App\Http\Controllers\CartController::class, 'downloadInvoice'])->name('customer.orders.invoice');
     Route::post('/reviews', [\App\Http\Controllers\ProductReviewController::class, 'store'])->name('reviews.store');
 });

@@ -68,6 +68,29 @@
         </div>
     </article>
 
+    <!-- Related Products -->
+    @if($relatedProducts->count() > 0)
+        <section class="mt-24 pt-12 border-t border-slate-100">
+            <div class="mb-10">
+                <h3 class="text-2xl font-black text-slate-900 tracking-tight">Kain Terkait <span class="text-teal-600">Artikel Ini.</span></h3>
+                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mt-1">Material pilihan untuk inspirasi fashion Anda</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($relatedProducts as $related)
+                    <a href="{{ route('produk.show', $related->slug) }}" class="group bg-white p-4 rounded-[2.5rem] border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-500">
+                        <div class="aspect-square rounded-[2rem] overflow-hidden bg-slate-50 mb-4">
+                            @if($related->image)
+                                <img src="{{ asset('storage/' . $related->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            @endif
+                        </div>
+                        <h4 class="text-sm font-black text-slate-900 line-clamp-1 group-hover:text-teal-600 transition-colors">{{ $related->name }}</h4>
+                        <p class="text-xs font-bold text-teal-600 mt-1">Rp{{ number_format($related->price, 0, ',', '.') }}</p>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <div class="mt-24 pt-12 border-t border-slate-100">
         <div class="bg-slate-50 p-12 rounded-[3.5rem] text-center">
             <h3 class="text-2xl font-black text-slate-900 mb-4 tracking-tight">Ingin informasi kain lainnya?</h3>

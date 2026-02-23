@@ -312,4 +312,19 @@ class CartController extends Controller
             
         return view('landing_page.orders.show', compact('order'));
     }
+
+    public function confirmReceipt(\App\Models\Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status !== 'shipped') {
+            return redirect()->back()->with('error', 'Hanya pesanan yang sudah dikirim yang dapat dikonfirmasi.');
+        }
+
+        $order->update(['status' => 'completed']);
+
+        return redirect()->back()->with('success', 'Terima kasih! Pesanan Anda telah selesai. Silakan berikan review.');
+    }
 }

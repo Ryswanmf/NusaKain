@@ -19,6 +19,16 @@ class PostController extends Controller
     public function show($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
-        return view('landing_page.blog.show', compact('post'));
+        
+        $relatedProducts = \App\Models\Product::where('is_active', true)
+            ->where(function($query) use ($post) {
+                $query->where('category', 'like', '%' . $post->category . '%')
+                      ->orWhere('name', 'like', '%' . $post->category . '%');
+            })
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('landing_page.blog.show', compact('post', 'relatedProducts'));
     }
 }

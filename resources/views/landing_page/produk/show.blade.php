@@ -81,171 +81,143 @@
         </div>
 
         <!-- Info Section -->
-        <div class="flex flex-col justify-center">
-            <div class="mb-6 flex items-center justify-between lg:justify-start lg:space-x-6">
-                <span class="px-4 py-1.5 bg-teal-50 text-teal-600 text-xs font-black uppercase tracking-widest rounded-full">
+        <div class="flex flex-col">
+            <div class="mb-8 flex flex-wrap items-center gap-4">
+                <span class="px-5 py-2 bg-teal-50 text-teal-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border border-teal-100">
                     {{ $product->category ?? 'Koleksi Premium' }}
                 </span>
-                <div class="flex items-center text-amber-400">
-                    @for($i=0; $i<5; $i++)
-                        <svg class="w-4 h-4 {{ $i < floor($product->rating) ? 'fill-current' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    @endfor
-                    <span class="text-sm font-black ml-2 text-slate-400">{{ number_format($product->rating, 1) }}</span>
+                <div class="flex items-center bg-amber-50 px-4 py-2 rounded-xl border border-amber-100 text-amber-500">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <span class="text-sm font-black ml-2">{{ number_format($product->rating, 1) }}</span>
+                    <span class="text-[10px] font-bold text-amber-400/60 ml-2 uppercase tracking-widest">Global Rating</span>
                 </div>
             </div>
             
-            <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 italic">
                 {{ $product->name }}
             </h1>
 
-            <div class="flex flex-col mb-8">
-                <div class="flex items-end gap-4">
-                    <p id="display-price" class="text-4xl font-black text-teal-600 italic">
+            <div class="flex flex-col mb-10 p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl group-hover:bg-teal-500/20 transition-all duration-700"></div>
+                
+                <div class="flex items-end gap-4 relative z-10">
+                    <p id="display-price" class="text-5xl font-black text-teal-400 italic tracking-tighter">
                         {{ $product->formatted_price }}
                     </p>
-                    @if($product->original_price && $product->original_price > $product->price)
-                        <div id="display-discount-wrapper" class="flex flex-col mb-1">
-                            <span class="text-sm font-bold text-slate-400 line-through">{{ $product->formatted_original_price }}</span>
-                            <span class="text-[10px] font-black px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase tracking-widest mt-1 text-center w-fit animate-bounce">Hemat <span id="display-discount">{{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}</span>%</span>
-                        </div>
-                    @endif
-                    <span class="text-sm font-bold text-slate-400 mb-1 uppercase tracking-tighter">/ Meter</span>
+                    <span class="text-xs font-black text-slate-500 mb-2 uppercase tracking-widest">/ Meter</span>
                 </div>
-                <div class="flex items-center gap-3 mt-4">
-                    <span id="display-stock" class="text-sm font-bold {{ $product->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
-                        {{ $product->stock > 0 ? 'Stok: ' . $product->stock . ' Meter' : 'Stok Habis' }}
+
+                @if($product->original_price && $product->original_price > $product->price)
+                    <div id="display-discount-wrapper" class="flex items-center gap-4 mt-4 relative z-10">
+                        <span class="text-lg font-bold text-slate-500 line-through tracking-tighter">{{ $product->formatted_original_price }}</span>
+                        <span class="px-3 py-1 bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[10px] font-black rounded-lg uppercase tracking-[0.2em]">
+                            Hemat {{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}%
+                        </span>
+                    </div>
+                @endif
+
+                <div class="mt-8 pt-6 border-t border-white/5 flex items-center gap-3 relative z-10">
+                    <div class="w-2 h-2 rounded-full {{ $product->stock > 0 ? 'bg-green-400' : 'bg-rose-400' }} animate-pulse"></div>
+                    <span id="display-stock" class="text-[10px] font-black uppercase tracking-[0.2em] {{ $product->stock > 0 ? 'text-green-400' : 'text-rose-400' }}">
+                        {{ $product->stock > 0 ? 'Ready Stock: ' . (float)$product->stock . ' Meter' : 'Stok Habis' }}
                     </span>
                 </div>
             </div>
 
             @if($product->variants->count() > 0)
-                <div class="mb-10">
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Pilih Variasi</h3>
-                    <div class="flex flex-wrap gap-3">
+                <div class="mb-12">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Pilihan Material / Warna</h3>
+                    <div class="flex flex-wrap gap-4">
                         @foreach($product->variants as $variant)
                             <div onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->formatted_price }}', {{ $variant->stock }}, '{{ $variant->image ? asset('storage/' . $variant->image) : '' }}')" 
-                                 class="variant-option px-6 py-3 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-teal-500 hover:bg-teal-50 transition-all {{ $loop->first ? 'border-teal-500 bg-teal-50' : '' }}"
+                                 class="variant-option px-8 py-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-teal-500 transition-all duration-300 {{ $loop->first ? 'border-teal-500 bg-teal-50/30' : '' }}"
                                  data-id="{{ $variant->id }}">
-                                <span class="font-bold text-slate-700">{{ $variant->name }}</span>
+                                <span class="font-black text-slate-900 uppercase text-xs tracking-widest">{{ $variant->name }}</span>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endif
 
-            <div class="prose prose-slate prose-lg mb-10">
-                <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Deskripsi Produk</h3>
-                <p class="text-slate-600 leading-relaxed font-medium">
-                    {!! nl2br(e($product->description)) !!}
-                </p>
+            <div class="mb-12">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Deskripsi Produk</h3>
+                <div class="prose prose-slate max-w-none">
+                    <p class="text-slate-600 leading-relaxed font-medium text-lg">
+                        {!! nl2br(e($product->description)) !!}
+                    </p>
+                </div>
             </div>
 
-            <!-- Customer Reviews Section -->
-            <div class="mt-16 border-t border-slate-100 pt-16">
-                <div class="flex items-center justify-between mb-10">
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Review Pembeli <span class="text-teal-600">({{ $product->reviews->count() }})</span></h3>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        <span class="text-xl font-black text-slate-900">{{ number_format($product->rating, 1) }}</span>
-                    </div>
-                </div>
-
-                @forelse($product->reviews as $review)
-                    <div class="mb-10 pb-10 border-b border-slate-50 last:border-0">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 uppercase text-xs">
-                                {{ substr($review->user->name, 0, 1) }}
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-black text-slate-900">{{ $review->user->name }}</h4>
-                                <div class="flex items-center gap-1 mt-0.5">
-                                    @for($i=1; $i<=5; $i++)
-                                        <svg class="w-3 h-3 {{ $i <= $review->rating ? 'text-amber-400' : 'text-slate-200' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                    @endfor
-                                    <span class="text-[10px] text-slate-400 font-bold ml-2 uppercase">{{ $review->created_at->diffForHumans() }}</span>
-                                </div>
-                            </div>
+            <!-- Action Area -->
+            <div class="space-y-6">
+                <!-- Calculator -->
+                <button onclick="openCalculator()" class="w-full flex items-center justify-between p-6 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-teal-600 shadow-sm group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                         </div>
-                        <p class="text-slate-600 leading-relaxed text-sm font-medium">
-                            {{ $review->comment }}
-                        </p>
-                        @if($review->image)
-                            <div class="mt-4 w-32 h-32 rounded-2xl overflow-hidden border border-slate-100">
-                                <img src="{{ asset('storage/' . $review->image) }}" class="w-full h-full object-cover">
-                            </div>
-                        @endif
+                        <div class="text-left">
+                            <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Kalkulator Kebutuhan</h4>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Hitung estimasi panjang kain Anda</p>
+                        </div>
                     </div>
-                @empty
-                    <div class="py-12 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
-                        <p class="text-slate-400 font-bold italic">Belum ada review untuk produk ini. Jadi yang pertama mengulas!</p>
-                    </div>
-                @endforelse
-            </div>
+                    <svg class="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                </button>
 
-            <!-- Calculator Trigger Button -->
-            <button onclick="openCalculator()" class="mb-10 flex items-center space-x-3 px-6 py-4 bg-teal-50 text-teal-600 rounded-2xl font-bold hover:bg-teal-100 transition-all group">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                <span>Kalkulator Kebutuhan Kain</span>
-            </button>
-
-            <div class="mb-10 p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Jumlah Pembelian (Meter)</h3>
-                <div class="flex items-center space-x-4">
-                    <div class="relative flex-1 max-w-[200px]">
-                        <input type="number" 
-                               name="quantity_input" 
-                               id="quantity_input" 
-                               value="1" 
-                               min="0.5" 
-                               step="0.5" 
-                               onchange="updateQuantity(this.value)"
-                               class="w-full pl-6 pr-12 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-2 focus:ring-teal-600 focus:border-transparent font-black text-slate-900 transition-all">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 font-black text-slate-400 text-xs">METER</span>
+                <div class="p-8 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center">Tentukan Jumlah (Meter)</h3>
+                    <div class="flex items-center justify-center gap-6">
+                        <button onclick="adjustQty(-0.5)" class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all active:scale-90 font-black text-2xl">-</button>
+                        <div class="relative min-w-[120px]">
+                            <input type="number" id="quantity_input" value="1" min="0.5" step="0.5" onchange="updateQuantity(this.value)"
+                                   class="w-full text-center py-4 bg-transparent border-none font-black text-4xl text-slate-900 focus:ring-0">
+                            <div class="text-center text-[10px] font-black text-teal-600 uppercase tracking-widest -mt-1">Meter</div>
+                        </div>
+                        <button onclick="adjustQty(0.5)" class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all active:scale-90 font-black text-2xl">+</button>
                     </div>
-                    <p class="text-xs font-bold text-slate-400 italic">Minimal pembelian 0.5 meter</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <form action="{{ route('cart.store') }}" method="POST" class="w-full">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
+                        <input type="hidden" name="quantity" id="quantity_hidden" value="1">
+                        @auth
+                            <button type="submit" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-teal-100 active:scale-95 group/cart">
+                                <svg class="w-6 h-6 mr-3 transition-transform group-hover/cart:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                Ke Keranjang
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-teal-700 transition-all active:scale-95">
+                                Login untuk Beli
+                            </a>
+                        @endauth
+                    </form>
+                    
+                    <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan produk {{ $product->name }}. Apakah stok masih tersedia?" 
+                       target="_blank"
+                       class="flex items-center justify-center px-8 py-6 bg-slate-900 text-white rounded-[2rem] font-black text-xl hover:bg-teal-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
+                        <svg class="w-6 h-6 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                        Tanya Admin
+                    </a>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <form action="{{ route('cart.store') }}" method="POST" class="w-full">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
-                    <input type="hidden" name="quantity" id="quantity_hidden" value="1">
-                    @auth
-                        <button type="submit" class="w-full flex items-center justify-center px-8 py-5 bg-teal-600 text-white rounded-[2rem] font-black text-lg hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-95">
-                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                            Ke Keranjang
-                        </button>
-                    @else
-                        <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-5 bg-teal-600 text-white rounded-[2rem] font-black text-lg hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-95">
-                            Login untuk Beli
-                        </a>
-                    @endauth
-                </form>
-                
-                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan produk {{ $product->name }}. Apakah stok masih tersedia?" 
-                   target="_blank"
-                   class="flex items-center justify-center px-8 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-lg hover:bg-teal-600 transition-all shadow-xl shadow-slate-200 hover:shadow-teal-100 active:scale-95">
-                    <svg class="w-6 h-6 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
-                    Tanya Admin
-                </a>
-            </div>
-
-            <div class="mt-12 flex items-center space-x-8 p-6 bg-slate-50 rounded-[2rem] border border-slate-100/50">
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pengiriman</span>
-                    <span class="text-xs font-bold text-slate-700 mt-1">Seluruh Indonesia</span>
+            <div class="mt-12 flex items-center justify-center space-x-8 p-8 bg-white rounded-[2.5rem] border border-slate-100">
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Kurir</span>
+                    <span class="text-xs font-black text-slate-900 uppercase">Se-Indonesia</span>
                 </div>
-                <div class="h-8 w-[1px] bg-slate-200"></div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Garansi</span>
-                    <span class="text-xs font-bold text-slate-700 mt-1">Kualitas Premium</span>
+                <div class="h-10 w-px bg-slate-100"></div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Kualitas</span>
+                    <span class="text-xs font-black text-teal-600 uppercase tracking-tighter">Premium Grade</span>
                 </div>
-                <div class="h-8 w-[1px] bg-slate-200"></div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pembayaran</span>
-                    <span class="text-xs font-bold text-slate-700 mt-1">Transfer Bank</span>
+                <div class="h-10 w-px bg-slate-100"></div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Waktu</span>
+                    <span class="text-xs font-black text-slate-900 uppercase">Proses Cepat</span>
                 </div>
             </div>
         </div>
@@ -253,30 +225,104 @@
 
     <!-- Related Products Section -->
     @if($relatedProducts->count() > 0)
-        <section class="mt-32">
-            <div class="flex items-center justify-between mb-12">
-                <h2 class="text-3xl font-black text-slate-900 tracking-tight">Produk <span class="text-teal-600">Serupa</span></h2>
-                <a href="{{ route('produk.index') }}?category={{ $product->category }}" class="text-sm font-bold text-teal-600 hover:underline underline-offset-4">Lihat Lainnya</a>
+        <section class="mt-40">
+            <div class="flex items-center justify-between mb-16">
+                <div>
+                    <h2 class="text-4xl font-black text-slate-900 tracking-tight italic">Produk <span class="text-teal-600">Serupa.</span></h2>
+                    <p class="text-slate-400 font-bold mt-2 uppercase text-[10px] tracking-[0.2em]">Material sejenis untuk koleksi Anda</p>
+                </div>
+                <a href="{{ route('produk.index') }}?category={{ $product->category }}" class="px-6 py-3 bg-slate-50 text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition-all">Lihat Lainnya</a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($relatedProducts as $related)
-                    <div class="group relative bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-                        <div class="aspect-square rounded-[2rem] overflow-hidden bg-gray-100 mb-6">
+                    <a href="{{ route('produk.show', $related->slug) }}" class="group bg-white rounded-[2.5rem] p-4 border border-slate-50 shadow-sm hover:shadow-xl transition-all duration-500">
+                        <div class="aspect-square rounded-[2rem] overflow-hidden bg-slate-50 mb-6 relative">
                             @if($related->image)
-                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             @endif
+                            <div class="absolute inset-0 bg-teal-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
-                        <div class="px-2 pb-2">
-                            <h3 class="text-lg font-black text-slate-900 line-clamp-1">{{ $related->name }}</h3>
-                            <p class="text-sm font-black text-teal-600 mt-1">Rp{{ number_format($related->price, 0, ',', '.') }}</p>
-                            <a href="{{ route('produk.show', $related->slug) }}" class="absolute inset-0 z-10"></a>
+                        <div class="px-2">
+                            <span class="text-[9px] font-black text-teal-600 uppercase tracking-widest">{{ $related->category }}</span>
+                            <h3 class="text-lg font-black text-slate-900 line-clamp-1 mt-1 group-hover:text-teal-600 transition-colors italic">{{ $related->name }}</h3>
+                            <p class="text-base font-black text-slate-400 mt-2">Rp{{ number_format($related->price, 0, ',', '.') }}</p>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </section>
     @endif
+
+    <!-- Customer Reviews Section -->
+    <section class="mt-40 border-t border-slate-100 pt-24">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-16">
+                <div>
+                    <h3 class="text-4xl font-black text-slate-900 tracking-tight italic">Review <span class="text-teal-600">Pembeli.</span></h3>
+                    <p class="text-slate-400 font-bold mt-2 uppercase text-[10px] tracking-[0.2em]">Pendapat mereka tentang material ini</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-6 h-6 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <span class="text-3xl font-black text-slate-900 italic">{{ number_format($product->rating, 1) }}</span>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-1">{{ $product->reviews->count() }} Ulasan</span>
+                </div>
+            </div>
+
+            <div class="space-y-10">
+                @forelse($product->reviews as $review)
+                    <div class="bg-white p-10 rounded-[3rem] border border-slate-50 shadow-sm hover:shadow-md transition-all">
+                        <div class="flex items-center gap-5 mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-300 uppercase text-lg shadow-inner">
+                                {{ substr($review->user->name, 0, 1) }}
+                            </div>
+                            <div>
+                                <h4 class="text-base font-black text-slate-900 tracking-tight">{{ $review->user->name }}</h4>
+                                <div class="flex items-center gap-1.5 mt-1">
+                                    @for($i=1; $i<=5; $i++)
+                                        <svg class="w-3.5 h-3.5 {{ $i <= $review->rating ? 'text-amber-400' : 'text-slate-100' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    @endfor
+                                    <span class="text-[10px] text-slate-300 font-bold ml-2 uppercase tracking-widest">{{ $review->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-lg font-medium italic">
+                            "{{ $review->comment }}"
+                        </p>
+                        @if($review->image)
+                            <div class="mt-8 relative group/review-img inline-block">
+                                <div class="absolute -inset-2 bg-teal-500/10 rounded-[2rem] blur opacity-0 group-hover/review-img:opacity-100 transition-opacity"></div>
+                                <img src="{{ asset('storage/' . $review->image) }}" class="relative w-40 h-40 rounded-[1.5rem] object-cover border border-slate-100 shadow-sm">
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <div class="py-20 text-center bg-slate-50/50 rounded-[4rem] border border-dashed border-slate-200">
+                        <div class="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            <svg class="w-10 h-10 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                        </div>
+                        <p class="text-slate-400 font-black uppercase tracking-[0.2em] text-xs">Belum ada review produk</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
+    </section>
 </main>
+
+<!-- Cart Success Toast -->
+<div id="cart-toast" class="fixed top-24 right-10 z-[100] transform transition-all duration-500 opacity-0 translate-x-10 pointer-events-none">
+    <div class="bg-white border border-teal-100 p-6 rounded-[2.5rem] shadow-2xl flex items-center gap-5 min-w-[320px]">
+        <div class="w-14 h-14 bg-teal-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-teal-200 animate__animated animate__bounceIn">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+            <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Berhasil!</h4>
+            <p class="text-xs font-bold text-slate-400">Produk masuk keranjang.</p>
+            <a href="{{ route('cart.index') }}" class="inline-block mt-2 text-[10px] font-black text-teal-600 uppercase tracking-widest hover:underline underline-offset-4">Lihat Keranjang →</a>
+        </div>
+    </div>
+</div>
 
 <!-- Calculator Modal -->
 <div id="calcModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden p-4">
@@ -376,6 +422,28 @@
     function updateQuantity(val) {
         document.getElementById('quantity_hidden').value = val;
     }
+
+    function adjustQty(amount) {
+        const input = document.getElementById('quantity_input');
+        let newVal = parseFloat(input.value) + amount;
+        if (newVal < 0.5) newVal = 0.5;
+        input.value = newVal;
+        updateQuantity(newVal);
+    }
+
+    // Show Toast if success
+    @if(session('success') && (strpos(session('success'), 'berhasil ditambahkan') !== false))
+        document.addEventListener('DOMContentLoaded', function() {
+            const toast = document.getElementById('cart-toast');
+            toast.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-x-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-x-0');
+            }, 5000);
+        });
+    @endif
 
     // Initialize GLightbox
     const lightbox = GLightbox({

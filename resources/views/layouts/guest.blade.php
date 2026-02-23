@@ -95,6 +95,7 @@
                             @if(Auth::user()->isAdmin())
                                 <a href="{{ url('/dashboard') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Admin Dashboard</a>
                             @endif
+                            <a href="{{ route('customer.dashboard') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Dashboard Akun</a>
                             <a href="{{ route('customer.orders') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Pesanan Saya</a>
                             <hr class="my-2 border-slate-50">
                             <form method="POST" action="{{ route('logout') }}">
@@ -271,5 +272,98 @@
 </script>
 
     @stack('scripts')
+
+    <!-- Nusakain Help Assistant (Chatbot UI) -->
+    <div class="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
+        <!-- Chat Bubble Popup -->
+        <div id="chat-popup" class="hidden mb-6 w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate__animated animate__fadeInUp animate__faster">
+            <!-- Header -->
+            <div class="bg-slate-900 p-8 text-white relative">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl"></div>
+                <div class="flex items-center gap-4 relative z-10">
+                    <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/30">
+                        <img src="{{ asset('images/favicon.png') }}" class="w-8 h-8 object-contain invert brightness-0">
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black uppercase tracking-widest">Nusakain Bot</h4>
+                        <p class="text-[10px] font-bold text-teal-400 uppercase tracking-tighter">Online • Siap Membantu</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menu Options -->
+            <div class="p-6 space-y-3 bg-slate-50/50">
+                <p class="px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pilih bantuan yang Anda butuhkan:</p>
+                
+                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya butuh bantuan mengenai..." target="_blank" 
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                        </div>
+                        <span class="text-sm font-bold text-slate-700">Chat WhatsApp</span>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+
+                <a href="{{ route('customer.orders') }}" 
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
+                        <span class="text-sm font-bold text-slate-700">Lacak Pesanan</span>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+
+                <a href="{{ route('faqs.index') }}" 
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <span class="text-sm font-bold text-slate-700">Tanya Jawab (FAQ)</span>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 text-center border-t border-slate-50">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Powered by Nusakain Digital</p>
+            </div>
+        </div>
+
+        <!-- Floating Button -->
+        <button onclick="toggleChat()" class="w-16 h-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:bg-teal-600 transition-all hover:scale-110 active:scale-95 group relative">
+            <div id="chat-icon-open">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            </div>
+            <div id="chat-icon-close" class="hidden">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <!-- Notification Dot -->
+            <span class="absolute top-0 right-0 w-4 h-4 bg-teal-500 border-4 border-white rounded-full"></span>
+        </button>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const popup = document.getElementById('chat-popup');
+            const iconOpen = document.getElementById('chat-icon-open');
+            const iconClose = document.getElementById('chat-icon-close');
+            
+            if (popup.classList.contains('hidden')) {
+                popup.classList.remove('hidden');
+                iconOpen.classList.add('hidden');
+                iconClose.classList.remove('hidden');
+            } else {
+                popup.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>

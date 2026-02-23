@@ -80,6 +80,14 @@
                         @endphp
                         <p class="text-xl font-black uppercase tracking-tight {{ $statusClasses[$order->status] }}">{{ $order->status }}</p>
                     </div>
+                    @if($order->status === 'shipped')
+                        <form action="{{ route('customer.orders.confirm', $order) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="px-8 py-3 bg-teal-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-teal-700 transition-all shadow-lg shadow-teal-100">
+                                Konfirmasi Pesanan Diterima
+                            </button>
+                        </form>
+                    @endif
                     <div class="text-right">
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Waktu Transaksi</p>
                         <p class="text-sm font-bold text-slate-900">{{ $order->created_at->format('d M Y, H:i') }}</p>

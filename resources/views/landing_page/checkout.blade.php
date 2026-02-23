@@ -35,24 +35,22 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2 md:col-span-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kota / Kabupaten Tujuan</label>
-                            <input type="text" name="city" required placeholder="Masukkan nama kota tujuan..."
-                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
-                        </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kota / Kabupaten Tujuan</label>
+                        <input type="text" name="city" value="{{ old('city', Auth::user()->city ?? '') }}" required placeholder="Masukkan nama kota tujuan..."
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
                     </div>
 
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Alamat Lengkap</label>
                         <textarea name="address_detail" rows="4" required placeholder="Nama Jalan, Blok, No. Rumah..."
-                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">{{ old('address_detail') }}</textarea>
+                            class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">{{ old('address_detail', Auth::user()->address ?? '') }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kode Pos</label>
-                            <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code') }}" required
+                            <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code', Auth::user()->postal_code ?? '') }}" required
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
                         </div>
                         <div class="space-y-2">

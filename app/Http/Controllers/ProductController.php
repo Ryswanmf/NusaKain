@@ -21,6 +21,14 @@ class ProductController extends Controller
             $query->where('category', $request->category);
         }
 
+        // Filter by price range
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
         $products = $query->latest()->paginate(12)->withQueryString();
         
         $categories = Product::where('is_active', true)
