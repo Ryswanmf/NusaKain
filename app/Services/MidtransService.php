@@ -17,31 +17,44 @@ class MidtransService
 
     public function getSnapToken($order)
     {
+        $itemDetails = $this->prepareItemDetails($order);
+        $totalFromItems = array_sum(array_column($itemDetails, 'price'));
+
         $params = [
             'transaction_details' => [
                 'order_id' => $order->order_number,
-                'gross_amount' => (int) $order->total_amount,
+                'gross_amount' => $totalFromItems,
             ],
             'customer_details' => [
                 'first_name' => $order->user->name,
                 'email' => $order->user->email,
                 'phone' => $order->user->phone ?? $order->receiver_phone,
             ],
-            'item_details' => $this->prepareItemDetails($order),
+            'item_details' => $itemDetails,
         ];
 
         return Snap::getSnapToken($params);
+    }
+
+    public function status($orderId)
+    {
+        try {
+            return \Midtrans\Transaction::status($orderId);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     protected function prepareItemDetails($order)
     {
         $items = [];
         foreach ($order->items as $item) {
+            $subtotal = (int) ($item->unit_price * $item->quantity);
             $items[] = [
-                'id' => $item->product_id,
-                'price' => (int) $item->unit_price,
-                'quantity' => $item->quantity,
-                'name' => \Illuminate\Support\Str::limit($item->product->name, 50),
+                'id' => $item->product_id . ($item->product_variant_id ? '-' . $item->product_variant_id : ''),
+                'price' => $subtotal,
+                'quantity' => 1,
+                'name' => \Illuminate\Support\Str::limit($item->product->name . ' (' . (float)$item->quantity . 'm)', 50),
             ];
         }
 

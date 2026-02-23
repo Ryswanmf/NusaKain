@@ -37,7 +37,7 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'product_variant_id' => 'nullable|exists:product_variants,id',
-            'quantity' => 'nullable|integer|min:1',
+            'quantity' => 'nullable|numeric|min:0.1',
         ]);
 
         $cartItem = CartItem::where('user_id', Auth::id())
@@ -66,7 +66,7 @@ class CartController extends Controller
         }
 
         $request->validate([
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|numeric|min:0.1',
         ]);
 
         $cartItem->update(['quantity' => $request->quantity]);
@@ -110,8 +110,12 @@ class CartController extends Controller
         $request->validate([
             'receiver_name' => 'required|string|max:255',
             'receiver_phone' => 'required|string|max:20',
+            'city' => 'required|string',
             'address_detail' => 'required|string',
             'postal_code' => 'required|string|max:10',
+            'courier' => 'required',
+            'shipping_service' => 'required',
+            'shipping_cost' => 'required|numeric',
         ]);
 
         $cartItems = CartItem::with(['product', 'variant'])->where('user_id', Auth::id())->get();
@@ -130,8 +134,7 @@ class CartController extends Controller
                 return ($item->variant->weight ?? $item->product->weight) * $item->quantity;
             });
 
-            // For now, simple flat shipping or 0 until RajaOngkir is integrated
-            $shippingCost = 0; 
+            $shippingCost = 20000; 
             $totalAmount = $productTotal + $shippingCost;
             
             $orderNumber = 'NK-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -143,6 +146,9 @@ class CartController extends Controller
                 'total_amount' => $totalAmount,
                 'shipping_cost' => $shippingCost,
                 'total_weight' => $totalWeight,
+                'city_id' => $request->city, // Store city name
+                'courier' => strtoupper($request->courier),
+                'shipping_service' => $request->shipping_service,
                 'receiver_name' => $request->receiver_name,
                 'receiver_phone' => $request->receiver_phone,
                 'address_detail' => $request->address_detail,
@@ -178,10 +184,13 @@ class CartController extends Controller
 
     public function callback(Request $request)
     {
+        \Illuminate\Support\Facades\Log::info('Midtrans Callback Received', $request->all());
+
         $serverKey = config('services.midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
         
         if ($hashed == $request->signature_key) {
+            \Illuminate\Support\Facades\Log::info('Midtrans Signature Validated');
             $order = \App\Models\Order::where('order_number', $request->order_id)->first();
             if ($order) {
                 $transaction = $request->transaction_status;
@@ -189,26 +198,33 @@ class CartController extends Controller
                 $order_id = $request->order_id;
                 $fraud = $request->fraud_status;
 
-                if ($transaction == 'capture') {
-                    if ($type == 'credit_card') {
-                        if ($fraud == 'challenge') {
-                            $order->update(['payment_status' => 'pending']);
-                        } else {
-                            $order->update(['payment_status' => 'paid', 'status' => 'processing']);
+                if ($transaction == 'capture' || $transaction == 'settlement') {
+                    if ($type == 'credit_card' && $fraud == 'challenge') {
+                        $order->update(['payment_status' => 'pending']);
+                    } else {
+                        // Jika status sebelumnya belum paid, maka kurangi stok
+                        if ($order->payment_status !== 'paid') {
+                            foreach ($order->items as $item) {
+                                if ($item->product_variant_id) {
+                                    $item->variant->decrement('stock', $item->quantity);
+                                } else {
+                                    $item->product->decrement('stock', $item->quantity);
+                                }
+                            }
                         }
+                        $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                     }
-                } elseif ($transaction == 'settlement') {
-                    $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                 } elseif ($transaction == 'pending') {
                     $order->update(['payment_status' => 'pending']);
-                } elseif ($transaction == 'deny') {
-                    $order->update(['payment_status' => 'failed']);
-                } elseif ($transaction == 'expire') {
-                    $order->update(['payment_status' => 'failed']);
-                } elseif ($transaction == 'cancel') {
+                } elseif ($transaction == 'deny' || $transaction == 'expire' || $transaction == 'cancel') {
                     $order->update(['payment_status' => 'failed']);
                 }
             }
+        } else {
+            \Illuminate\Support\Facades\Log::error('Midtrans Invalid Signature', [
+                'expected' => $hashed,
+                'received' => $request->signature_key
+            ]);
         }
 
         return response()->json(['status' => 'success']);
@@ -227,14 +243,40 @@ class CartController extends Controller
             ->with('items.product')
             ->firstOrFail();
 
+        $midtrans = new MidtransService();
+
+        // Sync status from Midtrans if still pending/unpaid locally
+        if (in_array($order->payment_status, ['unpaid', 'pending'])) {
+            $status = $midtrans->status($order->order_number);
+            
+            if ($status) {
+                $transaction = $status->transaction_status;
+                if ($transaction == 'capture' || $transaction == 'settlement') {
+                    // Update Stok if first time paid
+                    if ($order->payment_status !== 'paid') {
+                        foreach ($order->items as $item) {
+                            if ($item->product_variant_id) {
+                                $item->variant->decrement('stock', $item->quantity);
+                            } else {
+                                $item->product->decrement('stock', $item->quantity);
+                            }
+                        }
+                    }
+                    $order->update(['payment_status' => 'paid', 'status' => 'processing']);
+                } elseif ($transaction == 'pending') {
+                    $order->update(['payment_status' => 'pending']);
+                } elseif (in_array($transaction, ['deny', 'expire', 'cancel'])) {
+                    $order->update(['payment_status' => 'failed']);
+                }
+            }
+        }
+
         // Regenerate snap token if missing and unpaid
         if ($order->payment_status === 'unpaid' && !$order->snap_token) {
             try {
-                $midtrans = new MidtransService();
                 $snapToken = $midtrans->getSnapToken($order);
                 $order->update(['snap_token' => $snapToken]);
             } catch (\Exception $e) {
-                // Log error or handle gracefully
                 logger()->error('Midtrans Snap Token Error: ' . $e->getMessage());
             }
         }

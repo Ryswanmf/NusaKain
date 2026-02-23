@@ -65,6 +65,12 @@ class OrderForm
                             ->numeric()
                             ->prefix('Rp')
                             ->default(0),
+                        TextInput::make('courier')
+                            ->label('Kurir')
+                            ->disabled(),
+                        TextInput::make('shipping_service')
+                            ->label('Layanan')
+                            ->disabled(),
                         TextInput::make('total_weight')
                             ->label('Total Berat (gr)')
                             ->numeric()

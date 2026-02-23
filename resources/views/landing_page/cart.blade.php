@@ -42,8 +42,8 @@
                         <form action="{{ route('cart.update', $item->id) }}" method="POST" class="flex items-center bg-slate-50 rounded-full px-2 py-1">
                             @csrf
                             @method('PATCH')
-                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" onchange="this.form.submit()" 
-                                   class="w-16 bg-transparent border-none text-center font-black text-slate-900 focus:ring-0">
+                            <input type="number" name="quantity" value="{{ (float)$item->quantity }}" min="0.5" step="0.5" onchange="this.form.submit()" 
+                                   class="w-20 bg-transparent border-none text-center font-black text-slate-900 focus:ring-0">
                         </form>
 
                         <form action="{{ route('cart.destroy', $item->id) }}" method="POST">

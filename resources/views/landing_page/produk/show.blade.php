@@ -146,12 +146,30 @@
                 <span>Kalkulator Kebutuhan Kain</span>
             </button>
 
+            <div class="mb-10 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Jumlah Pembelian (Meter)</h3>
+                <div class="flex items-center space-x-4">
+                    <div class="relative flex-1 max-w-[200px]">
+                        <input type="number" 
+                               name="quantity_input" 
+                               id="quantity_input" 
+                               value="1" 
+                               min="0.5" 
+                               step="0.5" 
+                               onchange="updateQuantity(this.value)"
+                               class="w-full pl-6 pr-12 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-2 focus:ring-teal-600 focus:border-transparent font-black text-slate-900 transition-all">
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 font-black text-slate-400 text-xs">METER</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-400 italic">Minimal pembelian 0.5 meter</p>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <form action="{{ route('cart.store') }}" method="POST" class="w-full">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
-                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="quantity" id="quantity_hidden" value="1">
                     @auth
                         <button type="submit" class="w-full flex items-center justify-center px-8 py-5 bg-teal-600 text-white rounded-[2rem] font-black text-lg hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-95">
                             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -311,6 +329,10 @@
         const base = parseFloat(document.getElementById('garmentType').value);
         const result = (base * currentMultiplier).toFixed(2);
         document.getElementById('resultLength').innerText = result;
+    }
+
+    function updateQuantity(val) {
+        document.getElementById('quantity_hidden').value = val;
     }
 
     // Initialize GLightbox

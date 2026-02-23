@@ -113,11 +113,6 @@
 
                     <div class="h-[1px] bg-slate-800 my-4 mx-4"></div>
 
-                    <a href="/riswan" class="flex items-center space-x-3 px-4 py-3.5 rounded-2xl text-slate-500 hover:bg-teal-500 hover:text-slate-900 transition-all font-black text-[10px] uppercase tracking-widest border border-slate-800">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        <span>Dashboard Filament</span>
-                    </a>
-
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 px-4 py-3.5 rounded-2xl {{ Request::routeIs('profile.edit') ? 'bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }} transition-all font-bold text-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         <span>Profil</span>

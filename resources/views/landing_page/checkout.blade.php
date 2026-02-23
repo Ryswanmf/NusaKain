@@ -35,6 +35,14 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kota / Kabupaten Tujuan</label>
+                            <input type="text" name="city" required placeholder="Masukkan nama kota tujuan..."
+                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
+                        </div>
+                    </div>
+
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Alamat Lengkap</label>
                         <textarea name="address_detail" rows="4" required placeholder="Nama Jalan, Blok, No. Rumah..."
@@ -44,8 +52,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kode Pos</label>
-                            <input type="text" name="postal_code" value="{{ old('postal_code') }}" required
+                            <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code') }}" required
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Ekspedisi (Opsional)</label>
+                            <select name="courier" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 transition-all font-bold">
+                                <option value="JNE">JNE</option>
+                                <option value="TIKI">TIKI</option>
+                                <option value="POS">POS Indonesia</option>
+                            </select>
+                            <input type="hidden" name="shipping_service" value="REG">
                         </div>
                     </div>
                 </div>
@@ -64,7 +81,7 @@
                                 <div class="flex flex-col min-w-0 pr-4">
                                     <span class="font-bold truncate">{{ $item->product->name }}</span>
                                     <span class="text-[10px] text-slate-400 uppercase tracking-widest">
-                                        {{ $item->quantity }}m @if($item->variant) • {{ $item->variant->name }} @endif
+                                        {{ (float)$item->quantity }}m @if($item->variant) • {{ $item->variant->name }} @endif
                                     </span>
                                 </div>
                                 <span class="font-black whitespace-nowrap">
@@ -86,16 +103,19 @@
                         </div>
                         <div class="flex justify-between text-xs font-bold text-slate-400">
                             <span>Ongkos Kirim</span>
-                            <span class="text-teal-400">Gratis (Promo)</span>
+                            <span id="shipping_cost_display" class="text-teal-400">Rp 20.000</span>
                         </div>
                         
                         <div class="pt-4 flex justify-between items-end">
                             <span class="text-sm font-bold uppercase tracking-widest">Total Bayar</span>
-                            <span class="text-3xl font-black text-teal-400 italic">Rp{{ number_format($totalAmount, 0, ',', '.') }}</span>
+                            <span id="total_amount_display" class="text-3xl font-black text-teal-400 italic">Rp{{ number_format($totalAmount + 20000, 0, ',', '.') }}</span>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-10 py-5 bg-teal-500 text-slate-900 rounded-2xl font-black text-lg hover:bg-teal-400 transition-all active:scale-95 shadow-lg shadow-teal-500/20">
+                    <input type="hidden" name="shipping_cost" id="shipping_cost_hidden" value="20000">
+                    <input type="hidden" name="total_amount" id="total_amount_hidden" value="{{ $totalAmount + 20000 }}">
+
+                    <button type="submit" id="checkout-button" class="w-full mt-10 py-5 bg-teal-500 text-slate-900 rounded-2xl font-black text-lg hover:bg-teal-400 transition-all active:scale-95 shadow-lg shadow-teal-500/20">
                         Proses Pembayaran
                     </button>
                 </div>
@@ -112,4 +132,46 @@
         </div>
     </form>
 </main>
+
+<!-- Custom Notification Toast -->
+<div id="notification-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] transform transition-all duration-500 opacity-0 translate-y-10 pointer-events-none">
+    <div class="bg-slate-900 text-white px-8 py-4 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/10 backdrop-blur-md">
+        <div id="notif-icon" class="w-8 h-8 rounded-full flex items-center justify-center">
+            <!-- Icon will be inserted by JS -->
+        </div>
+        <p id="notif-message" class="text-sm font-bold tracking-tight"></p>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    const checkoutBtn = document.getElementById('checkout-button');
+    
+    const productTotal = {{ $totalAmount }};
+    const totalWeight = {{ $totalWeight }};
+
+    function showNotification(message, type = 'error') {
+        const toast = document.getElementById('notification-toast');
+        const iconContainer = document.getElementById('notif-icon');
+        const messageEl = document.getElementById('notif-message');
+
+        if (type === 'error') {
+            iconContainer.className = "w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center flex-shrink-0";
+            iconContainer.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>';
+        } else {
+            iconContainer.className = "w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center flex-shrink-0";
+            iconContainer.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
+        }
+
+        messageEl.innerText = message;
+        toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+            toast.classList.remove('opacity-100', 'translate-y-0');
+        }, 4000);
+    }
+</script>
+@endpush
 @endsection

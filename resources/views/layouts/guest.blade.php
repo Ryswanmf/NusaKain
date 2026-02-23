@@ -93,7 +93,7 @@
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[60]">
                             @if(Auth::user()->isAdmin())
-                                <a href="{{ url('/riswan') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Admin Panel</a>
+                                <a href="{{ url('/dashboard') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Admin Dashboard</a>
                             @endif
                             <a href="{{ route('customer.orders') }}" class="block px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 hover:bg-teal-50 transition-colors">Pesanan Saya</a>
                             <hr class="my-2 border-slate-50">
@@ -135,7 +135,7 @@
         <div class="flex flex-col space-y-3">
             @auth
                 @if(Auth::user()->isAdmin())
-                    <a href="{{ url('/riswan') }}" class="text-center py-3 bg-teal-600 text-white rounded-xl font-bold">Admin Panel</a>
+                    <a href="{{ url('/dashboard') }}" class="text-center py-3 bg-teal-600 text-white rounded-xl font-bold">Admin Dashboard</a>
                 @endif
             @else
                 <a href="{{ route('login') }}" class="text-center font-bold text-slate-700">Log in</a>

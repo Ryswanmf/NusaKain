@@ -43,7 +43,28 @@ Route::get('/p/{slug}', function($slug) {
 Route::post('/midtrans/callback', [\App\Http\Controllers\CartController::class, 'callback'])->name('midtrans.callback');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $stats = [
+        'total_orders' => \App\Models\Order::count(),
+        'total_revenue' => \App\Models\Order::where('payment_status', 'paid')->sum('total_amount'),
+        'total_customers' => \App\Models\User::where('role', 'user')->count(),
+        'low_stock' => \App\Models\Product::where('stock', '<', 5)->count(),
+    ];
+
+    $recentOrders = \App\Models\Order::with('user')->latest()->take(5)->get();
+    
+    // Simple Chart Data (Last 7 Days)
+    $chartData = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $date = now()->subDays($i)->format('Y-m-d');
+        $chartData['labels'][] = now()->subDays($i)->format('D');
+        $chartData['orders'][] = \App\Models\Order::whereDate('created_at', $date)->count();
+    }
+
+    $categoryDistribution = \App\Models\Product::select('category', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+        ->groupBy('category')
+        ->get();
+
+    return view('dashboard', compact('stats', 'recentOrders', 'chartData', 'categoryDistribution'));
 })->middleware(['auth', 'verified', 'admin'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -80,6 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/{cartItem}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
     Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/checkout', [\App\Http\Controllers\CartController::class, 'processCheckout'])->name('cart.processCheckout');
+
+    // Shipping AJAX Routes (Removed)
 
     // Wishlist Routes
     Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');

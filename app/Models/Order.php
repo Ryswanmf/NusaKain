@@ -20,6 +20,8 @@ class Order extends Model
         'postal_code',
         'total_weight',
         'shipping_cost',
+        'courier',
+        'shipping_service',
         'status',
         'payment_status',
         'payment_type',
