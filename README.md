@@ -1,113 +1,105 @@
-# Nusakain - Modern Textile Business Platform
+# Nusakain - Premium Textile Ecosystem
 
-Nusakain adalah platform digital berbasis web untuk bisnis tekstil/kain yang modern dan profesional. Dibangun dengan **Laravel 12** dan **Filament 3**, aplikasi ini dirancang untuk memudahkan pengelolaan produk, portofolio, blog, serta interaksi dengan pelanggan melalui admin panel yang intuitif.
+Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus untuk ekosistem bisnis tekstil premium di Indonesia. Dibangun dengan teknologi terbaru **Laravel 12** dan **Filament 3**, platform ini menawarkan pengalaman belanja kain yang presisi, sistem pembayaran otomatis, dan manajemen operasional yang efisien.
 
-## Tech Stack
-- **Framework:** [Laravel 12.x](https://laravel.com)
-- **Admin Panel:** [Filament v3.x](https://filamentphp.com) (Custom path: `/riswan`)
-- **Frontend Styling:** [Tailwind CSS](https://tailwindcss.com) (Modern "Toska" Theme)
-- **Database:** SQLite (Default) / MySQL / PostgreSQL
-- **Auth:** Laravel Breeze (Customized UI)
-
-## Fitur Utama
-
-### 1. Katalog Produk
-- Manajemen kain premium dengan kategori (Katun, Linen, Denim, dll).
-- Otomatisasi generate Slug untuk URL yang SEO-friendly.
-- Tampilan grid produk yang responsif dan elegan.
-
-### 2. Portofolio Proyek
-- Menampilkan kolaborasi dengan berbagai brand fashion.
-- Detail klien, kategori proyek, dan tanggal pelaksanaan.
-
-### 3. Blog & Artikel
-- Berbagi tips fashion dan tren industri tekstil.
-- Manajemen artikel lengkap dengan ringkasan (excerpt) dan konten panjang.
-
-### 4. Manajemen Tim (Tentang Kami)
-- Showcase profil tim di balik Nusakain.
-- Pengaturan urutan tampilan tim melalui admin panel.
-
-### 5. Kontak & Inkuiri
-- Formulir kontak fungsional untuk pesan pelanggan.
-- Notifikasi pesan belum dibaca (unread) di dashboard admin.
-
-### 6. Dashboard Admin Modern
-- Statistik real-time (Total Produk, Portofolio, Artikel, Pesan Baru).
-- Tema warna "Toska" (Teal) yang konsisten dengan frontend.
+## 🚀 Teknologi Utama
+- **Backend:** [Laravel 12.x](https://laravel.com)
+- **Admin Panel:** [Filament v3.x](https://filamentphp.com)
+- **Database:** MySQL / SQLite
+- **Payment Gateway:** [Midtrans Snap](https://midtrans.com)
+- **PDF Engine:** [Laravel-DomPDF](https://github.com/barryvdh/laravel-dompdf)
+- **Frontend:** Tailwind CSS, Alpine.js, Animate.css, GLightbox
 
 ---
 
-## 🛠 Panduan Instalasi
+## ✨ Fitur Unggulan
 
-### Prasyarat
+### 🛍️ E-Commerce Tekstil Khusus
+- **Beli per Meter (Desimal):** Mendukung pembelian kain dengan kuantitas desimal (contoh: 1.5m, 2.25m) dengan kelipatan 0.5m.
+- **Kalkulator Kebutuhan Kain:** Alat bantu interaktif bagi pembeli untuk mengestimasi panjang kain berdasarkan jenis pakaian dan ukuran tubuh.
+- **Varian Produk:** Manajemen variasi kain berdasarkan warna, material, atau grade khusus.
+- **Sistem Voucher:** Penggunaan kode promo (Potongan Rupiah atau Persentase) dengan validasi minimal belanja dan kuota penggunaan.
+
+### 💳 Transaksi & Pembayaran
+- **Integrasi Midtrans Snap:** Pembayaran aman menggunakan berbagai metode (Bank Transfer, QRIS, Kartu Kredit).
+- **Auto-Sync Payment:** Sinkronisasi status pembayaran secara real-time dari API Midtrans.
+- **Manajemen Stok Otomatis:** Stok kain berkurang secara otomatis hanya setelah pembayaran dikonfirmasi berhasil.
+- **Auto-Cancel Orders:** Pembatalan otomatis pesanan yang tidak dibayar dalam waktu 24 jam untuk menjaga akurasi stok.
+- **Invoice PDF:** Pembuatan dan pengunduhan invoice formal secara otomatis dalam format PDF.
+
+### 👤 Pengalaman Pelanggan (UX)
+- **Dashboard Akun Saya:** Ringkasan statistik belanja, riwayat pesanan, dan manajemen wishlist.
+- **Review & Rating:** Pembeli dapat memberikan ulasan bintang dan mengunggah foto kain yang telah diterima.
+- **Nusakain Assistant:** Widget bantuan melayang di pojok layar untuk akses cepat ke WhatsApp Admin, Lacak Pesanan, dan FAQ.
+- **Pencarian & Filter Canggih:** Filter produk berdasarkan kategori, rentang harga, dan status ketersediaan.
+
+### 🛡️ Dashboard Admin Kustom
+- **Statistik Bisnis:** Monitoring total penjualan, pendapatan bersih, jumlah pelanggan, dan stok kritis secara visual.
+- **Grafik Analitik:** Visualisasi tren pesanan harian dan distribusi kategori produk.
+- **Manajemen Lengkap:** CRUD untuk Produk, Pesanan, Voucher, Blog, Portofolio, Tim, dan Kontak Pelanggan.
+
+---
+
+## 🛠️ Panduan Instalasi
+
+### 1. Prasyarat
 - PHP >= 8.2
 - Composer
 - Node.js & NPM
+- Akun Midtrans (Sandbox/Production)
 
-### Langkah-langkah
-1. **Clone Repository:**
-   ```bash
-   git clone <repository-url>
-   cd Nusakain
-   ```
+### 2. Langkah Instalasi
+```bash
+# Clone repository
+git clone <repository-url>
+cd Nusakain
 
-2. **Instal Dependensi:**
-   ```bash
-   composer install
-   npm install
-   ```
+# Install dependensi PHP & JS
+composer install
+npm install && npm run build
 
-3. **Konfigurasi Environment:**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+# Konfigurasi Environment
+cp .env.example .env
+php artisan key:generate
 
-4. **Migrasi Database:**
-   ```bash
-   php artisan migrate
-   ```
+# Migrasi Database & Seeding
+php artisan migrate --seed
 
-5. **Link Storage:**
-   ```bash
-   php artisan storage:link
-   ```
+# Link Storage
+php artisan storage:link
+```
 
-6. **Jalankan Aplikasi:**
-   ```bash
-   npm run dev
-   # Buka terminal baru
-   php artisan serve
-   ```
+### 3. Konfigurasi .env (Penting)
+Pastikan Anda mengisi variabel berikut untuk fitur pembayaran:
+```env
+MIDTRANS_MERCHANT_ID=your_id
+MIDTRANS_CLIENT_KEY=your_client_key
+MIDTRANS_SERVER_KEY=your_server_key
+MIDTRANS_IS_PRODUCTION=false
+```
 
----
-
-## 📂 Struktur Proyek Utama
-
-- `app/Filament/Resources/` - Konfigurasi admin panel (Product, Portfolio, Post, Contact, TeamMember).
-- `app/Models/` - Definisi database dan logika model.
-- `app/Http/Controllers/` - Logika penanganan request landing page.
-- `resources/views/landing_page/` - Tampilan frontend utama.
-- `resources/views/layouts/app.blade.php` - Layout utama (Header & Footer).
-- `routes/web.php` - Definisi rute URL aplikasi.
+### 4. Menjalankan Task Scheduler
+Untuk fitur **Auto-Cancel Pesanan**, tambahkan Cron Job berikut di server Anda:
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
 
 ---
 
-## 🔐 Akses Admin
-
-- **URL:** `http://localhost:8000/riswan`
-- **Warna Tema:** Toska (Teal)
-- **Fitur Dashboard:** Stats Overview Widget untuk monitoring data.
-
----
-
-## 🎨 Kustomisasi Warna
-Website ini menggunakan palet warna **Toska** menggunakan Tailwind CSS:
-- Primary: `teal-600`
-- Secondary/Accent: `cyan-600`
-- Background: `gray-50/50`
+## 📂 Struktur Folder Utama
+- `app/Services/` - Logika integrasi Midtrans dan Shipping.
+- `app/Console/Commands/` - Tugas otomatisasi (Cancel Expired Orders).
+- `app/Filament/Resources/` - Pengaturan panel administrasi.
+- `resources/views/landing_page/` - Seluruh tampilan antarmuka pembeli.
+- `resources/views/admin/` - Tampilan dashboard admin kustom.
 
 ---
 
-© 2026 Nusakain Indonesia. Developed as a Modern Textile Solution.
+## 🎨 Palet Warna Brand
+- **Teal (Primary):** `#0d9488` - Melambangkan profesionalitas dan ketenangan.
+- **Slate (Secondary):** `#0f172a` - Melambangkan kemewahan dan kekuatan.
+- **Rose (Accent):** `#f43f5e` - Digunakan untuk penekanan urgensi dan promo.
+
+---
+
+© 2026 **Nusakain Indonesia**. Seluruh Hak Cipta Dilindungi.
