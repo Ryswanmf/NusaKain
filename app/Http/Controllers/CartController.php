@@ -188,12 +188,15 @@ class CartController extends Controller
             // Create Order Items
             foreach ($cartItems as $item) {
                 $unitPrice = $item->variant ? ($item->variant->price ?? $item->product->price) : $item->product->price;
+                $costPrice = $item->variant ? ($item->variant->cost_price ?? $item->product->cost_price) : $item->product->cost_price;
+                
                 \App\Models\OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
                     'product_variant_id' => $item->product_variant_id,
                     'quantity' => $item->quantity,
                     'unit_price' => $unitPrice,
+                    'cost_price' => $costPrice,
                 ]);
             }
 
@@ -233,15 +236,9 @@ class CartController extends Controller
                     } else {
                         // Jika status sebelumnya belum paid, maka kurangi stok
                         if ($order->payment_status !== 'paid') {
-                            foreach ($order->items as $item) {
-                                if ($item->product_variant_id) {
-                                    $item->variant->decrement('stock', $item->quantity);
-                                } else {
-                                    $item->product->decrement('stock', $item->quantity);
-                                }
-                            }
+                            $this->reduceStock($order);
+                            $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                         }
-                        $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                     }
                 } elseif ($transaction == 'pending') {
                     $order->update(['payment_status' => 'pending']);
@@ -283,15 +280,9 @@ class CartController extends Controller
                 if ($transaction == 'capture' || $transaction == 'settlement') {
                     // Update Stok if first time paid
                     if ($order->payment_status !== 'paid') {
-                        foreach ($order->items as $item) {
-                            if ($item->product_variant_id) {
-                                $item->variant->decrement('stock', $item->quantity);
-                            } else {
-                                $item->product->decrement('stock', $item->quantity);
-                            }
-                        }
+                        $this->reduceStock($order);
+                        $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                     }
-                    $order->update(['payment_status' => 'paid', 'status' => 'processing']);
                 } elseif ($transaction == 'pending') {
                     $order->update(['payment_status' => 'pending']);
                 } elseif (in_array($transaction, ['deny', 'expire', 'cancel'])) {
@@ -326,5 +317,24 @@ class CartController extends Controller
         $order->update(['status' => 'completed']);
 
         return redirect()->back()->with('success', 'Terima kasih! Pesanan Anda telah selesai. Silakan berikan review.');
+    }
+
+    private function reduceStock($order)
+    {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($order) {
+            foreach ($order->items as $item) {
+                if ($item->product_variant_id) {
+                    $variant = \App\Models\ProductVariant::lockForUpdate()->find($item->product_variant_id);
+                    if ($variant) {
+                        $variant->decrement('stock', $item->quantity);
+                    }
+                } else {
+                    $product = \App\Models\Product::lockForUpdate()->find($item->product_id);
+                    if ($product) {
+                        $product->decrement('stock', $item->quantity);
+                    }
+                }
+            }
+        });
     }
 }

@@ -40,12 +40,26 @@ Route::get('/p/{slug}', function($slug) {
     return view('landing_page.show', compact('page'));
 })->name('pages.show');
 
+// midtrans
 Route::post('/midtrans/callback', [\App\Http\Controllers\CartController::class, 'callback'])->name('midtrans.callback');
 
 Route::get('/dashboard', function () {
+    $paidOrderIds = \App\Models\Order::where('payment_status', 'paid')->pluck('id');
+    
+    $totalRevenue = \App\Models\Order::whereIn('id', $paidOrderIds)->sum('total_amount');
+    
+    // Profit = (Sales - Cost) - Discount
+    $totalProfit = \App\Models\OrderItem::whereIn('order_id', $paidOrderIds)
+        ->select(\Illuminate\Support\Facades\DB::raw('SUM((unit_price - cost_price) * quantity) as gross_margin'))
+        ->first()->gross_margin ?? 0;
+    
+    $totalDiscount = \App\Models\Order::whereIn('id', $paidOrderIds)->sum('discount_amount');
+    $netProfit = $totalProfit - $totalDiscount;
+
     $stats = [
         'total_orders' => \App\Models\Order::count(),
-        'total_revenue' => \App\Models\Order::where('payment_status', 'paid')->sum('total_amount'),
+        'total_revenue' => $totalRevenue,
+        'net_profit' => $netProfit,
         'total_customers' => \App\Models\User::where('role', 'user')->count(),
         'low_stock' => \App\Models\Product::where('stock', '<', 5)->count(),
     ];

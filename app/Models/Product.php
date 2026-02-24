@@ -15,6 +15,7 @@ class Product extends Model
         'slug',
         'description',
         'price',
+        'cost_price',
         'original_price',
         'stock',
         'weight',
@@ -39,6 +40,7 @@ class Product extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'price' => 'decimal:2',
+        'cost_price' => 'decimal:2',
         'original_price' => 'decimal:2',
         'rating' => 'float',
         'gallery' => 'array',

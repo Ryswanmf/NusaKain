@@ -37,10 +37,15 @@ class ProductForm
 
                 Section::make('Harga & Stok Dasar')
                     ->description('Harga ini akan digunakan jika variasi tidak memiliki harga khusus.')
-                    ->columns(4)
+                    ->columns(2)
                     ->components([
                         TextInput::make('price')
                             ->label('Harga Jual')
+                            ->required()
+                            ->numeric()
+                            ->prefix('Rp'),
+                        TextInput::make('cost_price')
+                            ->label('Harga Modal')
                             ->required()
                             ->numeric()
                             ->prefix('Rp'),
@@ -97,6 +102,10 @@ class ProductForm
                                     ->placeholder('NK-VAR-001'),
                                 TextInput::make('price')
                                     ->label('Harga Khusus')
+                                    ->numeric()
+                                    ->prefix('Rp'),
+                                TextInput::make('cost_price')
+                                    ->label('Modal Khusus')
                                     ->numeric()
                                     ->prefix('Rp'),
                                 TextInput::make('stock')

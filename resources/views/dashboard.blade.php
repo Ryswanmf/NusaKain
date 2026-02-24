@@ -16,141 +16,208 @@
 
     <div class="py-2">
         <!-- Highlights -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-10 md:mb-16">
             <!-- Total Orders -->
-            <div class="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="flex items-center justify-between mb-4 md:mb-6">
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-teal-50 text-teal-600 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors duration-500">
-                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors duration-500 shadow-inner">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[9px] font-black text-teal-500 bg-teal-50 px-3 py-1 rounded-lg uppercase tracking-widest border border-teal-100">Live</span>
                     </div>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Pesanan</p>
-                <h3 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ number_format($stats['total_orders']) }}</h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Total Pesanan</p>
+                <h3 class="text-3xl font-black text-slate-900 tracking-tighter italic">{{ number_format($stats['total_orders']) }}</h3>
             </div>
 
             <!-- Total Revenue -->
-            <div class="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="flex items-center justify-between mb-4 md:mb-6">
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-blue-50 text-blue-600 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500">
-                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-2xl hover:shadow-teal-900/20 hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-teal-500/10 rounded-full blur-2xl"></div>
+                <div class="flex items-center justify-between mb-6 relative z-10">
+                    <div class="w-14 h-14 bg-white/10 text-teal-400 rounded-2xl flex items-center justify-center group-hover:bg-teal-500 group-hover:text-slate-900 transition-colors duration-500 shadow-lg">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Pendapatan Lunas</p>
-                <h3 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">Rp {{ number_format($stats['total_revenue'] / 1000000, 1) }}M</h3>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1 relative z-10">Pendapatan Lunas</p>
+                @php
+                    $revenue = $stats['total_revenue'];
+                    if ($revenue >= 1000000) {
+                        $formattedRevenue = 'Rp ' . number_format($revenue / 1000000, 1) . 'M';
+                    } elseif ($revenue >= 1000) {
+                        $formattedRevenue = 'Rp ' . number_format($revenue / 1000, 0) . 'K';
+                    } else {
+                        $formattedRevenue = 'Rp ' . number_format($revenue, 0, ',', '.');
+                    }
+                @endphp
+                <h3 class="text-3xl font-black text-teal-400 tracking-tighter italic relative z-10">{{ $formattedRevenue }}</h3>
             </div>
 
-            <!-- New Customers -->
-            <div class="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="flex items-center justify-between mb-4 md:mb-6">
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-indigo-50 text-indigo-600 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-500">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <!-- Net Profit -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-500 shadow-inner">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[9px] font-black text-indigo-500 bg-indigo-50 px-3 py-1 rounded-lg uppercase tracking-widest border border-indigo-100">Profit</span>
                     </div>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Pelanggan</p>
-                <h3 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ number_format($stats['total_customers']) }}</h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Keuntungan Bersih</p>
+                @php
+                    $profit = $stats['net_profit'];
+                    if ($profit >= 1000000) {
+                        $formattedProfit = 'Rp ' . number_format($profit / 1000000, 1) . 'M';
+                    } elseif ($profit >= 1000) {
+                        $formattedProfit = 'Rp ' . number_format($profit / 1000, 0) . 'K';
+                    } else {
+                        $formattedProfit = 'Rp ' . number_format($profit, 0, ',', '.');
+                    }
+                @endphp
+                <h3 class="text-3xl font-black text-slate-900 tracking-tighter italic">{{ $formattedProfit }}</h3>
             </div>
 
             <!-- Low Stock Alert -->
-            <div class="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="flex items-center justify-between mb-4 md:mb-6">
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-rose-50 text-rose-600 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition-colors duration-500">
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition-colors duration-500 shadow-inner">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                     </div>
+                    @if($stats['low_stock'] > 0)
+                        <div class="animate-pulse">
+                            <span class="text-[9px] font-black text-rose-500 bg-rose-50 px-3 py-1 rounded-lg uppercase tracking-widest border border-rose-100 italic">Attention</span>
+                        </div>
+                    @endif
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Stok Menipis (< 5m)</p>
-                <h3 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">{{ number_format($stats['low_stock']) }} <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-1">Produk</span></h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Stok Menipis (< 5m)</p>
+                <h3 class="text-3xl font-black text-slate-900 tracking-tighter italic">{{ number_format($stats['low_stock']) }} <span class="text-xs text-slate-300 not-italic ml-1">Produk</span></h3>
             </div>
         </div>
 
         <!-- Recent Activity Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
             <!-- Charts Section -->
-            <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <div class="flex items-center justify-between mb-10">
+            <div class="lg:col-span-2 space-y-10 md:space-y-16">
+                <div class="bg-white p-8 md:p-12 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-teal-50 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                    
+                    <div class="flex items-center justify-between mb-12 relative z-10">
                         <div>
-                            <h3 class="text-xl font-black text-slate-900 tracking-tight">Analitik Penjualan</h3>
-                            <p class="text-sm text-slate-400 font-medium">Tren pesanan dalam 7 hari terakhir.</p>
+                            <h3 class="text-2xl font-black text-slate-900 tracking-tight italic">Analitik <span class="text-teal-600">Penjualan.</span></h3>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Tren pesanan 7 hari terakhir</p>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="w-3 h-3 bg-teal-500 rounded-full"></span>
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pesanan Baru</span>
+                        <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                            <span class="w-2.5 h-2.5 bg-teal-500 rounded-full animate-pulse"></span>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Live Data</span>
                         </div>
                     </div>
-                    <div class="h-[300px] w-full">
+                    <div class="h-[350px] w-full relative z-10">
                         <canvas id="ordersChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Left: Table -->
-                <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-                <div class="p-6 md:p-10 border-b border-slate-50 flex items-center justify-between">
-                    <div class="min-w-0">
-                        <h3 class="text-lg md:text-xl font-black text-slate-900 tracking-tight">Pesanan Terbaru</h3>
-                        <p class="hidden sm:block text-sm text-slate-400 font-medium">Monitoring transaksi masuk secara real-time.</p>
+                <!-- Recent Orders Table -->
+                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                    <div class="p-8 md:p-12 border-b border-slate-50 flex items-center justify-between bg-white relative overflow-hidden">
+                        <div class="absolute -left-10 -top-10 w-32 h-32 bg-slate-50 rounded-full blur-2xl group-hover:bg-teal-50 transition-colors duration-1000"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-black text-slate-900 tracking-tight italic">Pesanan <span class="text-teal-600">Terbaru.</span></h3>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Monitoring transaksi real-time</p>
+                        </div>
+                        <a href="{{ route('admin.pesanan.index') }}" class="relative z-10 px-8 py-3.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-teal-600 transition-all shadow-xl shadow-slate-200 hover:shadow-teal-100 active:scale-95 flex items-center gap-2">
+                            <span>Lihat Semua</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
                     </div>
-                    <a href="{{ route('admin.pesanan.index') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-slate-50 text-slate-900 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition-all shadow-sm flex-shrink-0">Lihat Semua</a>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] bg-slate-50/50">
-                                <th class="px-6 md:px-10 py-4 md:py-5">No. Pesanan</th>
-                                <th class="px-6 md:px-10 py-4 md:py-5">Pelanggan</th>
-                                <th class="px-6 md:px-10 py-4 md:py-5">Status</th>
-                                <th class="px-6 md:px-10 py-4 md:py-5 text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            @foreach($recentOrders as $order)
-                                <tr class="group hover:bg-slate-50/50 transition-all duration-300">
-                                    <td class="px-6 md:px-10 py-4 md:py-6">
-                                        <div class="text-xs md:text-sm font-black text-slate-900">#{{ $order->order_number }}</div>
-                                        <div class="text-[9px] md:text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{{ $order->created_at->diffForHumans() }}</div>
-                                    </td>
-                                    <td class="px-6 md:px-10 py-4 md:py-6 text-xs md:text-sm font-bold text-slate-600">{{ $order->user->name ?? $order->receiver_name }}</td>
-                                    <td class="px-6 md:px-10 py-4 md:py-6">
-                                        <span class="px-2 py-0.5 md:px-3 md:py-1 bg-teal-50 text-teal-600 text-[9px] md:text-[10px] font-black rounded-full uppercase tracking-widest whitespace-nowrap">{{ $order->status }}</span>
-                                    </td>
-                                    <td class="px-6 md:px-10 py-4 md:py-6 text-right text-xs md:text-sm font-black text-slate-900 italic">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                    <div class="overflow-x-auto relative z-10">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50/50">
+                                    <th class="px-10 py-6">ID Pesanan</th>
+                                    <th class="px-10 py-6">Pelanggan</th>
+                                    <th class="px-10 py-6">Status</th>
+                                    <th class="px-10 py-6 text-right">Total Akhir</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                @foreach($recentOrders as $order)
+                                    <tr class="group/row hover:bg-slate-50/50 transition-all duration-500">
+                                        <td class="px-10 py-8">
+                                            <div class="text-sm font-black text-slate-900 tracking-tighter uppercase">#{{ $order->order_number }}</div>
+                                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{{ $order->created_at->format('d M, H:i') }}</div>
+                                        </td>
+                                        <td class="px-10 py-8">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-black text-[10px] uppercase shadow-sm group-hover/row:bg-teal-500 group-hover/row:text-white transition-all duration-500">
+                                                    {{ substr($order->user->name ?? $order->receiver_name, 0, 1) }}
+                                                </div>
+                                                <span class="text-sm font-bold text-slate-700">{{ $order->user->name ?? $order->receiver_name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-10 py-8">
+                                            @php
+                                                $statusColors = [
+                                                    'pending' => 'bg-amber-50 text-amber-600 border-amber-100',
+                                                    'processing' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                                    'shipped' => 'bg-indigo-50 text-indigo-600 border-indigo-100',
+                                                    'completed' => 'bg-teal-50 text-teal-600 border-teal-100',
+                                                    'cancelled' => 'bg-rose-50 text-rose-600 border-rose-100',
+                                                ];
+                                            @endphp
+                                            <span class="px-4 py-1.5 {{ $statusColors[$order->status] ?? 'bg-slate-50' }} text-[9px] font-black rounded-lg uppercase tracking-[0.2em] border shadow-sm">
+                                                {{ $order->status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-10 py-8 text-right">
+                                            <span class="text-base font-black text-slate-900 italic tracking-tighter">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right: Quick Actions / Feedback -->
-            <div class="space-y-6 md:space-y-8">
-                <div class="bg-teal-600 p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-xl shadow-teal-100 relative overflow-hidden group">
-                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all"></div>
-                    <h4 class="text-white font-black text-lg md:text-xl tracking-tight mb-2 relative z-10">Butuh Bantuan?</h4>
-                    <p class="text-teal-100 text-xs md:text-sm font-medium mb-6 md:mb-8 relative z-10 leading-relaxed">Hubungi tim support Nusakain untuk kendala teknis.</p>
-                    <a href="https://wa.me/6289515915699" target="_blank" class="inline-flex items-center px-6 py-3 bg-white text-teal-600 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-teal-50 transition-all relative z-10 shadow-lg shadow-teal-900/20 active:scale-95">
-                        Chat Support
+            <!-- Right Sidebar: Stats & Info -->
+            <div class="space-y-10 md:space-y-12">
+                <!-- Support Card -->
+                <div class="bg-teal-600 p-10 rounded-[3.5rem] shadow-2xl shadow-teal-900/20 relative overflow-hidden group">
+                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-1000"></div>
+                    <div class="absolute -left-10 -top-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
+                    
+                    <h4 class="text-white font-black text-2xl tracking-tight mb-3 relative z-10 italic">Butuh <span class="text-slate-900">Bantuan?</span></h4>
+                    <p class="text-teal-100 text-xs font-medium mb-10 relative z-10 leading-relaxed uppercase tracking-widest">Hubungi tim technical support Nusakain untuk bantuan sistem.</p>
+                    
+                    <a href="https://wa.me/6289515915699" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white hover:text-teal-600 transition-all relative z-10 shadow-xl active:scale-95">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                        <span>Chat Support</span>
                     </a>
                 </div>
 
-                <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm">
-                    <h4 class="text-slate-900 font-black text-sm uppercase tracking-widest mb-8">Distribusi Kategori</h4>
-                    <div class="h-[250px] w-full mb-6">
+                <!-- Category Chart -->
+                <div class="bg-white p-10 md:p-12 rounded-[3.5rem] border border-slate-100 shadow-sm group hover:border-teal-500/30 transition-all duration-500">
+                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-[0.3em] mb-10 italic">Distribusi <span class="text-teal-600">Kategori.</span></h4>
+                    <div class="h-[280px] w-full mb-8">
                         <canvas id="categoryChart"></canvas>
                     </div>
-                    <p class="text-[11px] text-slate-400 font-medium text-center italic">Proporsi produk berdasarkan kategori terpopuler.</p>
+                    <p class="text-[10px] text-slate-400 font-bold text-center uppercase tracking-widest leading-relaxed px-4">Proporsi material kain berdasarkan kategori terpopuler.</p>
                 </div>
 
-                <div class="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <h4 class="text-slate-900 font-black text-xs md:text-sm uppercase tracking-widest mb-6">Informasi Sistem</h4>
-                    <div class="space-y-5 md:space-y-6">
-                        <div class="flex items-center justify-between pb-3 md:pb-4 border-b border-slate-50">
-                            <span class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">Versi App</span>
-                            <span class="text-[10px] md:text-xs font-black text-slate-900 tracking-widest uppercase">v2.4.0</span>
+                <!-- System Info -->
+                <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-slate-50 rounded-full blur-2xl group-hover:bg-blue-50 transition-colors duration-1000"></div>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-[0.3em] mb-8 italic relative z-10">Informasi <span class="text-teal-600">Sistem.</span></h4>
+                    <div class="space-y-6 relative z-10">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-50">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">App Version</span>
+                            <span class="text-[10px] font-black text-slate-900 tracking-[0.2em] uppercase bg-slate-100 px-3 py-1 rounded-lg">v2.5.0-Gold</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">Server</span>
-                            <span class="text-[10px] md:text-xs font-black text-green-500 tracking-widest uppercase flex items-center">
-                                <div class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                                Online
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Server Health</span>
+                            <span class="text-[10px] font-black text-green-500 tracking-widest uppercase flex items-center">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></div>
+                                Optimal
                             </span>
                         </div>
                     </div>
@@ -158,6 +225,99 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gradient Setup for Chart
+            const ctxOrders = document.getElementById('ordersChart').getContext('2d');
+            const gradient = ctxOrders.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(13, 148, 136, 0.2)');
+            gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
+            // Orders Chart (Line)
+            new Chart(ctxOrders, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($chartData['labels']) !!},
+                    datasets: [{
+                        label: 'Pesanan Masuk',
+                        data: {!! json_encode($chartData['orders']) !!},
+                        borderColor: '#0d9488',
+                        backgroundColor: gradient,
+                        borderWidth: 5,
+                        fill: true,
+                        tension: 0.45,
+                        pointRadius: 0,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: '#0d9488',
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { size: 12, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 15,
+                            cornerRadius: 16,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false }, 
+                            ticks: { font: { weight: 'bold', size: 10 }, color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false }, 
+                            ticks: { font: { weight: 'bold', size: 10 }, color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+
+            // Category Chart (Doughnut)
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: {!! json_encode($categoryDistribution->pluck('category')) !!},
+                    datasets: [{
+                        data: {!! json_encode($categoryDistribution->pluck('total')) !!},
+                        backgroundColor: ['#0d9488', '#0ea5e9', '#6366f1', '#f59e0b', '#ec4899', '#8b5cf6'],
+                        borderWidth: 8,
+                        borderColor: '#ffffff',
+                        hoverOffset: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { 
+                                usePointStyle: true, 
+                                padding: 30, 
+                                font: { weight: '900', size: 10, family: 'sans-serif' },
+                                color: '#64748b'
+                            } 
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 
     @push('scripts')
     <script>
