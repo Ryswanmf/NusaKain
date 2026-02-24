@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LandingSetting extends Model
 {
     protected $fillable = [
+        'site_name',
         'hero_badge',
         'hero_title_primary',
         'hero_title_italic',
@@ -20,6 +21,13 @@ class LandingSetting extends Model
         'cta_description',
         'cta_button_text',
         'cta_button_url',
+        'contact_email',
+        'contact_phone',
+        'contact_address',
+        'contact_instagram',
+        'contact_facebook',
+        'footer_slogan_1',
+        'footer_slogan_2',
         'whatsapp',
         'instagram',
         'facebook',

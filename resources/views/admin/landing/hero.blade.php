@@ -36,10 +36,17 @@
                             Hero Section
                         </h3>
 
-                        <div class="space-y-2 md:space-y-3">
-                            <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Hero Badge</label>
-                            <input type="text" name="hero_badge" value="{{ old('hero_badge', $setting->hero_badge) }}"
-                                class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base" placeholder="Badge">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Nama Situs (Logo)</label>
+                                <input type="text" name="site_name" value="{{ old('site_name', $setting->site_name) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
+                            </div>
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Hero Badge</label>
+                                <input type="text" name="hero_badge" value="{{ old('hero_badge', $setting->hero_badge) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base" placeholder="Badge">
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -98,6 +105,19 @@
                             <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Alamat Lengkap</label>
                             <textarea name="contact_address" rows="3"
                                 class="w-full px-5 py-4 md:px-8 md:py-6 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-medium text-slate-600 text-sm md:text-base leading-relaxed">{{ old('contact_address', $setting->contact_address) }}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Slogan Footer 1</label>
+                                <input type="text" name="footer_slogan_1" value="{{ old('footer_slogan_1', $setting->footer_slogan_1) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
+                            </div>
+                            <div class="space-y-2 md:space-y-3">
+                                <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Slogan Footer 2</label>
+                                <input type="text" name="footer_slogan_2" value="{{ old('footer_slogan_2', $setting->footer_slogan_2) }}"
+                                    class="w-full px-5 py-4 md:px-8 md:py-5 bg-slate-50 border-none rounded-xl md:rounded-[2rem] focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all font-bold text-slate-900 text-sm md:text-base">
+                            </div>
                         </div>
                     </div>
                 </div>

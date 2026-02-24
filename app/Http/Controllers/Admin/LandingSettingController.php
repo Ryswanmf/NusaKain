@@ -38,6 +38,7 @@ class LandingSettingController extends Controller
         $setting = LandingSetting::first();
         
         $validated = $request->validate([
+            'site_name' => 'nullable|string|max:255',
             'hero_badge' => 'nullable|string|max:255',
             'hero_title_primary' => 'nullable|string|max:255',
             'hero_title_italic' => 'nullable|string|max:255',
@@ -56,6 +57,8 @@ class LandingSettingController extends Controller
             'contact_address' => 'nullable|string',
             'contact_instagram' => 'nullable|string|max:255',
             'contact_facebook' => 'nullable|string|max:255',
+            'footer_slogan_1' => 'nullable|string|max:255',
+            'footer_slogan_2' => 'nullable|string|max:255',
             'whatsapp' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'facebook' => 'nullable|string|max:255',

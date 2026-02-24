@@ -23,7 +23,7 @@
                         <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                             <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                         </div>
-                        <span class="text-xl font-black tracking-tight">Nusakain<span class="text-teal-400">.</span></span>
+                        <span class="text-xl font-black tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-400">.</span></span>
                     </a>
                     <!-- Mobile Close Button -->
                     <button id="sidebar-close" class="lg:hidden p-2 text-slate-400 hover:text-white">

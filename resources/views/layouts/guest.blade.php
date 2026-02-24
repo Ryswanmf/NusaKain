@@ -39,7 +39,7 @@
                 <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                     <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                 </div>
-                <span class="text-xl font-extrabold text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
+                <span class="text-xl font-extrabold text-slate-900 tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-600">.</span></span>
             </a>
         </div>
 
@@ -164,10 +164,10 @@
                     <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                         <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                     </div>
-                    <span class="text-2xl font-black text-slate-900 tracking-tight">Nusakain<span class="text-teal-600">.</span></span>
+                    <span class="text-2xl font-black text-slate-900 tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-600">.</span></span>
                 </a>
                 <p class="text-slate-500 text-sm leading-relaxed font-medium">
-                    Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia. Kami menghubungkan tradisi dengan teknologi modern.
+                    {{ $setting->hero_description ?? 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia.' }}
                 </p>
             </div>
 
@@ -217,9 +217,20 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Email</span>
-                            <a href="mailto:halo@nusakain.com" class="text-sm font-bold text-slate-700 hover:text-teal-600 transition-colors">halo@nusakain.com</a>
+                            <a href="mailto:{{ $setting->contact_email ?? 'halo@nusakain.com' }}" class="text-sm font-bold text-slate-700 hover:text-teal-600 transition-colors">{{ $setting->contact_email ?? 'halo@nusakain.com' }}</a>
                         </div>
                     </li>
+                    @if($setting->contact_address)
+                    <li class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex-shrink-0 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Alamat</span>
+                            <p class="text-[11px] font-bold text-slate-700 leading-relaxed">{{ $setting->contact_address }}</p>
+                        </div>
+                    </li>
+                    @endif
                 </ul>
                 <div class="flex items-center space-x-4 mt-8">
                     @if($setting->instagram)
@@ -238,11 +249,11 @@
 
         <div class="pt-12 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
             <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">
-                © 2026 Nusakain Indonesia. Seluruh hak cipta dilindungi.
+                © {{ date('Y') }} {{ $setting->site_name ?? 'Nusakain' }} Indonesia. Seluruh hak cipta dilindungi.
             </p>
             <div class="flex items-center space-x-8">
-                <span class="text-xs font-black text-slate-300 uppercase tracking-widest italic">Quality Excellence</span>
-                <span class="text-xs font-black text-slate-300 uppercase tracking-widest italic">Sustainable Growth</span>
+                <span class="text-xs font-black text-slate-300 uppercase tracking-widest italic">{{ $setting->footer_slogan_1 ?? 'Quality Excellence' }}</span>
+                <span class="text-xs font-black text-slate-300 uppercase tracking-widest italic">{{ $setting->footer_slogan_2 ?? 'Sustainable Growth' }}</span>
             </div>
         </div>
     </div>
@@ -285,7 +296,7 @@
                         <img src="{{ asset('images/favicon.png') }}" class="w-8 h-8 object-contain invert brightness-0">
                     </div>
                     <div>
-                        <h4 class="text-sm font-black uppercase tracking-widest">Nusakain Bot</h4>
+                        <h4 class="text-sm font-black uppercase tracking-widest">{{ $setting->site_name ?? 'Nusakain' }} Bot</h4>
                         <p class="text-[10px] font-bold text-teal-400 uppercase tracking-tighter">Online • Siap Membantu</p>
                     </div>
                 </div>
@@ -295,7 +306,11 @@
             <div class="p-6 space-y-3 bg-slate-50/50">
                 <p class="px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pilih bantuan yang Anda butuhkan:</p>
                 
-                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya butuh bantuan mengenai..." target="_blank" 
+                @php
+                    $waNumber = $setting->whatsapp ?? '6289515915699';
+                    $waUrl = str_contains($waNumber, 'http') ? $waNumber : "https://wa.me/{$waNumber}?text=Halo " . ($setting->site_name ?? 'Nusakain') . ", saya butuh bantuan mengenai...";
+                @endphp
+                <a href="{{ $waUrl }}" target="_blank" 
                    class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
