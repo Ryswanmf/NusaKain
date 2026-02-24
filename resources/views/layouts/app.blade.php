@@ -42,7 +42,7 @@
                 <div class="p-8 flex items-center justify-between">
                     <a href="/" class="flex items-center space-x-3 group">
                         <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                            <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
+                            <img src="{{ asset('assets/brand/favicon.png') }}" class="w-full h-full object-cover p-1">
                         </div>
                         <span class="text-xl font-black tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-400">.</span></span>
                     </a>

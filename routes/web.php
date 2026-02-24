@@ -117,8 +117,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/checkout', [\App\Http\Controllers\CartController::class, 'processCheckout'])->name('cart.processCheckout');
 
-    // Shipping AJAX Routes (Removed)
-
     // Wishlist Routes
     Route::get('/wishlist', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
