@@ -142,6 +142,44 @@
                         </div>
                     </div>
 
+                    <div class="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm space-y-4 md:space-y-6">
+                        <label class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1 block text-center">Legalitas Invoice</label>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Stamp -->
+                            <div class="space-y-2">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Stempel (PNG)</p>
+                                <div class="relative aspect-square bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
+                                    <input type="file" name="stamp_image" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewStamp(this)">
+                                    @if($setting->stamp_image)
+                                        <img id="preview-stamp" src="{{ asset('storage/' . $setting->stamp_image) }}" class="absolute inset-0 w-full h-full object-contain p-2">
+                                    @else
+                                        <img id="preview-stamp" class="hidden absolute inset-0 w-full h-full object-contain p-2">
+                                    @endif
+                                    <div id="stamp-placeholder" class="{{ $setting->stamp_image ? 'hidden' : '' }} text-slate-300">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Signature -->
+                            <div class="space-y-2">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Tanda Tangan (PNG)</p>
+                                <div class="relative aspect-square bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
+                                    <input type="file" name="signature_image" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewSignature(this)">
+                                    @if($setting->signature_image)
+                                        <img id="preview-signature" src="{{ asset('storage/' . $setting->signature_image) }}" class="absolute inset-0 w-full h-full object-contain p-2">
+                                    @else
+                                        <img id="preview-signature" class="hidden absolute inset-0 w-full h-full object-contain p-2">
+                                    @endif
+                                    <div id="signature-placeholder" class="{{ $setting->signature_image ? 'hidden' : '' }} text-slate-300">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="space-y-3 md:space-y-4 pt-2">
                         <button type="submit" class="w-full py-5 md:py-6 bg-slate-900 text-white rounded-xl md:rounded-[2.5rem] font-black text-base md:text-lg hover:bg-teal-600 transition-all shadow-2xl shadow-slate-300 active:scale-95 flex items-center justify-center">
                             <svg class="w-5 h-5 md:w-6 md:h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -157,6 +195,34 @@
         function previewImage(input) {
             const preview = document.getElementById('preview');
             const placeholder = document.getElementById('upload-placeholder');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewStamp(input) {
+            const preview = document.getElementById('preview-stamp');
+            const placeholder = document.getElementById('stamp-placeholder');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewSignature(input) {
+            const preview = document.getElementById('preview-signature');
+            const placeholder = document.getElementById('signature-placeholder');
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {

@@ -13,6 +13,8 @@ class LandingSetting extends Model
         'hero_title_italic',
         'hero_description',
         'hero_image',
+        'stamp_image',
+        'signature_image',
         'hero_button_primary_text',
         'hero_button_primary_url',
         'hero_button_secondary_text',

@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LandingSetting;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LandingSettingController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $setting = LandingSetting::first();
@@ -47,12 +55,14 @@ class LandingSettingController extends Controller
             'hero_button_primary_url' => 'nullable|string|max:255',
             'hero_button_secondary_text' => 'nullable|string|max:255',
             'hero_button_secondary_url' => 'nullable|string|max:255',
-            'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'hero_image' => 'nullable|image|max:5120',
+            'stamp_image' => 'nullable|image|max:2048',
+            'signature_image' => 'nullable|image|max:2048',
             'cta_title' => 'nullable|string|max:255',
             'cta_description' => 'nullable|string',
             'cta_button_text' => 'nullable|string|max:255',
             'cta_button_url' => 'nullable|string|max:255',
-            'contact_email' => 'nullable|email|max:255',
+            'contact_email' => 'nullable|string|max:255',
             'contact_phone' => 'nullable|string|max:255',
             'contact_address' => 'nullable|string',
             'contact_instagram' => 'nullable|string|max:255',
@@ -68,7 +78,24 @@ class LandingSettingController extends Controller
             if ($setting->hero_image) {
                 Storage::disk('public')->delete($setting->hero_image);
             }
-            $validated['hero_image'] = $request->file('hero_image')->store('landing', 'public');
+            $path = $request->file('hero_image')->store('landing', 'public');
+            $validated['hero_image'] = $path;
+        }
+
+        if ($request->hasFile('stamp_image')) {
+            if ($setting->stamp_image) {
+                Storage::disk('public')->delete($setting->stamp_image);
+            }
+            $path = $request->file('stamp_image')->store('landing', 'public');
+            $validated['stamp_image'] = $path;
+        }
+
+        if ($request->hasFile('signature_image')) {
+            if ($setting->signature_image) {
+                Storage::disk('public')->delete($setting->signature_image);
+            }
+            $path = $request->file('signature_image')->store('landing', 'public');
+            $validated['signature_image'] = $path;
         }
 
         $setting->update($validated);

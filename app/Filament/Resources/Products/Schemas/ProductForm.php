@@ -66,13 +66,19 @@ class ProductForm
                             ->label('Gambar Utama')
                             ->image()
                             ->directory('products')
-                            ->imageEditor(),
+                            ->imageEditor()
+                            ->saveUploadedFileUsing(function ($file) {
+                                return (new \App\Services\ImageService())->optimizeToWebP($file, 'products');
+                            }),
                         FileUpload::make('gallery')
                             ->label('Galeri Foto')
                             ->image()
                             ->multiple()
                             ->directory('products/gallery')
-                            ->imageEditor(),
+                            ->imageEditor()
+                            ->saveUploadedFileUsing(function ($file) {
+                                return (new \App\Services\ImageService())->optimizeToWebP($file, 'products/gallery');
+                            }),
                     ]),
 
                 Section::make('Variasi Produk')
@@ -107,6 +113,9 @@ class ProductForm
                                     ->image()
                                     ->directory('products/variants')
                                     ->imageEditor()
+                                    ->saveUploadedFileUsing(function ($file) {
+                                        return (new \App\Services\ImageService())->optimizeToWebP($file, 'products/variants');
+                                    })
                                     ->columnSpanFull(),
                             ])
                             ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)

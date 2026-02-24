@@ -90,8 +90,14 @@
         <div class="total-section">
             <div class="total-row">
                 <span style="color: #64748b;">Subtotal Produk:</span>
-                <span style="font-weight: bold; margin-left: 20px;">Rp{{ number_format($order->total_amount - $order->shipping_cost, 0, ',', '.') }}</span>
+                <span style="font-weight: bold; margin-left: 20px;">Rp{{ number_format($order->total_amount - $order->shipping_cost + $order->discount_amount, 0, ',', '.') }}</span>
             </div>
+            @if($order->discount_amount > 0)
+                <div class="total-row">
+                    <span style="color: #f43f5e;">Diskon Voucher:</span>
+                    <span style="font-weight: bold; margin-left: 20px; color: #f43f5e;">-Rp{{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+                </div>
+            @endif
             <div class="total-row">
                 <span style="color: #64748b;">Biaya Pengiriman:</span>
                 <span style="font-weight: bold; margin-left: 20px;">Rp{{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
@@ -100,6 +106,36 @@
                 <span style="font-size: 12px; font-weight: normal; color: #64748b; vertical-align: middle;">TOTAL PEMBAYARAN:</span>
                 <span style="margin-left: 10px;">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
             </div>
+        </div>
+
+        <!-- Signature & Stamp Section -->
+        <div style="margin-top: 60px; width: 100%;">
+            <div style="float: right; width: 200px; text-align: center; position: relative;">
+                <p style="font-size: 12px; margin-bottom: 50px;">Hormat kami,</p>
+                
+                @if($setting->stamp_image && file_exists(storage_path('app/public/' . $setting->stamp_image)))
+                    @php
+                        $stampData = base64_encode(file_get_contents(storage_path('app/public/' . $setting->stamp_image)));
+                        $stampType = pathinfo(storage_path('app/public/' . $setting->stamp_image), PATHINFO_EXTENSION);
+                    @endphp
+                    <img src="data:image/{{ $stampType }};base64,{{ $stampData }}" 
+                         style="position: absolute; width: 100px; opacity: 0.6; top: 20px; left: 20px; z-index: 1;">
+                @endif
+
+                @if($setting->signature_image && file_exists(storage_path('app/public/' . $setting->signature_image)))
+                    @php
+                        $sigData = base64_encode(file_get_contents(storage_path('app/public/' . $setting->signature_image)));
+                        $sigType = pathinfo(storage_path('app/public/' . $setting->signature_image), PATHINFO_EXTENSION);
+                    @endphp
+                    <img src="data:image/{{ $sigType }};base64,{{ $sigData }}" 
+                         style="position: relative; width: 120px; z-index: 2;">
+                @endif
+
+                <div style="margin-top: 10px; border-top: 1px solid #333; padding-top: 5px;">
+                    <p style="font-size: 12px; font-weight: bold; margin: 0;">{{ $setting->site_name }} Admin</p>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
         </div>
 
         <div class="footer">
