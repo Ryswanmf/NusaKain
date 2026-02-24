@@ -79,6 +79,27 @@
                         Daftar Gratis
                     </button>
                 </div>
+
+                <div class="relative py-4">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-100"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs uppercase">
+                        <span class="bg-white px-4 text-slate-400 font-bold tracking-widest">Atau daftar dengan</span>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="{{ route('google.login') }}" class="w-full flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-[0.98]">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
+                            <path fill="#FBBC05" d="M16.04 18.013c-1.09.693-2.415 1.078-3.84 1.078a7.077 7.077 0 0 1-6.734-4.858L1.44 17.358C3.398 21.302 7.47 24 12 24c3.135 0 5.946-1.039 8.066-2.81l-4.026-3.177Z"/>
+                            <path fill="#4285F4" d="M23.49 12.275c0-.826-.074-1.62-.21-2.386H12v4.514h6.44a5.517 5.517 0 0 1-2.395 3.614l4.026 3.177c2.356-2.177 3.714-5.382 3.714-8.919Z"/>
+                            <path fill="#34A853" d="M5.266 14.235a7.077 7.077 0 0 1 0-4.47L1.24 6.65a11.977 11.977 0 0 0 0 10.708l4.026-3.123Z"/>
+                        </svg>
+                        Google
+                    </a>
+                </div>
             </form>
 
             <p class="mt-8 md:mt-10 text-center text-sm text-slate-500 font-medium">

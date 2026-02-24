@@ -28,10 +28,10 @@
         <div class="header">
             <div class="invoice-info">
                 <div class="info-col">
-                    <div class="logo">Nusakain.</div>
+                    <div class="logo">{{ $setting->site_name ?? 'Nusakain' }}.</div>
                     <p style="margin-top: 5px; font-size: 12px; color: #64748b;">
-                        Premium Textile Ecosystem<br>
-                        Jakarta, Indonesia
+                        {{ $setting->footer_slogan_1 ?? 'Premium Textile Ecosystem' }}<br>
+                        {!! nl2br(e($setting->contact_address ?? 'Jakarta, Indonesia')) !!}
                     </p>
                 </div>
                 <div class="info-col text-right">
