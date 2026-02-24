@@ -7,6 +7,27 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Scrollbar for Sidebar */
+        #sidebar-nav::-webkit-scrollbar {
+            width: 5px;
+        }
+        #sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        #sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(20, 184, 166, 0.5); /* teal-500 with opacity */
+        }
+        /* Firefox support */
+        #sidebar-nav {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+    </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -32,7 +53,7 @@
                 </div>
 
                 <!-- Nav Links -->
-                <nav class="flex-1 px-6 space-y-2 overflow-y-auto pb-8">
+                <nav id="sidebar-nav" class="flex-1 px-6 space-y-2 overflow-y-auto pb-8">
                     <p class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Utama</p>
                     
                     <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-4 py-3.5 rounded-2xl {{ Request::routeIs('dashboard') ? 'bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }} transition-all font-bold text-sm">
