@@ -46,16 +46,14 @@
         <!-- Image Section -->
         <div class="relative group">
             <div class="absolute -inset-4 bg-teal-50 rounded-[3rem] blur-2xl opacity-50 group-hover:bg-teal-100 transition-all duration-500"></div>
-            <div class="relative aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm mb-6">
+            <div class="relative aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm mb-6 group/magnify">
                 @if($product->image)
-                    <a href="{{ asset('storage/' . $product->image) }}" class="glightbox" data-gallery="product-gallery">
+                    <div id="magnifier-container" class="relative w-full h-full cursor-zoom-in overflow-hidden">
                         <img id="main-image" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
-                             loading="lazy"
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute bottom-6 right-6 w-12 h-12 bg-white/90 backdrop-blur rounded-2xl flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
-                        </div>
-                    </a>
+                             class="w-full h-full object-cover transition-transform duration-500">
+                        <!-- Magnifier Lens -->
+                        <div id="magnifier-lens" class="absolute hidden w-40 h-40 border-4 border-white/50 rounded-3xl shadow-2xl pointer-events-none z-30 bg-no-repeat" style="background-size: 800% 800%;"></div>
+                    </div>
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">
                         <svg class="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -390,6 +388,42 @@
     function closeCalculator() {
         document.getElementById('calcModal').classList.add('hidden');
         document.body.style.overflow = 'auto';
+    }
+
+    // Magnifier Logic
+    const container = document.getElementById('magnifier-container');
+    const lens = document.getElementById('magnifier-lens');
+    const img = document.getElementById('main-image');
+
+    if (container && lens && img) {
+        container.addEventListener('mousemove', moveLens);
+        container.addEventListener('mouseenter', () => lens.classList.remove('hidden'));
+        container.addEventListener('mouseleave', () => lens.classList.add('hidden'));
+
+        function moveLens(e) {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            let posX = x - (lens.offsetWidth / 2);
+            let posY = y - (lens.offsetHeight / 2);
+
+            // Boundary checks
+            if (posX < 0) posX = 0;
+            if (posX > rect.width - lens.offsetWidth) posX = rect.width - lens.offsetWidth;
+            if (posY < 0) posY = 0;
+            if (posY > rect.height - lens.offsetHeight) posY = rect.height - lens.offsetHeight;
+
+            lens.style.left = posX + 'px';
+            lens.style.top = posY + 'px';
+
+            // Zoom effect
+            const ratioX = 100 / (rect.width - lens.offsetWidth);
+            const ratioY = 100 / (rect.height - lens.offsetHeight);
+            
+            lens.style.backgroundImage = `url('${img.src}')`;
+            lens.style.backgroundPosition = `${posX * ratioX}% ${posY * ratioY}%`;
+        }
     }
 
     function changeImage(src) {

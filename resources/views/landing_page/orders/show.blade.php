@@ -22,6 +22,50 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div class="lg:col-span-2 space-y-8">
+            <!-- New Order Timeline -->
+            <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden relative">
+                <div class="absolute top-0 left-0 w-full h-1 bg-slate-50">
+                    @php
+                        $progressWidth = match($order->status) {
+                            'pending' => '20%',
+                            'processing' => '45%',
+                            'shipped' => '75%',
+                            'completed' => '100%',
+                            'cancelled' => '0%',
+                            default => '0%'
+                        };
+                    @endphp
+                    <div class="h-full bg-teal-500 transition-all duration-1000" style="width: {{ $progressWidth }}"></div>
+                </div>
+                
+                <div class="grid grid-cols-4 gap-4 relative">
+                    <div class="flex flex-col items-center text-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center {{ in_array($order->status, ['pending', 'processing', 'shipped', 'completed']) ? 'bg-teal-500 text-white shadow-lg shadow-teal-200' : 'bg-slate-100 text-slate-300' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black uppercase tracking-widest {{ in_array($order->status, ['pending', 'processing', 'shipped', 'completed']) ? 'text-slate-900' : 'text-slate-300' }}">Dipesan</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center {{ in_array($order->status, ['processing', 'shipped', 'completed']) ? 'bg-teal-500 text-white shadow-lg shadow-teal-200' : 'bg-slate-100 text-slate-300' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black uppercase tracking-widest {{ in_array($order->status, ['processing', 'shipped', 'completed']) ? 'text-slate-900' : 'text-slate-300' }}">Diproses</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center {{ in_array($order->status, ['shipped', 'completed']) ? 'bg-teal-500 text-white shadow-lg shadow-teal-200' : 'bg-slate-100 text-slate-300' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black uppercase tracking-widest {{ in_array($order->status, ['shipped', 'completed']) ? 'text-slate-900' : 'text-slate-300' }}">Dikirim</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center {{ $order->status === 'completed' ? 'bg-teal-500 text-white shadow-lg shadow-teal-200' : 'bg-slate-100 text-slate-300' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black uppercase tracking-widest {{ $order->status === 'completed' ? 'text-slate-900' : 'text-slate-300' }}">Selesai</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Payment Status Alert -->
             @if(in_array($order->payment_status, ['unpaid', 'pending']))
                 <div class="p-8 bg-amber-50 rounded-[2.5rem] border border-amber-100 flex flex-col md:flex-row items-center justify-between gap-6 animate__animated animate__pulse animate__infinite">
