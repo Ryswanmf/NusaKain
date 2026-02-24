@@ -74,31 +74,30 @@ class LandingSettingController extends Controller
             'facebook' => 'nullable|string|max:255',
         ]);
 
+        $setting->fill($request->except(['hero_image', 'stamp_image', 'signature_image']));
+
         if ($request->hasFile('hero_image')) {
             if ($setting->hero_image) {
                 Storage::disk('public')->delete($setting->hero_image);
             }
-            $path = $request->file('hero_image')->store('landing', 'public');
-            $validated['hero_image'] = $path;
+            $setting->hero_image = $request->file('hero_image')->store('landing', 'public');
         }
 
         if ($request->hasFile('stamp_image')) {
             if ($setting->stamp_image) {
                 Storage::disk('public')->delete($setting->stamp_image);
             }
-            $path = $request->file('stamp_image')->store('landing', 'public');
-            $validated['stamp_image'] = $path;
+            $setting->stamp_image = $request->file('stamp_image')->store('landing', 'public');
         }
 
         if ($request->hasFile('signature_image')) {
             if ($setting->signature_image) {
                 Storage::disk('public')->delete($setting->signature_image);
             }
-            $path = $request->file('signature_image')->store('landing', 'public');
-            $validated['signature_image'] = $path;
+            $setting->signature_image = $request->file('signature_image')->store('landing', 'public');
         }
 
-        $setting->update($validated);
+        $setting->save();
 
         return back()->with('success', 'Pengaturan Beranda berhasil diperbarui.');
     }

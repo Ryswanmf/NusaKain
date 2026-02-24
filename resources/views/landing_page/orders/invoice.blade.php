@@ -79,7 +79,7 @@
                                 <div style="font-size: 10px; color: #64748b;">Varian: {{ $item->variant->name }}</div>
                             @endif
                         </td>
-                        <td style="text-align: center;">{{ $item->quantity }}</td>
+                        <td style="text-align: center;">{{ (float)$item->quantity }}</td>
                         <td style="text-align: right;">{{ number_format($item->unit_price, 0, ',', '.') }}</td>
                         <td style="text-align: right;">{{ number_format($item->unit_price * $item->quantity, 0, ',', '.') }}</td>
                     </tr>
@@ -113,19 +113,24 @@
             <div style="float: right; width: 200px; text-align: center; position: relative;">
                 <p style="font-size: 12px; margin-bottom: 50px;">Hormat kami,</p>
                 
-                @if($setting->stamp_image && file_exists(storage_path('app/public/' . $setting->stamp_image)))
+                @php
+                    $stampPath = $setting->stamp_image ? storage_path('app/public/' . $setting->stamp_image) : null;
+                    $sigPath = $setting->signature_image ? storage_path('app/public/' . $setting->signature_image) : null;
+                @endphp
+
+                @if($stampPath && file_exists($stampPath))
                     @php
-                        $stampData = base64_encode(file_get_contents(storage_path('app/public/' . $setting->stamp_image)));
-                        $stampType = pathinfo(storage_path('app/public/' . $setting->stamp_image), PATHINFO_EXTENSION);
+                        $stampData = base64_encode(file_get_contents($stampPath));
+                        $stampType = pathinfo($stampPath, PATHINFO_EXTENSION);
                     @endphp
                     <img src="data:image/{{ $stampType }};base64,{{ $stampData }}" 
-                         style="position: absolute; width: 100px; opacity: 0.6; top: 20px; left: 20px; z-index: 1;">
+                         style="position: absolute; width: 100px; opacity: 0.6; top: 0px; left: 50%; margin-left: -50px; z-index: 1;">
                 @endif
 
-                @if($setting->signature_image && file_exists(storage_path('app/public/' . $setting->signature_image)))
+                @if($sigPath && file_exists($sigPath))
                     @php
-                        $sigData = base64_encode(file_get_contents(storage_path('app/public/' . $setting->signature_image)));
-                        $sigType = pathinfo(storage_path('app/public/' . $setting->signature_image), PATHINFO_EXTENSION);
+                        $sigData = base64_encode(file_get_contents($sigPath));
+                        $sigType = pathinfo($sigPath, PATHINFO_EXTENSION);
                     @endphp
                     <img src="data:image/{{ $sigType }};base64,{{ $sigData }}" 
                          style="position: relative; width: 120px; z-index: 2;">
