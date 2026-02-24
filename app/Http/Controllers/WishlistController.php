@@ -23,6 +23,7 @@ class WishlistController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
+            'notify_stock' => 'nullable|boolean'
         ]);
 
         $wishlist = Wishlist::where('user_id', Auth::id())
@@ -30,14 +31,27 @@ class WishlistController extends Controller
             ->first();
 
         if ($wishlist) {
+            // If user specifically asked for notify_stock, update it instead of removing
+            if ($request->has('notify_stock')) {
+                $wishlist->update(['notify_stock' => $request->notify_stock]);
+                $msg = $request->notify_stock ? 'Kami akan menginfokan saat stok tersedia.' : 'Notifikasi stok dibatalkan.';
+                return response()->json(['status' => 'updated', 'message' => $msg]);
+            }
+            
             $wishlist->delete();
             return response()->json(['status' => 'removed', 'message' => 'Produk dihapus dari simpanan.']);
         } else {
             Wishlist::create([
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
+                'notify_stock' => $request->notify_stock ?? false,
             ]);
-            return response()->json(['status' => 'added', 'message' => 'Produk berhasil disimpan.']);
+            
+            $msg = ($request->notify_stock ?? false) 
+                ? 'Berhasil! Kami akan menginfokan saat stok tersedia.' 
+                : 'Produk berhasil disimpan.';
+                
+            return response()->json(['status' => 'added', 'message' => $msg]);
         }
     }
 

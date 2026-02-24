@@ -183,11 +183,19 @@
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
                         <input type="hidden" name="quantity" id="quantity_hidden" value="1">
+                        
                         @auth
-                            <button type="submit" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-teal-100 active:scale-95 group/cart">
-                                <svg class="w-6 h-6 mr-3 transition-transform group-hover/cart:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                Ke Keranjang
-                            </button>
+                            @if($product->stock > 0)
+                                <button type="submit" id="main-buy-btn" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-teal-100 active:scale-95 group/cart">
+                                    <svg class="w-6 h-6 mr-3 transition-transform group-hover/cart:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    Ke Keranjang
+                                </button>
+                            @else
+                                <button type="button" onclick="notifyMe({{ $product->id }})" id="notify-btn" class="w-full flex items-center justify-center px-8 py-6 bg-amber-500 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-amber-100 active:scale-95 group/notif">
+                                    <svg class="w-6 h-6 mr-3 transition-transform group-hover/notif:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                    Ingatkan Saya
+                                </button>
+                            @endif
                         @else
                             <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-teal-700 transition-all active:scale-95">
                                 Login untuk Beli
@@ -423,6 +431,31 @@
         document.getElementById('quantity_hidden').value = val;
     }
 
+    function notifyMe(productId) {
+        fetch('{{ route('wishlist.toggle') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ 
+                product_id: productId,
+                notify_stock: true
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            showNotification(data.message, 'success');
+            const btn = document.getElementById('notify-btn');
+            if (btn) {
+                btn.innerHTML = '<svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Sudah Terdaftar';
+                btn.classList.remove('bg-amber-500');
+                btn.classList.add('bg-slate-400');
+                btn.disabled = true;
+            }
+        });
+    }
+
     function adjustQty(amount) {
         const input = document.getElementById('quantity_input');
         let newVal = parseFloat(input.value) + amount;
@@ -470,12 +503,27 @@
 
         // Update stock display
         const stockEl = document.getElementById('display-stock');
+        const buyBtn = document.getElementById('main-buy-btn');
+        const notifyBtn = document.getElementById('notify-btn');
+
         if (stock > 0) {
-            stockEl.innerText = 'Stok: ' + stock + ' Meter';
-            stockEl.className = 'text-sm font-bold text-green-600';
+            stockEl.innerText = 'Ready Stock: ' + stock + ' Meter';
+            stockEl.className = 'text-[10px] font-black uppercase tracking-[0.2em] text-green-400';
+            
+            if (buyBtn) buyBtn.classList.remove('hidden');
+            if (notifyBtn) notifyBtn.classList.add('hidden');
         } else {
             stockEl.innerText = 'Stok Habis';
-            stockEl.className = 'text-sm font-bold text-red-500';
+            stockEl.className = 'text-[10px] font-black uppercase tracking-[0.2em] text-rose-400';
+            
+            if (buyBtn) buyBtn.classList.add('hidden');
+            if (notifyBtn) {
+                notifyBtn.classList.remove('hidden');
+                notifyBtn.innerHTML = '<svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg> Ingatkan Saya';
+                notifyBtn.classList.add('bg-amber-500');
+                notifyBtn.classList.remove('bg-slate-400');
+                notifyBtn.disabled = false;
+            }
         }
 
         // Update image if variant has one
