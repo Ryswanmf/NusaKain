@@ -17,6 +17,7 @@ Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus 
 - Payment Gateway: Midtrans Snap
 - PDF Engine: Laravel-DomPDF
 - Image Processing: Intervention Image (WebP Optimized)
+- Spreadsheet Engine: Maatwebsite Excel
 - Frontend: Tailwind CSS, Alpine.js, Animate.css, GLightbox
 
 ---
@@ -32,22 +33,23 @@ Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus 
 ### Transaksi & Pembayaran
 - Integrasi Midtrans Snap: Pembayaran aman menggunakan berbagai metode (Bank Transfer, QRIS, Kartu Kredit).
 - Auto-Sync Payment: Sinkronisasi status pembayaran secara real-time dari API Midtrans.
-- Manajemen Stok Otomatis: Stok kain berkurang secara otomatis hanya setelah pembayaran dikonfirmasi berhasil.
+- Manajemen Stok Otomatis: Stok kain berkurang secara otomatis (mendukung desimal) hanya setelah pembayaran dikonfirmasi berhasil.
 - Auto-Cancel Orders: Pembatalan otomatis pesanan yang tidak dibayar dalam waktu 24 jam untuk menjaga akurasi stok.
-- Invoice PDF: Pembuatan dan pengunduhan invoice formal secara otomatis dalam format PDF lengkap dengan Stempel dan Tanda Tangan digital.
+- Invoice PDF: Pembuatan invoice otomatis dalam format PDF lengkap dengan Stempel dan Tanda Tangan digital dinamis.
 
 ### Pengalaman Pelanggan (UX)
 - Dashboard Akun Saya: Ringkasan statistik belanja, riwayat pesanan, dan manajemen wishlist.
+- Visual Status Timeline: Garis waktu interaktif di halaman pesanan untuk melacak progres transaksi (Dipesan, Diproses, Dikirim, Selesai).
 - Review & Rating: Pembeli dapat memberikan ulasan bintang dan mengunggah foto kain yang telah diterima.
-- Nusakain Assistant: Widget bantuan melayang di pojok layar untuk akses cepat ke WhatsApp Admin, Lacak Pesanan, dan FAQ.
-- Magnifier Zoom: Fitur kaca pembesar pada foto produk untuk melihat detail serat dan tekstur kain secara mendalam.
-- Social Auth: Login cepat menggunakan akun Google.
+- Nusakain Assistant: Widget bantuan melayang untuk akses cepat ke WhatsApp Admin, Lacak Pesanan, dan FAQ.
+- Magnifier Zoom: Fitur kaca pembesar pada foto produk untuk melihat detail serat dan tekstur kain secara mendalam tanpa pecah.
+- Social Auth: Login cepat satu klik menggunakan akun Google.
 
 ### Dashboard Admin Kustom
-- Analitik Keuntungan (Profit): Perhitungan otomatis keuntungan bersih berdasarkan harga modal (COGS) dan diskon.
-- Statistik Bisnis: Monitoring total penjualan, pendapatan lunas, jumlah pelanggan, dan stok kritis secara visual.
-- Grafik Analitik: Visualisasi tren pesanan harian dan distribusi kategori produk.
-- Manajemen Lengkap: CRUD untuk Produk, Pesanan, Voucher, Blog, Portofolio, Tim, dan Kontak Pelanggan.
+- Analitik Keuntungan (Profit): Perhitungan otomatis keuntungan bersih harian berdasarkan harga modal (COGS), harga jual, dan diskon voucher.
+- Ekspor Laporan: Pengunduhan laporan penjualan dalam format Excel (.xlsx) dan PDF profesional dengan filter rentang tanggal.
+- Statistik Bisnis: Monitoring real-time total penjualan, pendapatan lunas, jumlah pelanggan, dan stok kritis (< 5m).
+- Manajemen Konten Dinamis: Pengaturan penuh logo, nama situs, slogan, alamat, dan media sosial melalui panel admin.
 
 ---
 
@@ -103,18 +105,19 @@ Untuk fitur Auto-Cancel Pesanan, tambahkan Cron Job berikut di server Anda:
 ---
 
 ## Struktur Folder Utama
-- `app/Services/` - Logika integrasi Midtrans, Image Processing, dan Region.
+- `app/Exports/` - Konfigurasi ekspor data Excel.
+- `app/Services/` - Logika integrasi Midtrans, Image Processing (WebP), dan WhatsApp.
 - `app/Console/Commands/` - Tugas otomatisasi (Cancel Expired Orders).
-- `app/Filament/Resources/` - Pengaturan panel administrasi.
-- `resources/views/landing_page/` - Seluruh tampilan antarmuka pembeli.
-- `resources/views/admin/` - Tampilan dashboard admin kustom.
+- `app/Observers/` - Pemantauan perubahan stok dan notifikasi wishlist.
+- `resources/views/landing_page/` - Antarmuka pembeli (Frontend).
+- `resources/views/admin/` - Tampilan dashboard admin kustom dan laporan.
 
 ---
 
 ## Palet Warna Brand
-- Teal (Primary): #0d9488 - Melambangkan profesionalitas.
-- Slate (Secondary): #0f172a - Melambangkan kemewahan.
-- Rose (Accent): #f43f5e - Digunakan untuk promo dan diskon.
+- Teal (Primary): #0d9488 - Melambangkan profesionalitas dan detail tekstil.
+- Slate (Secondary): #0f172a - Melambangkan kemewahan dan integritas.
+- Rose (Accent): #f43f5e - Digunakan untuk penekanan promo dan status urgensi.
 
 ---
 
