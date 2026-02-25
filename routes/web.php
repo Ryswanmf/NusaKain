@@ -81,6 +81,12 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('stats', 'recentOrders', 'chartData', 'categoryDistribution'));
 })->middleware(['auth', 'verified', 'admin'])->name('dashboard');
 
+// Admin Reports
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin/reports')->name('admin.reports.')->group(function () {
+    Route::get('/excel', [\App\Http\Controllers\Admin\ReportController::class, 'exportExcel'])->name('excel');
+    Route::get('/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportPdf'])->name('pdf');
+});
+
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('produk', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('portofolio', \App\Http\Controllers\Admin\PortfolioController::class);
