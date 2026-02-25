@@ -7,7 +7,14 @@
                 </h2>
                 <p class="text-[11px] md:text-sm text-slate-500 font-medium mt-0.5 truncate text-teal-600 md:text-slate-500">Welcome, {{ Auth::user()->name }}!</p>
             </div>
-            <div class="hidden xs:flex items-center gap-3 self-start md:self-auto">
+            <div class="hidden xs:flex flex-wrap items-center gap-3 self-start md:self-auto">
+                <!-- Date Filter -->
+                <div class="flex items-center bg-white p-1 rounded-2xl border border-slate-100 shadow-sm">
+                    <input type="date" id="start_date" class="bg-transparent border-none text-[10px] font-black text-slate-600 focus:ring-0 w-28 uppercase" title="Tanggal Mulai">
+                    <span class="text-slate-300 text-[10px] font-black px-1">—</span>
+                    <input type="date" id="end_date" class="bg-transparent border-none text-[10px] font-black text-slate-600 focus:ring-0 w-28 uppercase" title="Tanggal Selesai">
+                </div>
+
                 <div class="flex items-center bg-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl border border-slate-100 shadow-sm">
                     <svg class="w-4 h-4 md:w-5 md:h-5 text-teal-500 mr-2 md:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     <span class="text-[10px] md:text-sm font-black text-slate-700 uppercase tracking-wider whitespace-nowrap">{{ now()->format('d M Y') }}</span>
@@ -15,10 +22,10 @@
                 
                 <!-- Export Buttons -->
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('admin.reports.excel') }}" class="p-2.5 md:p-3 bg-green-50 text-green-600 rounded-xl md:rounded-2xl hover:bg-green-600 hover:text-white transition-all shadow-sm border border-green-100 group/btn" title="Unduh Excel">
+                    <a href="{{ route('admin.reports.excel') }}" id="btn-export-excel" class="p-2.5 md:p-3 bg-green-50 text-green-600 rounded-xl md:rounded-2xl hover:bg-green-600 hover:text-white transition-all shadow-sm border border-green-100 group/btn" title="Unduh Excel">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </a>
-                    <a href="{{ route('admin.reports.pdf') }}" class="p-2.5 md:p-3 bg-rose-50 text-rose-600 rounded-xl md:rounded-2xl hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 group/btn" title="Unduh PDF">
+                    <a href="{{ route('admin.reports.pdf') }}" id="btn-export-pdf" class="p-2.5 md:p-3 bg-rose-50 text-rose-600 rounded-xl md:rounded-2xl hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 group/btn" title="Unduh PDF">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h1m1 0h1m1 0h1m-3 4h1m1 0h1m1 0h1m-3 4h1m1 0h1m1 0h1"/></svg>
                     </a>
                 </div>
@@ -241,6 +248,32 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Update Export Links based on date filter
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            const btnExcel = document.getElementById('btn-export-excel');
+            const btnPdf = document.getElementById('btn-export-pdf');
+
+            const baseExcelUrl = "{{ route('admin.reports.excel') }}";
+            const basePdfUrl = "{{ route('admin.reports.pdf') }}";
+
+            function updateExportLinks() {
+                const start = startDateInput.value;
+                const end = endDateInput.value;
+                const params = new URLSearchParams();
+                
+                if (start) params.append('start_date', start);
+                if (end) params.append('end_date', end);
+
+                const queryString = params.toString() ? '?' + params.toString() : '';
+                
+                btnExcel.href = baseExcelUrl + queryString;
+                btnPdf.href = basePdfUrl + queryString;
+            }
+
+            startDateInput.addEventListener('change', updateExportLinks);
+            endDateInput.addEventListener('change', updateExportLinks);
+
             // Gradient Setup for Chart
             const ctxOrders = document.getElementById('ordersChart').getContext('2d');
             const gradient = ctxOrders.createLinearGradient(0, 0, 0, 400);

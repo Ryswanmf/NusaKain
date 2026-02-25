@@ -9,9 +9,27 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class OrdersExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $startDate;
+    protected $endDate;
+
+    public function __construct($startDate = null, $endDate = null)
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+    }
+
     public function collection()
     {
-        return Order::with(['items', 'user'])->latest()->get();
+        $query = Order::with(['items', 'user'])->latest();
+
+        if ($this->startDate) {
+            $query->whereDate('created_at', '>=', $this->startDate);
+        }
+        if ($this->endDate) {
+            $query->whereDate('created_at', '<=', $this->endDate);
+        }
+
+        return $query->get();
     }
 
     public function headings(): array

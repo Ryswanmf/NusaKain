@@ -23,7 +23,17 @@
     <div class="header">
         <div class="logo">Nusakain.</div>
         <div class="title">LAPORAN PENJUALAN</div>
-        <p>Periode: Per Tanggal {{ now()->format('d F Y') }}</p>
+        <p>Periode: 
+            @if($stats['start_date'] && $stats['end_date'])
+                {{ \Carbon\Carbon::parse($stats['start_date'])->format('d M Y') }} - {{ \Carbon\Carbon::parse($stats['end_date'])->format('d M Y') }}
+            @elseif($stats['start_date'])
+                Mulai {{ \Carbon\Carbon::parse($stats['start_date'])->format('d M Y') }}
+            @elseif($stats['end_date'])
+                Hingga {{ \Carbon\Carbon::parse($stats['end_date'])->format('d M Y') }}
+            @else
+                Semua Periode (Hingga {{ now()->format('d F Y') }})
+            @endif
+        </p>
     </div>
 
     <table class="stats-grid">
