@@ -47,10 +47,17 @@
                 <div class="absolute -inset-4 bg-teal-100/50 rounded-[2.5rem] blur-2xl group-hover:bg-teal-200/50 transition-colors"></div>
                 
                 <div class="animate-float">
-                    <img src="{{ asset('assets/landing/hero-landingpage.png') }}" 
-                         alt="Koleksi Kain Nusakain" 
-                         loading="lazy"
-                         class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
+                    @if($setting && $setting->hero_image)
+                        <img src="{{ asset('storage/' . $setting->hero_image) }}" 
+                             alt="Koleksi Kain Nusakain" 
+                             loading="lazy"
+                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
+                    @else
+                        <img src="{{ asset('images/hero-landingpage.png') }}" 
+                             alt="Koleksi Kain Nusakain" 
+                             loading="lazy"
+                             class="relative w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.05]">
+                    @endif
                 </div>
                 
                 <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 bg-white/90 backdrop-blur px-4 py-2 md:px-5 md:py-3 rounded-xl md:rounded-2xl shadow-xl border border-white/20 animate__animated animate__bounceIn animate__delay-2s">

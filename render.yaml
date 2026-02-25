@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: nusakain-web
-    env: docker
-    plan: free
-    region: singapore
-

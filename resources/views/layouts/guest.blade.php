@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Nusakain - Premium Textiles')</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/brand/favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia. Kami menyediakan berbagai pilihan kain berkualitas tinggi.')">
     <meta name="keywords" content="@yield('meta_keywords', 'kain premium, tekstil indonesia, supplier kain, batik, linen, denim, katun')">
@@ -38,7 +38,7 @@
         <div class="flex-1 flex items-center">
             <a href="/" class="flex items-center space-x-3 group">
                                         <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                                            <img src="{{ asset('assets/brand/favicon.png') }}" class="w-full h-full object-cover p-1">
+                                            <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                                         </div>                <span class="text-xl font-extrabold text-slate-900 tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-600">.</span></span>
             </a>
         </div>
@@ -162,7 +162,7 @@
             <div class="space-y-6">
                 <a href="/" class="flex items-center space-x-3 group">
                                             <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                                                <img src="{{ asset('assets/brand/favicon.png') }}" class="w-full h-full object-cover p-1">
+                                                <img src="{{ asset('images/favicon.png') }}" class="w-full h-full object-cover p-1">
                                             </div>                    <span class="text-2xl font-black text-slate-900 tracking-tight">{{ $setting->site_name ?? 'Nusakain' }}<span class="text-teal-600">.</span></span>
                 </a>
                 <p class="text-slate-500 text-sm leading-relaxed font-medium">
@@ -292,7 +292,7 @@
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl"></div>
                 <div class="flex items-center gap-4 relative z-10">
                     <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/30">
-                        <img src="{{ asset('assets/brand/favicon.png') }}" class="w-8 h-8 object-contain invert brightness-0">
+                        <img src="{{ asset('images/favicon.png') }}" class="w-8 h-8 object-contain invert brightness-0">
                     </div>
                     <div>
                         <h4 class="text-sm font-black uppercase tracking-widest">{{ $setting->site_name ?? 'Nusakain' }} Bot</h4>
