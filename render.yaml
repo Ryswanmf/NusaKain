@@ -1,13 +1,7 @@
 services:
   - type: web
     name: nusakain-web
-    env: php
-    buildCommand: ./build.sh
-    startCommand: apachectl -D FOREGROUND
-    envVars:
-      - key: PHP_VERSION
-        value: 8.2
-      - key: APP_SERVICE
-        value: web
-      - key: NODE_VERSION
-        value: 18.x
+    env: docker
+    plan: free
+    region: singapore
+
