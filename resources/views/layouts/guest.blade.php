@@ -283,19 +283,29 @@
 
     @stack('scripts')
 
+    <style>
+        @keyframes nusabot-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .animate-nusabot {
+            animation: nusabot-float 3s ease-in-out infinite;
+        }
+    </style>
+
     <!-- Nusakain Help Assistant (Chatbot UI) -->
     <div class="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
         <!-- Chat Bubble Popup -->
         <div id="chat-popup" class="hidden mb-6 w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate__animated animate__fadeInUp animate__faster">
             <!-- Header -->
-            <div class="bg-slate-900 p-8 text-white relative">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl"></div>
+            <div class="bg-slate-900 p-8 text-white relative group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl group-hover:bg-teal-500/30 transition-all duration-700"></div>
                 <div class="flex items-center gap-4 relative z-10">
-                    <div class="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/30">
-                        <img src="{{ asset('images/favicon.png') }}" class="w-8 h-8 object-contain invert brightness-0">
+                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 shadow-lg">
+                        <img src="{{ asset('images/nusabot.png') }}" class="w-8 h-8 object-contain">
                     </div>
                     <div>
-                        <h4 class="text-sm font-black uppercase tracking-widest">{{ $setting->site_name ?? 'Nusakain' }} Bot</h4>
+                        <h4 class="text-sm font-black uppercase tracking-widest">Nusa<span class="text-teal-400">bot.</span></h4>
                         <p class="text-[10px] font-bold text-teal-400 uppercase tracking-tighter">Online • Siap Membantu</p>
                     </div>
                 </div>
@@ -350,15 +360,15 @@
         </div>
 
         <!-- Floating Button -->
-        <button onclick="toggleChat()" class="w-16 h-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:bg-teal-600 transition-all hover:scale-110 active:scale-95 group relative">
-            <div id="chat-icon-open">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+        <button onclick="toggleChat()" class="relative group active:scale-95 transition-all outline-none">
+            <div id="chat-icon-open" class="animate-nusabot">
+                <img src="{{ asset('images/nusabot.png') }}" alt="Nusabot" class="w-40 h-40 object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.15)] group-hover:scale-110 transition-transform">
+                <!-- Notification Dot (Positioned on the robot) -->
+                <span class="absolute top-8 right-8 w-4 h-4 bg-teal-500 border-4 border-white rounded-full z-10 animate-pulse"></span>
             </div>
-            <div id="chat-icon-close" class="hidden">
+            <div id="chat-icon-close" class="hidden w-16 h-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center shadow-2xl">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
             </div>
-            <!-- Notification Dot -->
-            <span class="absolute top-0 right-0 w-4 h-4 bg-teal-500 border-4 border-white rounded-full"></span>
         </button>
     </div>
 
