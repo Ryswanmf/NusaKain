@@ -8,15 +8,18 @@
 ![Midtrans](https://img.shields.io/badge/Midtrans-Payment-blue?style=for-the-badge)
 ![WebP](https://img.shields.io/badge/Image-WebP_Optimized-teal?style=for-the-badge)
 
-Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus untuk ekosistem bisnis tekstil premium di Indonesia. Dibangun dengan teknologi terbaru Laravel 12 dan Filament 3, platform ini menawarkan pengalaman belanja kain yang presisi, sistem pembayaran otomatis, dan manajemen operasional yang efisien.
+## Project Preview
+![Nusakain Landing Page Preview](public/images/Screenshot%202026-02-26%20111922.png)
+
+Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus untuk ekosistem bisnis tekstil premium di Indonesia. Dibangun dengan teknologi terbaru Laravel 12 dan Filament 5, platform ini menawarkan pengalaman belanja kain yang presisi, sistem pembayaran otomatis, dan manajemen operasional yang efisien.
 
 ## Teknologi Utama
 - Backend: Laravel 12.x
-- Admin Panel: Filament v3.x
+- Admin Panel: Filament v5.x (Modern decoupled architecture)
 - Database: MySQL / SQLite
-- Payment Gateway: Midtrans Snap
+- Payment Gateway: Midtrans Snap Integration
 - PDF Engine: Laravel-DomPDF
-- Image Processing: Intervention Image (WebP Optimized)
+- Image Processing: Intervention Image v3 (WebP Optimized)
 - Spreadsheet Engine: Maatwebsite Excel
 - Frontend: Tailwind CSS, Alpine.js, Animate.css, GLightbox
 
@@ -27,7 +30,7 @@ Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus 
 ### E-Commerce Tekstil Khusus
 - Beli per Meter (Desimal): Mendukung pembelian kain dengan kuantitas desimal (contoh: 1.5m, 2.25m) dengan kelipatan 0.5m.
 - Kalkulator Kebutuhan Kain: Alat bantu interaktif bagi pembeli untuk mengestimasi panjang kain berdasarkan jenis pakaian dan ukuran tubuh.
-- Varian Produk: Manajemen variasi kain berdasarkan warna, material, atau grade khusus.
+- Varian Produk (Pill Style): Manajemen variasi kain dengan antarmuka premium berbasis selektor pill dan sinkronisasi stok real-time.
 - Sistem Voucher: Penggunaan kode promo (Potongan Rupiah atau Persentase) dengan validasi minimal belanja dan kuota penggunaan.
 
 ### Transaksi & Pembayaran
@@ -40,13 +43,14 @@ Nusakain adalah platform E-commerce dan Portofolio modern yang dirancang khusus 
 ### Pengalaman Pelanggan (UX)
 - Dashboard Akun Saya: Ringkasan statistik belanja, riwayat pesanan, dan manajemen wishlist.
 - Visual Status Timeline: Garis waktu interaktif di halaman pesanan untuk melacak progres transaksi (Dipesan, Diproses, Dikirim, Selesai).
-- Review & Rating: Pembeli dapat memberikan ulasan bintang dan mengunggah foto kain yang telah diterima.
-- Nusakain Assistant: Widget bantuan melayang untuk akses cepat ke WhatsApp Admin, Lacak Pesanan, dan FAQ.
+- Analitik Review & Rating: Pembeli dapat memberikan ulasan bintang, mengunggah foto, dan melihat statistik distribusi rating (Rating Bar) yang transparan.
+- Nusabot Assistant: Karakter bot melayang (Floating Bot) dengan animasi dinamis untuk akses cepat ke WhatsApp Admin, Lacak Pesanan, dan FAQ.
 - Magnifier Zoom: Fitur kaca pembesar pada foto produk untuk melihat detail serat dan tekstur kain secara mendalam tanpa pecah.
 - Social Auth: Login cepat satu klik menggunakan akun Google.
 
-### Dashboard Admin Kustom
+### Dashboard Admin & CRM
 - Analitik Keuntungan (Profit): Perhitungan otomatis keuntungan bersih harian berdasarkan harga modal (COGS), harga jual, dan diskon voucher.
+- Monitoring Review Terbaru: Dashboard admin kustom untuk memantau ulasan pembeli terbaru dan status visibilitas review secara real-time.
 - Ekspor Laporan: Pengunduhan laporan penjualan dalam format Excel (.xlsx) dan PDF profesional dengan filter rentang tanggal.
 - Statistik Bisnis: Monitoring real-time total penjualan, pendapatan lunas, jumlah pelanggan, dan stok kritis (< 5m).
 - Manajemen Konten Dinamis: Pengaturan penuh logo, nama situs, slogan, alamat, dan media sosial melalui panel admin.
