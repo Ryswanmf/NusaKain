@@ -121,4 +121,4 @@ Untuk fitur Auto-Cancel Pesanan, tambahkan Cron Job berikut di server Anda:
 
 ---
 
-© 2026 **Nusakain Indonesia**. Seluruh Hak Cipta Dilindungi.
+© 2026 **Nusakain Indonesia**. Seluruh Hak Cipta Dilindungi Riswan.
