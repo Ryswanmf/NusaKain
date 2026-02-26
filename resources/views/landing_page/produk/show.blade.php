@@ -79,104 +79,96 @@
         </div>
 
         <!-- Info Section -->
-        <div class="flex flex-col">
-            <div class="mb-6 flex flex-wrap items-center gap-3">
-                <span class="px-4 py-1.5 bg-teal-50 text-teal-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-lg border border-teal-100">
-                    {{ $product->category ?? 'Koleksi Premium' }}
-                </span>
-                <div class="flex items-center bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 text-amber-500">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    <span class="text-xs font-black ml-2">{{ number_format($product->rating, 1) }}</span>
+        <div class="flex flex-col lg:pl-10">
+            <!-- Badge & Rating Row -->
+            <div class="mb-6 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 bg-teal-600 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
+                        New Arrival
+                    </span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">
+                        {{ $product->category ?? 'Premium Collection' }}
+                    </span>
+                </div>
+                <div class="flex items-center gap-1 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
+                    <svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <span class="text-[10px] font-black text-slate-700">{{ number_format($product->rating, 1) }}</span>
                 </div>
             </div>
             
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 italic">
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none mb-4">
                 {{ $product->name }}
             </h1>
 
-            <!-- Price Tag -->
-            <div class="mb-10 p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl group-hover:bg-teal-500/20 transition-all duration-700"></div>
-                
-                <div class="flex items-baseline gap-2 relative z-10">
-                    <p id="display-price" class="text-5xl font-black text-teal-400 italic tracking-tighter">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="flex items-center gap-2">
+                    <p id="display-price" class="text-3xl font-black text-teal-600 tracking-tighter">
                         {{ $product->formatted_price }}
                     </p>
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">/ Meter</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">/ Meter</span>
                 </div>
-
                 @if($product->original_price && $product->original_price > $product->price)
-                    <div id="display-discount-wrapper" class="flex items-center gap-3 mt-3 relative z-10">
-                        <span class="text-base font-bold text-slate-500 line-through tracking-tighter">{{ $product->formatted_original_price }}</span>
-                        <span class="px-2 py-0.5 bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[9px] font-black rounded-md uppercase tracking-widest">
-                            -{{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}%
-                        </span>
-                    </div>
+                    <span class="text-sm font-bold text-slate-300 line-through">{{ $product->formatted_original_price }}</span>
                 @endif
             </div>
 
-            <!-- Specs Grid -->
-            <div class="grid grid-cols-3 gap-4 mb-10">
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Berat</p>
-                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ $product->weight ?? 0 }} Gram</p>
+            <!-- Essential Specs (Minimalist) -->
+            <div class="flex items-center gap-6 py-6 border-y border-slate-100 mb-10">
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Weight</span>
+                    <span class="text-[11px] font-black text-slate-800 uppercase italic">{{ $product->weight ?? 0 }}gr</span>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Stok Tersedia</p>
-                    <p id="display-stock-val" class="text-xs font-black text-teal-600 uppercase italic">{{ (float)$product->stock }} Meter</p>
+                <div class="w-px h-8 bg-slate-100"></div>
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Stock</span>
+                    <span id="display-stock-val" class="text-[11px] font-black text-teal-600 uppercase italic">{{ (float)$product->stock }}m Available</span>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">SKU</p>
-                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ $product->variants->first()->sku ?? 'NK-'.str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</p>
+                <div class="w-px h-8 bg-slate-100"></div>
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Code</span>
+                    <span class="text-[11px] font-black text-slate-800 uppercase italic">{{ $product->variants->first()->sku ?? 'NK-'.str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</span>
                 </div>
             </div>
 
+            <!-- Variants (Pill Style) -->
             @if($product->variants->count() > 0)
                 <div class="mb-10">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 ml-1">Pilihan Material / Warna</h3>
-                    <div class="flex flex-wrap gap-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Pilih Varian</h3>
+                        <span class="text-[9px] font-bold text-teal-600 uppercase tracking-widest cursor-pointer hover:underline" onclick="openCalculator()">Size Guide</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
                         @foreach($product->variants as $variant)
-                            <div onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->formatted_price }}', {{ $variant->stock }}, '{{ $variant->image ? asset('storage/' . $variant->image) : '' }}')" 
-                                 class="variant-option px-6 py-3 bg-white border-2 border-slate-100 rounded-xl cursor-pointer hover:border-teal-500 transition-all duration-300 {{ $loop->first ? 'border-teal-500 bg-teal-50/30' : '' }}"
+                            <button onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->formatted_price }}', {{ $variant->stock }}, '{{ $variant->image ? asset('storage/' . $variant->image) : '' }}')" 
+                                 class="variant-option px-5 py-2.5 rounded-full border border-slate-200 text-[10px] font-black uppercase tracking-widest transition-all duration-300 hover:border-teal-500 {{ $loop->first ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-200' : 'bg-white text-slate-600' }}"
                                  data-id="{{ $variant->id }}">
-                                <span class="font-black text-slate-900 uppercase text-[10px] tracking-widest">{{ $variant->name }}</span>
-                            </div>
+                                {{ $variant->name }}
+                            </button>
                         @endforeach
                     </div>
                 </div>
             @endif
 
-            <div class="mb-10">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 ml-1">Deskripsi Produk</h3>
-                <div class="prose prose-slate max-w-none">
-                    <p class="text-slate-600 leading-relaxed font-medium text-base">
-                        {!! nl2br(e($product->description)) !!}
-                    </p>
-                </div>
+            <!-- Description (Compact) -->
+            <div class="mb-12">
+                <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em] mb-4">Tentang Produk</h3>
+                <p class="text-slate-500 leading-relaxed text-sm font-medium line-clamp-3 hover:line-clamp-none transition-all cursor-pointer">
+                    {!! nl2br(e($product->description)) !!}
+                </p>
             </div>
 
-            <!-- Action Area -->
-            <div class="space-y-6">
-                <!-- Calculator Button (Small Version) -->
-                <button onclick="openCalculator()" class="w-full flex items-center justify-between px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-teal-50 transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-teal-600 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                        </div>
-                        <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Kalkulator Kebutuhan</span>
-                    </div>
-                    <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <!-- Qty & Add to Cart -->
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <div class="flex items-center bg-white border border-slate-100 rounded-2xl p-2 shadow-sm">
-                        <button onclick="adjustQty(-0.5)" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all font-black">-</button>
+            <!-- Integrated Action Bar -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <!-- Qty Counter -->
+                    <div class="flex items-center bg-slate-100 rounded-2xl p-1.5 border border-slate-200/50">
+                        <button onclick="adjustQty(-0.5)" class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-900 hover:bg-white hover:shadow-sm transition-all font-black">-</button>
                         <input type="number" id="quantity_input" value="1" min="0.5" step="0.5" onchange="updateQuantity(this.value)"
-                               class="w-16 text-center bg-transparent border-none font-black text-xl text-slate-900 focus:ring-0">
-                        <button onclick="adjustQty(0.5)" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all font-black">+</button>
+                               class="w-14 text-center bg-transparent border-none font-black text-lg text-slate-900 focus:ring-0">
+                        <button onclick="adjustQty(0.5)" class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-900 hover:bg-white hover:shadow-sm transition-all font-black">+</button>
                     </div>
 
+                    <!-- Buy Button -->
                     <form action="{{ route('cart.store') }}" method="POST" class="flex-1">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -184,49 +176,37 @@
                         <input type="hidden" name="quantity" id="quantity_hidden" value="1">
                         
                         @auth
-                            <button type="submit" id="main-buy-btn" class="w-full flex items-center justify-center px-8 py-4 bg-teal-600 text-white rounded-2xl font-black text-base hover:bg-slate-900 transition-all shadow-lg shadow-teal-100 active:scale-95 {{ $product->stock <= 0 ? 'hidden' : '' }}">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                Ke Keranjang
+                            <button type="submit" id="main-buy-btn" class="w-full h-[54px] bg-teal-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-xl shadow-teal-100 flex items-center justify-center gap-3 {{ $product->stock <= 0 ? 'hidden' : '' }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                Tambahkan Keranjang
                             </button>
-                            <button type="button" onclick="notifyMe({{ $product->id }})" id="notify-btn" class="w-full flex items-center justify-center px-8 py-4 bg-amber-500 text-white rounded-2xl font-black text-base hover:bg-slate-900 transition-all shadow-lg shadow-amber-100 active:scale-95 {{ $product->stock > 0 ? 'hidden' : '' }}">
-                                Ingatkan Saya
+                            <button type="button" onclick="notifyMe({{ $product->id }})" id="notify-btn" class="w-full h-[54px] bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] {{ $product->stock > 0 ? 'hidden' : '' }}">
+                                Ingatkan Saat Restock
                             </button>
                         @else
-                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-4 bg-teal-600 text-white rounded-2xl font-black text-base hover:bg-teal-700 transition-all">
-                                Login untuk Beli
+                            <a href="{{ route('login') }}" class="w-full h-[54px] bg-teal-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center">
+                                Masuk Untuk Membeli
                             </a>
                         @endauth
                     </form>
                 </div>
 
-                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan produk {{ $product->name }}." 
-                   target="_blank"
-                   class="w-full flex items-center justify-center px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-base hover:bg-teal-600 transition-all active:scale-95">
-                    <svg class="w-5 h-5 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
-                    Tanya Admin (WA)
-                </a>
-
-                <div class="flex items-center justify-center gap-6 pt-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Safe Payment</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Fast Process</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quality Check</span>
-                    </div>
+                <!-- Secondary Actions -->
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan {{ $product->name }}" target="_blank"
+                       class="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-[9px] font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 transition-all">
+                        <svg class="w-3.5 h-3.5 fill-teal-600" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                        Tanya Admin
+                    </a>
+                    <button onclick="addToWishlist({{ $product->id }})"
+                       class="flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-[9px] font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                        Simpan Dulu
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 
@@ -565,13 +545,13 @@
     });
 
     function selectVariant(element, id, price, stock, image) {
-        // Update visual selection
+        // Update visual selection (Pill Style)
         document.querySelectorAll('.variant-option').forEach(el => {
-            el.classList.remove('border-teal-500', 'bg-teal-50');
-            el.classList.add('border-slate-100');
+            el.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'shadow-slate-200');
+            el.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
         });
-        element.classList.remove('border-slate-100');
-        element.classList.add('border-teal-500', 'bg-teal-50');
+        element.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+        element.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'shadow-lg', 'shadow-slate-200');
 
         // Update hidden input
         document.getElementById('product_variant_id').value = id;
