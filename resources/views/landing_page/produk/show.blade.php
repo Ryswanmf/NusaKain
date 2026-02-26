@@ -80,67 +80,76 @@
 
         <!-- Info Section -->
         <div class="flex flex-col">
-            <div class="mb-8 flex flex-wrap items-center gap-4">
-                <span class="px-5 py-2 bg-teal-50 text-teal-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border border-teal-100">
+            <div class="mb-6 flex flex-wrap items-center gap-3">
+                <span class="px-4 py-1.5 bg-teal-50 text-teal-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-lg border border-teal-100">
                     {{ $product->category ?? 'Koleksi Premium' }}
                 </span>
-                <div class="flex items-center bg-amber-50 px-4 py-2 rounded-xl border border-amber-100 text-amber-500">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    <span class="text-sm font-black ml-2">{{ number_format($product->rating, 1) }}</span>
-                    <span class="text-[10px] font-bold text-amber-400/60 ml-2 uppercase tracking-widest">Global Rating</span>
+                <div class="flex items-center bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 text-amber-500">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <span class="text-xs font-black ml-2">{{ number_format($product->rating, 1) }}</span>
                 </div>
             </div>
             
-            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 italic">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 italic">
                 {{ $product->name }}
             </h1>
 
-            <div class="flex flex-col mb-10 p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
+            <!-- Price Tag -->
+            <div class="mb-10 p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
                 <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl group-hover:bg-teal-500/20 transition-all duration-700"></div>
                 
-                <div class="flex items-end gap-4 relative z-10">
+                <div class="flex items-baseline gap-2 relative z-10">
                     <p id="display-price" class="text-5xl font-black text-teal-400 italic tracking-tighter">
                         {{ $product->formatted_price }}
                     </p>
-                    <span class="text-xs font-black text-slate-500 mb-2 uppercase tracking-widest">/ Meter</span>
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">/ Meter</span>
                 </div>
 
                 @if($product->original_price && $product->original_price > $product->price)
-                    <div id="display-discount-wrapper" class="flex items-center gap-4 mt-4 relative z-10">
-                        <span class="text-lg font-bold text-slate-500 line-through tracking-tighter">{{ $product->formatted_original_price }}</span>
-                        <span class="px-3 py-1 bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[10px] font-black rounded-lg uppercase tracking-[0.2em]">
-                            Hemat {{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}%
+                    <div id="display-discount-wrapper" class="flex items-center gap-3 mt-3 relative z-10">
+                        <span class="text-base font-bold text-slate-500 line-through tracking-tighter">{{ $product->formatted_original_price }}</span>
+                        <span class="px-2 py-0.5 bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[9px] font-black rounded-md uppercase tracking-widest">
+                            -{{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}%
                         </span>
                     </div>
                 @endif
+            </div>
 
-                <div class="mt-8 pt-6 border-t border-white/5 flex items-center gap-3 relative z-10">
-                    <div class="w-2 h-2 rounded-full {{ $product->stock > 0 ? 'bg-green-400' : 'bg-rose-400' }} animate-pulse"></div>
-                    <span id="display-stock" class="text-[10px] font-black uppercase tracking-[0.2em] {{ $product->stock > 0 ? 'text-green-400' : 'text-rose-400' }}">
-                        {{ $product->stock > 0 ? 'Ready Stock: ' . (float)$product->stock . ' Meter' : 'Stok Habis' }}
-                    </span>
+            <!-- Specs Grid -->
+            <div class="grid grid-cols-3 gap-4 mb-10">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Berat</p>
+                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ $product->weight ?? 0 }} Gram</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Stok Tersedia</p>
+                    <p id="display-stock-val" class="text-xs font-black text-teal-600 uppercase italic">{{ (float)$product->stock }} Meter</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">SKU</p>
+                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ $product->variants->first()->sku ?? 'NK-'.str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</p>
                 </div>
             </div>
 
             @if($product->variants->count() > 0)
-                <div class="mb-12">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Pilihan Material / Warna</h3>
-                    <div class="flex flex-wrap gap-4">
+                <div class="mb-10">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 ml-1">Pilihan Material / Warna</h3>
+                    <div class="flex flex-wrap gap-3">
                         @foreach($product->variants as $variant)
                             <div onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->formatted_price }}', {{ $variant->stock }}, '{{ $variant->image ? asset('storage/' . $variant->image) : '' }}')" 
-                                 class="variant-option px-8 py-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-teal-500 transition-all duration-300 {{ $loop->first ? 'border-teal-500 bg-teal-50/30' : '' }}"
+                                 class="variant-option px-6 py-3 bg-white border-2 border-slate-100 rounded-xl cursor-pointer hover:border-teal-500 transition-all duration-300 {{ $loop->first ? 'border-teal-500 bg-teal-50/30' : '' }}"
                                  data-id="{{ $variant->id }}">
-                                <span class="font-black text-slate-900 uppercase text-xs tracking-widest">{{ $variant->name }}</span>
+                                <span class="font-black text-slate-900 uppercase text-[10px] tracking-widest">{{ $variant->name }}</span>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endif
 
-            <div class="mb-12">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Deskripsi Produk</h3>
+            <div class="mb-10">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 ml-1">Deskripsi Produk</h3>
                 <div class="prose prose-slate max-w-none">
-                    <p class="text-slate-600 leading-relaxed font-medium text-lg">
+                    <p class="text-slate-600 leading-relaxed font-medium text-base">
                         {!! nl2br(e($product->description)) !!}
                     </p>
                 </div>
@@ -148,84 +157,91 @@
 
             <!-- Action Area -->
             <div class="space-y-6">
-                <!-- Calculator -->
-                <button onclick="openCalculator()" class="w-full flex items-center justify-between p-6 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-teal-50 hover:border-teal-100 transition-all group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-teal-600 shadow-sm group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <!-- Calculator Button (Small Version) -->
+                <button onclick="openCalculator()" class="w-full flex items-center justify-between px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-teal-50 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-teal-600 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                         </div>
-                        <div class="text-left">
-                            <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Kalkulator Kebutuhan</h4>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Hitung estimasi panjang kain Anda</p>
-                        </div>
+                        <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Kalkulator Kebutuhan</span>
                     </div>
-                    <svg class="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
                 </button>
 
-                <div class="p-8 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center">Tentukan Jumlah (Meter)</h3>
-                    <div class="flex items-center justify-center gap-6">
-                        <button onclick="adjustQty(-0.5)" class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all active:scale-90 font-black text-2xl">-</button>
-                        <div class="relative min-w-[120px]">
-                            <input type="number" id="quantity_input" value="1" min="0.5" step="0.5" onchange="updateQuantity(this.value)"
-                                   class="w-full text-center py-4 bg-transparent border-none font-black text-4xl text-slate-900 focus:ring-0">
-                            <div class="text-center text-[10px] font-black text-teal-600 uppercase tracking-widest -mt-1">Meter</div>
-                        </div>
-                        <button onclick="adjustQty(0.5)" class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all active:scale-90 font-black text-2xl">+</button>
+                <!-- Qty & Add to Cart -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex items-center bg-white border border-slate-100 rounded-2xl p-2 shadow-sm">
+                        <button onclick="adjustQty(-0.5)" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all font-black">-</button>
+                        <input type="number" id="quantity_input" value="1" min="0.5" step="0.5" onchange="updateQuantity(this.value)"
+                               class="w-16 text-center bg-transparent border-none font-black text-xl text-slate-900 focus:ring-0">
+                        <button onclick="adjustQty(0.5)" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-teal-500 hover:text-white transition-all font-black">+</button>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <form action="{{ route('cart.store') }}" method="POST" class="w-full">
+                    <form action="{{ route('cart.store') }}" method="POST" class="flex-1">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="product_variant_id" id="product_variant_id" value="{{ $product->variants->first()->id ?? '' }}">
                         <input type="hidden" name="quantity" id="quantity_hidden" value="1">
                         
                         @auth
-                            @if($product->stock > 0)
-                                <button type="submit" id="main-buy-btn" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-teal-100 active:scale-95 group/cart">
-                                    <svg class="w-6 h-6 mr-3 transition-transform group-hover/cart:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                    Ke Keranjang
-                                </button>
-                            @else
-                                <button type="button" onclick="notifyMe({{ $product->id }})" id="notify-btn" class="w-full flex items-center justify-center px-8 py-6 bg-amber-500 text-white rounded-[2rem] font-black text-xl hover:bg-slate-900 transition-all shadow-xl shadow-amber-100 active:scale-95 group/notif">
-                                    <svg class="w-6 h-6 mr-3 transition-transform group-hover/notif:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                                    Ingatkan Saya
-                                </button>
-                            @endif
+                            <button type="submit" id="main-buy-btn" class="w-full flex items-center justify-center px-8 py-4 bg-teal-600 text-white rounded-2xl font-black text-base hover:bg-slate-900 transition-all shadow-lg shadow-teal-100 active:scale-95 {{ $product->stock <= 0 ? 'hidden' : '' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                Ke Keranjang
+                            </button>
+                            <button type="button" onclick="notifyMe({{ $product->id }})" id="notify-btn" class="w-full flex items-center justify-center px-8 py-4 bg-amber-500 text-white rounded-2xl font-black text-base hover:bg-slate-900 transition-all shadow-lg shadow-amber-100 active:scale-95 {{ $product->stock > 0 ? 'hidden' : '' }}">
+                                Ingatkan Saya
+                            </button>
                         @else
-                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-6 bg-teal-600 text-white rounded-[2rem] font-black text-xl hover:bg-teal-700 transition-all active:scale-95">
+                            <a href="{{ route('login') }}" class="w-full flex items-center justify-center px-8 py-4 bg-teal-600 text-white rounded-2xl font-black text-base hover:bg-teal-700 transition-all">
                                 Login untuk Beli
                             </a>
                         @endauth
                     </form>
-                    
-                    <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan produk {{ $product->name }}. Apakah stok masih tersedia?" 
-                       target="_blank"
-                       class="flex items-center justify-center px-8 py-6 bg-slate-900 text-white rounded-[2rem] font-black text-xl hover:bg-teal-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
-                        <svg class="w-6 h-6 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
-                        Tanya Admin
-                    </a>
                 </div>
-            </div>
 
-            <div class="mt-12 flex items-center justify-center space-x-8 p-8 bg-white rounded-[2.5rem] border border-slate-100">
-                <div class="flex flex-col items-center">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Kurir</span>
-                    <span class="text-xs font-black text-slate-900 uppercase">Se-Indonesia</span>
-                </div>
-                <div class="h-10 w-px bg-slate-100"></div>
-                <div class="flex flex-col items-center">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Kualitas</span>
-                    <span class="text-xs font-black text-teal-600 uppercase tracking-tighter">Premium Grade</span>
-                </div>
-                <div class="h-10 w-px bg-slate-100"></div>
-                <div class="flex flex-col items-center">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Waktu</span>
-                    <span class="text-xs font-black text-slate-900 uppercase">Proses Cepat</span>
+                <a href="https://wa.me/6289515915699?text=Halo Nusakain, saya tertarik dengan produk {{ $product->name }}." 
+                   target="_blank"
+                   class="w-full flex items-center justify-center px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-base hover:bg-teal-600 transition-all active:scale-95">
+                    <svg class="w-5 h-5 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                    Tanya Admin (WA)
+                </a>
+
+                <div class="flex items-center justify-center gap-6 pt-6">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Safe Payment</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Fast Process</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quality Check</span>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Sticky Mobile Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-50 lg:hidden transform translate-y-0 transition-transform duration-300 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]" id="mobile-sticky-bar">
+        <div class="flex items-center gap-4 max-w-7xl mx-auto">
+            <div class="flex-1">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{{ $product->name }}</p>
+                <p class="text-sm font-black text-teal-600 italic tracking-tighter">{{ $product->formatted_price }}</p>
+            </div>
+            <button onclick="document.getElementById('main-buy-btn').click()" class="px-6 py-3 bg-teal-600 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-teal-100 active:scale-95">
+                Beli Sekarang
+            </button>
+        </div>
+    </div>
         </div>
     </div>
 
@@ -572,12 +588,20 @@
             stockEl.innerText = 'Ready Stock: ' + stock + ' Meter';
             stockEl.className = 'text-[10px] font-black uppercase tracking-[0.2em] text-green-400';
             
+            // Update Specs Grid Stock
+            const specStock = document.getElementById('display-stock-val');
+            if(specStock) specStock.innerText = stock + ' Meter';
+
             if (buyBtn) buyBtn.classList.remove('hidden');
             if (notifyBtn) notifyBtn.classList.add('hidden');
         } else {
             stockEl.innerText = 'Stok Habis';
             stockEl.className = 'text-[10px] font-black uppercase tracking-[0.2em] text-rose-400';
             
+            // Update Specs Grid Stock
+            const specStock = document.getElementById('display-stock-val');
+            if(specStock) specStock.innerText = 'Habis';
+
             if (buyBtn) buyBtn.classList.add('hidden');
             if (notifyBtn) {
                 notifyBtn.classList.remove('hidden');
@@ -593,6 +617,24 @@
             changeImage(image);
         }
     }
+
+    // Mobile Sticky Bar Logic
+    window.addEventListener('scroll', function() {
+        const bar = document.getElementById('mobile-sticky-bar');
+        const buyBtn = document.getElementById('main-buy-btn');
+        if (!bar || !buyBtn) return;
+
+        const btnPosition = buyBtn.getBoundingClientRect().top;
+        
+        // Tampilkan bar hanya jika tombol asli sudah tidak terlihat (scrolled past)
+        if (btnPosition < 0) {
+            bar.classList.remove('translate-y-full');
+            bar.classList.add('translate-y-0');
+        } else {
+            bar.classList.remove('translate-y-0');
+            bar.classList.add('translate-y-full');
+        }
+    });
 </script>
 @endpush
 @endsection
