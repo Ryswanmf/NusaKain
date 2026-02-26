@@ -65,4 +65,29 @@ class Product extends Model
     {
         return $this->hasMany(ProductReview::class)->where('is_visible', true);
     }
+
+    public function getRatingStats()
+    {
+        $total = $this->reviews()->count();
+        $stats = [
+            5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0
+        ];
+
+        if ($total > 0) {
+            $counts = $this->reviews()
+                ->selectRaw('rating, count(*) as count')
+                ->groupBy('rating')
+                ->pluck('count', 'rating');
+
+            foreach ($counts as $rating => $count) {
+                $stats[$rating] = round(($count / $total) * 100);
+            }
+        }
+
+        return [
+            'total' => $total,
+            'average' => round($this->reviews()->avg('rating') ?? 0, 1),
+            'percentages' => $stats
+        ];
+    }
 }

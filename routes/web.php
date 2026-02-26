@@ -65,6 +65,7 @@ Route::get('/dashboard', function () {
     ];
 
     $recentOrders = \App\Models\Order::with('user')->latest()->take(5)->get();
+    $recentReviews = \App\Models\ProductReview::with(['user', 'product'])->latest()->take(5)->get();
     
     // Simple Chart Data (Last 7 Days)
     $chartData = [];
@@ -78,7 +79,7 @@ Route::get('/dashboard', function () {
         ->groupBy('category')
         ->get();
 
-    return view('dashboard', compact('stats', 'recentOrders', 'chartData', 'categoryDistribution'));
+    return view('dashboard', compact('stats', 'recentOrders', 'recentReviews', 'chartData', 'categoryDistribution'));
 })->middleware(['auth', 'verified', 'admin'])->name('dashboard');
 
 // Admin Reports

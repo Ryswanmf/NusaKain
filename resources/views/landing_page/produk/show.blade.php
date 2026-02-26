@@ -262,34 +262,60 @@
     <!-- Customer Reviews Section -->
     <section class="mt-40 border-t border-slate-100 pt-24">
         <div class="max-w-4xl mx-auto">
-            <div class="flex items-center justify-between mb-16">
+            @php $stats = $product->getRatingStats(); @endphp
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20 items-center">
                 <div>
                     <h3 class="text-4xl font-black text-slate-900 tracking-tight italic">Review <span class="text-teal-600">Pembeli.</span></h3>
                     <p class="text-slate-400 font-bold mt-2 uppercase text-[10px] tracking-[0.2em]">Pendapat mereka tentang material ini</p>
                 </div>
-                <div class="flex flex-col items-end">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-6 h-6 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        <span class="text-3xl font-black text-slate-900 italic">{{ number_format($product->rating, 1) }}</span>
+                <div class="flex items-center gap-8 bg-white p-8 rounded-[2.5rem] border border-slate-50 shadow-sm">
+                    <div class="text-center px-4">
+                        <span class="text-5xl font-black text-slate-900 italic tracking-tighter">{{ $stats['average'] }}</span>
+                        <div class="flex items-center gap-1 mt-2 justify-center">
+                            @for($i=1; $i<=5; $i++)
+                                <svg class="w-3.5 h-3.5 {{ $i <= round($stats['average']) ? 'text-amber-400' : 'text-slate-100' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @endfor
+                        </div>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-3">{{ $stats['total'] }} Ulasan</p>
                     </div>
-                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-1">{{ $product->reviews->count() }} Ulasan</span>
+                    <div class="flex-1 space-y-2.5 border-l border-slate-50 pl-8">
+                        @foreach([5,4,3,2,1] as $star)
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-black text-slate-400 w-4">{{ $star }}</span>
+                                <div class="flex-1 h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                                    <div class="h-full bg-teal-500 rounded-full transition-all duration-1000" style="width: {{ $stats['percentages'][$star] }}%"></div>
+                                </div>
+                                <span class="text-[9px] font-black text-slate-300 w-8 text-right">{{ $stats['percentages'][$star] }}%</span>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
             <div class="space-y-10">
                 @forelse($product->reviews as $review)
                     <div class="bg-white p-10 rounded-[3rem] border border-slate-50 shadow-sm hover:shadow-md transition-all">
-                        <div class="flex items-center gap-5 mb-6">
-                            <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-300 uppercase text-lg shadow-inner">
-                                {{ substr($review->user->name, 0, 1) }}
-                            </div>
-                            <div>
-                                <h4 class="text-base font-black text-slate-900 tracking-tight">{{ $review->user->name }}</h4>
-                                <div class="flex items-center gap-1.5 mt-1">
-                                    @for($i=1; $i<=5; $i++)
-                                        <svg class="w-3.5 h-3.5 {{ $i <= $review->rating ? 'text-amber-400' : 'text-slate-100' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                    @endfor
-                                    <span class="text-[10px] text-slate-300 font-bold ml-2 uppercase tracking-widest">{{ $review->created_at->diffForHumans() }}</span>
+                        <div class="flex items-start justify-between mb-8">
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-300 uppercase text-lg shadow-inner">
+                                    {{ substr($review->user->name, 0, 1) }}
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-black text-slate-900 tracking-tight">{{ $review->user->name }}</h4>
+                                    <div class="flex flex-col gap-1 mt-1">
+                                        <div class="flex items-center gap-1">
+                                            @for($i=1; $i<=5; $i++)
+                                                <svg class="w-3 h-3 {{ $i <= $review->rating ? 'text-amber-400' : 'text-slate-100' }} fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                            @endfor
+                                            <span class="text-[9px] text-slate-300 font-bold ml-2 uppercase tracking-widest">{{ $review->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        @if($review->order_id)
+                                            <div class="flex items-center gap-1.5 text-teal-600">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                                <span class="text-[8px] font-black uppercase tracking-[0.15em]">Pembelian Terverifikasi</span>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +325,9 @@
                         @if($review->image)
                             <div class="mt-8 relative group/review-img inline-block">
                                 <div class="absolute -inset-2 bg-teal-500/10 rounded-[2rem] blur opacity-0 group-hover/review-img:opacity-100 transition-opacity"></div>
-                                <img src="{{ asset('storage/' . $review->image) }}" class="relative w-40 h-40 rounded-[1.5rem] object-cover border border-slate-100 shadow-sm">
+                                <a href="{{ asset('storage/' . $review->image) }}" class="glightbox" data-gallery="review-{{ $review->id }}">
+                                    <img src="{{ asset('storage/' . $review->image) }}" class="relative w-40 h-40 rounded-[1.5rem] object-cover border border-slate-100 shadow-sm hover:scale-[1.02] transition-transform duration-500">
+                                </a>
                             </div>
                         @endif
                     </div>
