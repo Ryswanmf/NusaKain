@@ -147,7 +147,8 @@ class CartController extends Controller
                 return ($item->variant->weight ?? $item->product->weight) * $item->quantity;
             });
 
-            $shippingCost = 20000; 
+            // Per 4kg (4000 gram) ongkos kirim nya 20 ribu
+            $shippingCost = ceil(max($totalWeight, 1) / 4000) * 20000; 
             
             // Apply Voucher Discount
             $discount = 0;
