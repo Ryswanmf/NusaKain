@@ -34,4 +34,18 @@ class LandingSetting extends Model
         'instagram',
         'facebook',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::saved(function ($setting) {
+            \Illuminate\Support\Facades\Cache::forget('landing_settings');
+        });
+
+        static::deleted(function ($setting) {
+            \Illuminate\Support\Facades\Cache::forget('landing_settings');
+        });
+    }
 }

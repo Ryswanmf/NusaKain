@@ -23,14 +23,42 @@
     <meta property="twitter:description" content="@yield('meta_description', 'Solusi ekosistem tekstil premium untuk pengusaha fashion Indonesia.')">
     <meta property="twitter:image" content="@yield('meta_image', asset('images/hero-landingpage.png'))">
 
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="pt-24 bg-gray-50/50 font-sans antialiased">
+<body class="pt-24 bg-gray-50/50 font-sans antialiased"
+      x-data="{ loading: true }" 
+      x-init="window.onload = () => { setTimeout(() => loading = false, 500) }">
+
+    <!-- Premium Preloader -->
+    <div x-show="loading" 
+         x-transition:leave="transition ease-in duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
+        <div class="relative">
+            <!-- Pulsing Glow -->
+            <div class="absolute -inset-4 bg-teal-500/20 rounded-full blur-xl animate-pulse"></div>
+            <!-- Logo -->
+            <img src="{{ asset('images/favicon.png') }}" alt="Loading..." class="w-16 h-16 object-contain relative z-10 animate-nusabot">
+        </div>
+        <!-- Modern Loading Bar -->
+        <div class="w-48 h-1 bg-slate-100 rounded-full mt-8 overflow-hidden">
+            <div class="h-full bg-teal-600 rounded-full animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+        <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Nusakain Experience</p>
+    </div>
+
+    <style>
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
 
 <nav class="bg-white/80 backdrop-blur-md fixed w-full top-0 z-50 border-b border-gray-100/80 shadow-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 h-20">
