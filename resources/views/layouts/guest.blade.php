@@ -294,100 +294,132 @@
     </style>
 
     <!-- Nusakain Help Assistant (Chatbot UI) -->
-    <div class="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
+    <div x-data="{ open: false }" class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
         <!-- Chat Bubble Popup -->
-        <div id="chat-popup" class="hidden mb-6 w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden animate__animated animate__fadeInUp animate__faster">
+        <div x-show="open" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-10 scale-95"
+             class="mb-6 w-[360px] bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden"
+             style="display: none;">
+            
             <!-- Header -->
-            <div class="bg-slate-900 p-8 text-white relative group">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl group-hover:bg-teal-500/30 transition-all duration-700"></div>
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-7 text-white relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl"></div>
                 <div class="flex items-center gap-4 relative z-10">
-                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 shadow-lg">
-                        <img src="{{ asset('images/nusabot.png') }}" class="w-8 h-8 object-contain">
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-inner">
+                            <img src="{{ asset('images/nusabot.png') }}" class="w-10 h-10 object-contain">
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-slate-900 rounded-full"></div>
                     </div>
                     <div>
-                        <h4 class="text-sm font-black uppercase tracking-widest">Nusa<span class="text-teal-400">bot.</span></h4>
-                        <p class="text-[10px] font-bold text-teal-400 uppercase tracking-tighter">Online • Siap Membantu</p>
+                        <h4 class="text-base font-bold tracking-tight">Nusabot <span class="text-teal-400">Assistant</span></h4>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-teal-400 rounded-full animate-pulse"></span>
+                            <p class="text-[11px] font-medium text-slate-400">Online • Balas dalam sekejap</p>
+                        </div>
                     </div>
                 </div>
             </div>
             
+            <!-- Welcome Message -->
+            <div class="px-7 pt-6 pb-2">
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <p class="text-sm text-slate-600 leading-relaxed">Halo! 👋 Saya <b>Nusabot</b>. Ada yang bisa saya bantu hari ini?</p>
+                </div>
+            </div>
+
             <!-- Menu Options -->
-            <div class="p-6 space-y-3 bg-slate-50/50">
-                <p class="px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pilih bantuan yang Anda butuhkan:</p>
+            <div class="p-7 space-y-3">
+                <p class="px-1 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Bantuan Cepat</p>
                 
                 @php
                     $waNumber = $setting->whatsapp ?? '6289515915699';
                     $waUrl = str_contains($waNumber, 'http') ? $waNumber : "https://wa.me/{$waNumber}?text=Halo " . ($setting->site_name ?? 'Nusakain') . ", saya butuh bantuan mengenai...";
                 @endphp
+                
+                <!-- WhatsApp -->
                 <a href="{{ $waUrl }}" target="_blank" 
-                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-all duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.716 2.003-1.408.245-.693.245-1.287.172-1.408-.074-.122-.272-.196-.57-.346zM12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.12 1.511 5.86L0 24l6.337-1.663C8.03 23.35 10.027 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.749-.512-5.352-1.48l-.385-.233-3.746.982.998-3.65-.255-.406C2.272 15.627 1.5 13.854 1.5 12c0-5.79 4.71-10.5 10.5-10.5 5.79 0 10.5 4.71 10.5 10.5S17.79 22.5 12 22.5z"/></svg>
                         </div>
-                        <span class="text-sm font-bold text-slate-700">Chat WhatsApp</span>
+                        <div>
+                            <span class="block text-sm font-bold text-slate-700">Chat WhatsApp</span>
+                            <span class="block text-[10px] text-slate-400">Konsultasi langsung via WA</span>
+                        </div>
                     </div>
-                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-5 h-5 text-slate-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
 
+                <!-- Track Order -->
                 <a href="{{ route('customer.orders') }}" 
-                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                         </div>
-                        <span class="text-sm font-bold text-slate-700">Lacak Pesanan</span>
+                        <div>
+                            <span class="block text-sm font-bold text-slate-700">Lacak Pesanan</span>
+                            <span class="block text-[10px] text-slate-400">Cek status pengiriman Anda</span>
+                        </div>
                     </div>
-                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-5 h-5 text-slate-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
 
+                <!-- FAQ -->
                 <a href="{{ route('faqs.index') }}" 
-                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                   class="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:border-teal-500 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="text-sm font-bold text-slate-700">Tanya Jawab (FAQ)</span>
+                        <div>
+                            <span class="block text-sm font-bold text-slate-700">Pusat Bantuan</span>
+                            <span class="block text-[10px] text-slate-400">Pertanyaan yang sering diajukan</span>
+                        </div>
                     </div>
-                    <svg class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-5 h-5 text-slate-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
             </div>
 
             <!-- Footer -->
-            <div class="p-4 text-center border-t border-slate-50">
-                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Powered by Nusakain Digital</p>
+            <div class="px-7 py-4 bg-slate-50 border-t border-slate-100 text-center">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">© {{ date('Y') }} {{ $setting->site_name ?? 'Nusakain' }} Assistant</p>
             </div>
         </div>
 
         <!-- Floating Button -->
-        <button onclick="toggleChat()" class="relative group active:scale-95 transition-all outline-none">
-            <div id="chat-icon-open" class="animate-nusabot">
-                <img src="{{ asset('images/nusabot.png') }}" alt="Nusabot" class="w-40 h-40 object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.15)] group-hover:scale-110 transition-transform">
-                <!-- Notification Dot (Positioned on the robot) -->
-                <span class="absolute top-8 right-8 w-4 h-4 bg-teal-500 border-4 border-white rounded-full z-10 animate-pulse"></span>
-            </div>
-            <div id="chat-icon-close" class="hidden w-16 h-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center shadow-2xl">
+        <button @click="open = !open" 
+                class="relative group outline-none transition-all duration-300 transform active:scale-90">
+            <!-- Opened Icon (Close) -->
+            <div x-show="open" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 rotate-90 scale-0"
+                 x-transition:enter-end="opacity-100 rotate-0 scale-100"
+                 class="w-16 h-16 bg-slate-900 text-white rounded-3xl flex items-center justify-center shadow-2xl hover:bg-slate-800 transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+
+            <!-- Closed Icon (Robot) -->
+            <div x-show="!open" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-0"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 class="animate-nusabot relative">
+                <div class="absolute -inset-4 bg-teal-500/20 rounded-full blur-xl group-hover:bg-teal-500/30 transition-all duration-500"></div>
+                <img src="{{ asset('images/nusabot.png') }}" alt="Nusabot" 
+                     class="w-24 h-24 object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 relative z-10">
+                
+                <!-- Badge Notification -->
+                <span class="absolute top-4 right-4 w-5 h-5 bg-teal-500 border-4 border-white rounded-full z-20 shadow-sm"></span>
             </div>
         </button>
     </div>
-
-    <script>
-        function toggleChat() {
-            const popup = document.getElementById('chat-popup');
-            const iconOpen = document.getElementById('chat-icon-open');
-            const iconClose = document.getElementById('chat-icon-close');
-            
-            if (popup.classList.contains('hidden')) {
-                popup.classList.remove('hidden');
-                iconOpen.classList.add('hidden');
-                iconClose.classList.remove('hidden');
-            } else {
-                popup.classList.add('hidden');
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
-            }
-        }
-    </script>
 </body>
 </html>
