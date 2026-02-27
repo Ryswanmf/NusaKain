@@ -8,119 +8,134 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-    <!-- Animated Background Blobs -->
+<body class="bg-[#f8fafc] min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-sans">
+    <!-- Sophisticated Background -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] -left-[10%] w-[40%] h-[40%] bg-teal-200/30 rounded-full blur-[120px] animate-blob"></div>
-        <div class="absolute bottom-[-10%] -right-[10%] w-[40%] h-[40%] bg-cyan-200/30 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
-        <div class="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-100/30 rounded-full blur-[100px] animate-blob animation-delay-4000"></div>
+        <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-gradient-to-br from-teal-100/30 to-transparent rounded-full blur-[120px] animate-pulse"></div>
+        <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-gradient-to-tl from-blue-100/30 to-transparent rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
     </div>
 
-    <style>
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-            animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-            animation-delay: 4s;
-        }
-    </style>
-
-    <div class="max-w-md w-full relative z-10">
-        <div class="bg-white rounded-[3rem] p-10 md:p-12 border border-gray-100 shadow-sm text-center">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight text-left">Selamat <span class="text-teal-600">Datang!</span></h1>
-            <p class="mt-4 text-slate-500 font-medium text-left">Silakan masuk ke akun Anda untuk melanjutkan.</p>
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mt-6" :status="session('status')" />
-
-            <form method="POST" action="{{ route('login') }}" class="mt-10 space-y-6 text-left">
-                @csrf
-
-                <!-- Email Address -->
-                <div class="space-y-2">
-                    <label for="email" class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all">
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <div class="max-w-[350px] w-full relative z-10" 
+         x-data="{ loading: false }" 
+         x-init="setTimeout(() => $el.classList.remove('opacity-0', 'translate-y-8'), 100)"
+         class="opacity-0 translate-y-8 transition-all duration-1000 ease-out">
+        
+        <!-- Premium Glass Card -->
+        <div class="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] border border-white/60 relative overflow-hidden">
+            <!-- Distinct Header Section -->
+            <div class="relative pt-8 pb-5 px-6 text-center overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-b from-slate-50/80 to-transparent"></div>
+                
+                <!-- Integrated Logo -->
+                <div class="relative z-10 mb-3">
+                    <a href="/" class="inline-block group">
+                        <div class="relative">
+                            <div class="absolute -inset-2 bg-teal-500/10 rounded-full blur-lg group-hover:bg-teal-500/20 transition-all duration-700"></div>
+                            <img src="{{ asset('images/favicon.png') }}" alt="Logo" class="w-11 h-11 mx-auto drop-shadow-2xl animate-nusabot relative z-10 transition-transform group-hover:scale-110">
+                        </div>
+                    </a>
                 </div>
 
-                <!-- Password -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label for="password" class="text-sm font-bold text-slate-700 ml-1">Password</label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-xs font-bold text-teal-600 hover:text-teal-700">Lupa Password?</a>
-                        @endif
+                <div class="relative z-10">
+                    <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-tight">
+                        Nusa<span class="text-teal-600">kain.</span>
+                    </h1>
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">Identity Access</p>
+                </div>
+            </div>
+
+            <div class="px-6 pb-8">
+                <!-- Session Status -->
+                <x-auth-session-status class="mb-4 text-center text-[10px]" :status="session('status')" />
+
+                <form method="POST" action="{{ route('login') }}" class="space-y-4" @submit="loading = true">
+                    @csrf
+
+                    <!-- Email Address -->
+                    <div class="space-y-1">
+                        <label for="email" class="text-[8px] font-black text-slate-400 ml-2 uppercase tracking-[0.2em]">Identitas</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                            </div>
+                            <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="Email"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50/50 border-2 border-transparent rounded-[1.2rem] focus:ring-4 focus:ring-teal-500/10 focus:border-teal-600 focus:bg-white transition-all text-xs font-semibold placeholder:text-slate-300">
+                        </div>
+                        <x-input-error :messages="$errors->get('email')" class="mt-1 ml-2 text-[10px]" />
                     </div>
-                    <input type="password" name="password" id="password" required autocomplete="current-password"
-                        class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all">
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                </div>
 
-                <!-- Remember Me -->
-                <div class="flex items-center ml-1">
-                    <label for="remember_me" class="inline-flex items-center">
-                        <input id="remember_me" type="checkbox" class="rounded-lg border-gray-300 text-teal-600 shadow-sm focus:ring-teal-500" name="remember">
-                        <span class="ms-2 text-sm text-slate-500 font-medium italic">Ingat Saya</span>
-                    </label>
-                </div>
-
-                <div class="pt-2">
-                    <button type="submit" class="w-full py-5 bg-teal-600 text-white rounded-2xl font-black hover:bg-teal-700 transition-all shadow-xl shadow-teal-100 active:scale-[0.98]">
-                        Masuk Sekarang
-                    </button>
-                </div>
-
-                <div class="relative py-4">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-slate-100"></div>
+                    <!-- Password -->
+                    <div class="space-y-1" x-data="{ show: false }">
+                        <div class="flex justify-between items-center px-2">
+                            <label for="password" class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Sandi</label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-[7px] font-black text-teal-600 hover:text-teal-700 uppercase tracking-widest">Lupa?</a>
+                            @endif
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </div>
+                            <input :type="show ? 'text' : 'password'" name="password" id="password" required autocomplete="current-password" placeholder="••••••••"
+                                class="w-full pl-10 pr-10 py-3 bg-slate-50/50 border-2 border-transparent rounded-[1.2rem] focus:ring-4 focus:ring-teal-500/10 focus:border-teal-600 focus:bg-white transition-all text-xs font-semibold placeholder:text-slate-300">
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-teal-600 transition-colors">
+                                <svg x-show="!show" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg x-show="show" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </button>
+                        </div>
+                        <x-input-error :messages="$errors->get('password')" class="mt-1 ml-2 text-[10px]" />
                     </div>
-                    <div class="relative flex justify-center text-xs uppercase">
-                        <span class="bg-white px-4 text-slate-400 font-bold tracking-widest">Atau masuk dengan</span>
-                    </div>
-                </div>
 
-                <div>
-                    <a href="{{ route('google.login') }}" class="w-full flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-[0.98]">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <div class="pt-3">
+                        <button type="submit" 
+                                :disabled="loading"
+                                class="w-full py-3 bg-slate-900 text-white rounded-[1rem] font-black hover:bg-teal-600 hover:shadow-[0_15px_30px_-8px_rgba(13,148,136,0.25)] transition-all active:scale-[0.98] uppercase tracking-[0.25em] text-[9px] flex items-center justify-center gap-2">
+                            <template x-if="!loading">
+                                <span>Autentikasi</span>
+                            </template>
+                            <template x-if="loading">
+                                <svg class="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </template>
+                        </button>
+                    </div>
+
+                    <div class="relative py-2 flex items-center gap-3">
+                        <div class="flex-grow border-t border-slate-100"></div>
+                        <span class="text-[7px] uppercase font-black text-slate-300 tracking-[0.3em] whitespace-nowrap">Atau</span>
+                        <div class="flex-grow border-t border-slate-100"></div>
+                    </div>
+
+                    <a href="{{ route('google.login') }}" class="w-full flex items-center justify-center gap-2 py-3 bg-white border-2 border-slate-100 text-slate-700 rounded-[1rem] font-black hover:border-teal-600 hover:bg-teal-50/10 transition-all active:scale-[0.98] group shadow-sm">
+                        <svg class="w-4 h-4 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                             <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
                             <path fill="#FBBC05" d="M16.04 18.013c-1.09.693-2.415 1.078-3.84 1.078a7.077 7.077 0 0 1-6.734-4.858L1.44 17.358C3.398 21.302 7.47 24 12 24c3.135 0 5.946-1.039 8.066-2.81l-4.026-3.177Z"/>
                             <path fill="#4285F4" d="M23.49 12.275c0-.826-.074-1.62-.21-2.386H12v4.514h6.44a5.517 5.517 0 0 1-2.395 3.614l4.026 3.177c2.356-2.177 3.714-5.382 3.714-8.919Z"/>
                             <path fill="#34A853" d="M5.266 14.235a7.077 7.077 0 0 1 0-4.47L1.24 6.65a11.977 11.977 0 0 0 0 10.708l4.026-3.123Z"/>
                         </svg>
-                        Google
+                        <span class="text-[8px] uppercase tracking-[0.2em]">Google account</span>
                     </a>
-                </div>
-            </form>
+                </form>
 
-            @if (Route::has('register'))
-                <p class="mt-10 text-center text-sm text-slate-500 font-medium">
-                    Belum punya akun? 
-                    <a href="{{ route('register') }}" class="text-teal-600 font-bold hover:underline underline-offset-4 decoration-2">Daftar Gratis</a>
-                </p>
-            @endif
-
-            <div class="mt-8 pt-8 border-t border-slate-50">
-                <a href="/" class="inline-flex items-center text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors group">
-                    <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                    Kembali ke Beranda
-                </a>
+                @if (Route::has('register'))
+                    <div class="mt-6 text-center">
+                        <a href="{{ route('register') }}" class="group inline-flex items-center gap-2">
+                            <span class="text-[8px] font-black text-slate-300 uppercase tracking-[0.2em]">Belum punya akun?</span>
+                            <span class="text-[9px] font-black text-teal-600 uppercase tracking-widest group-hover:text-slate-900 transition-all underline underline-offset-2 decoration-slate-100">Daftar</span>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
 
-        <p class="mt-10 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
-            © 2026 Nusakain Indonesia.
-        </p>
+        <div class="mt-6 flex flex-col items-center gap-3">
+            <a href="/" class="group flex items-center gap-3 text-[8px] font-black text-slate-400 hover:text-teal-600 transition-all uppercase tracking-[0.4em]">
+                <div class="w-7 h-7 rounded-xl bg-white shadow-sm flex items-center justify-center group-hover:-translate-x-1 transition-transform border border-slate-50">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </div>
+                Beranda
+            </a>
+        </div>
     </div>
-
 </body>
 </html>
